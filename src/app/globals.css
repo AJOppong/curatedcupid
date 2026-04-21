@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0D0D12;
+  --background: #0A0914;
   --foreground: #FAFAFA;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-brand-bg: #0D0D12;
-  --color-brand-surface: #13131A;
+  --color-brand-bg: #0A0914;
+  --color-brand-surface: #12101F;
   --color-brand-pink: #E91E8C;
-  --color-brand-pink-light: #FF4DAF;
+  --color-brand-pink-light: #FF6BB5;
   --color-brand-gold: #D4AF37;
-  --color-brand-purple: #7C3AED;
+  --color-brand-purple: #4C1D95;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background-color: #0D0D12;
+  background-color: #0A0914;
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
@@ -27,10 +27,10 @@ body {
 
 /* Glassmorphism */
 .glass {
-  background: rgba(19, 19, 26, 0.6);
+  background: rgba(18, 16, 31, 0.65);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* Pink glow */
@@ -45,3 +45,27 @@ body {
 /* Scrollbar hide */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Pink gradient text */
+.text-gradient-pink {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FFB3D9 40%, #E91E8C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Pink gradient button */
+.btn-pink-gradient {
+  background: linear-gradient(135deg, #E91E8C 0%, #FF6BB5 100%);
+  box-shadow: 0 4px 24px rgba(233, 30, 140, 0.4);
+}
+.btn-pink-gradient:hover {
+  box-shadow: 0 4px 40px rgba(233, 30, 140, 0.65);
+}
+
+/* Section badge */
+.section-badge {
+  background: rgba(88, 28, 135, 0.35);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: rgba(216, 180, 254, 0.9);
+}
