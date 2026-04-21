@@ -97,7 +97,7 @@ export default function Step4EventDetails() {
         <Field label="Location / Venue" icon={<MapPin className="w-3 h-3" />}>
           <input
             type="text"
-            placeholder="e.g. Lagos Island, Apartment 4B"
+            placeholder="e.g. Ayeduase, Apartment 4B"
             className={inputClass}
             value={eventDetails.location}
             onChange={(e) => updateEventDetails({ location: e.target.value })}

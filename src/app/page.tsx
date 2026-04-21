@@ -121,7 +121,7 @@ function Hero() {
         <div className="w-px h-4 bg-white/10" />
         <span>200+ experiences delivered</span>
         <div className="w-px h-4 bg-white/10" />
-        <span>Lagos & Abuja</span>
+        <span>Ayeduase - Kumasi</span>
       </motion.div>
 
       <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute bottom-8 text-white/15">
@@ -190,7 +190,7 @@ const packages = [
     id: "rose-starter",
     icon: <Heart className="w-5 h-5" />,
     name: "Rose Starter",
-    price: "₦15,000",
+    price: "GH₵15,000",
     tag: null,
     features: ["Rose petal trail", "2 pillar candles", "Personalized love note", "1-hour setup"],
     featured: false,
@@ -199,7 +199,7 @@ const packages = [
     id: "sweet-surprise",
     icon: <Gift className="w-5 h-5" />,
     name: "Sweet Surprise",
-    price: "₦28,000",
+    price: "GH₵28,000",
     tag: null,
     features: ["Everything in Rose Starter", "Balloon arrangement", "LED fairy lights", "Chocolates & treats"],
     featured: false,
@@ -208,7 +208,7 @@ const packages = [
     id: "essential-romance",
     icon: <Sparkles className="w-5 h-5" />,
     name: "Essential Romance",
-    price: "₦45,000",
+    price: "GH₵45,000",
     tag: null,
     features: ["Rose petals arrangement", "Scented candles setup", "Romantic lighting", "Personalized message card", "2-hour setup window", "Photo opportunities"],
     featured: false,
@@ -217,7 +217,7 @@ const packages = [
     id: "luxury-experience",
     icon: <Crown className="w-5 h-5" />,
     name: "Luxury Experience",
-    price: "₦85,000",
+    price: "GH₵85,000",
     tag: "Most Popular",
     features: ["Everything in Essential", "Premium floral arrangements", "Champagne & chocolates", "Balloon installations", "LED neon custom sign", "Professional photography (1hr)", "Music playlist curation", "4-hour setup window"],
     featured: true,
@@ -226,7 +226,7 @@ const packages = [
     id: "grand-affair",
     icon: <Star className="w-5 h-5" />,
     name: "Grand Affair",
-    price: "₦120,000",
+    price: "GH₵120,000",
     tag: null,
     features: ["Everything in Luxury", "Designer floral installations", "Gourmet dinner arrangement", "Premium champagne selection", "Full-day coordination"],
     featured: false,
@@ -235,7 +235,7 @@ const packages = [
     id: "ultimate-celebration",
     icon: <Gem className="w-5 h-5" />,
     name: "Ultimate Celebration",
-    price: "₦175,000",
+    price: "GH₵175,000",
     tag: null,
     features: ["Everything in Grand Affair", "Live musician (2hrs)", "Full photography package", "Videography highlights", "Spa package vouchers", "All-day setup & support"],
     featured: false,
@@ -244,7 +244,7 @@ const packages = [
     id: "royal-diamond",
     icon: <Crown className="w-5 h-5" />,
     name: "Royal Diamond",
-    price: "₦250,000",
+    price: "GH₵250,000",
     tag: "Premium",
     features: ["Everything in Ultimate", "Exclusive venue styling", "Custom floral installations", "Dual photographers", "Drone footage", "Dedicated event coordinator", "VIP afterparty setup"],
     featured: false,
@@ -462,7 +462,7 @@ function Contact() {
               {[
                 { icon: <Phone className="w-4 h-4" />, label: "Phone", value: "+234 901 000 0000" },
                 { icon: <Mail className="w-4 h-4" />, label: "Email", value: "hello@curatedcupid.com" },
-                { icon: <MapPin className="w-4 h-4" />, label: "Location", value: "Lagos & Abuja, Nigeria" },
+                { icon: <MapPin className="w-4 h-4" />, label: "Location", value: "Ayeduase - Kumasi, Ghana" },
                 { icon: <Clock className="w-4 h-4" />, label: "Hours", value: "Mon–Sun, 8am – 9pm" },
               ].map((item) => (
                 <div key={item.label} className="flex items-start gap-3">
@@ -581,13 +581,13 @@ function Footer() {
             <div className="space-y-2 text-white/30 text-sm">
               <p>+234 901 000 0000</p>
               <p>hello@curatedcupid.com</p>
-              <p>Lagos & Abuja, Nigeria</p>
+              <p>Ayeduase - Kumasi, Ghana</p>
             </div>
           </div>
         </div>
         <div className="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-white/20 text-xs">
           <p>© {new Date().getFullYear()} Curated Cupid. All rights reserved.</p>
-          <p>Made with 💕 in Lagos</p>
+          <p>Made with 💕 in Kumasi</p>
         </div>
       </div>
     </footer>

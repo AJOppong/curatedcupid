@@ -43,8 +43,8 @@ export default function Step5Checkout() {
   const whatsappMessage = encodeURIComponent(
     `Hi Curated Cupid! 🌹\n\nI'd like to confirm my booking:\n\n` +
     `*Name:* ${eventDetails.name}\n*Date:* ${eventDetails.date} at ${eventDetails.time}\n*Location:* ${eventDetails.location}\n*Service:* ${baseService}\n\n` +
-    `*Items:*\n${cart.map((i) => `- ${i.name} x${i.quantity} (₦${(i.price * i.quantity).toLocaleString()})`).join("\n")}\n\n` +
-    `*Total:* ₦${total.toLocaleString()}\n\nTheme: ${eventDetails.theme || "No preference"}\n\nNotes: ${eventDetails.instructions || "None"}`
+    `*Items:*\n${cart.map((i) => `- ${i.name} x${i.quantity} (GH₵${(i.price * i.quantity).toLocaleString()})`).join("\n")}\n\n` +
+    `*Total:* GH₵${total.toLocaleString()}\n\nTheme: ${eventDetails.theme || "No preference"}\n\nNotes: ${eventDetails.instructions || "None"}`
   );
 
   if (submitted) {
@@ -77,7 +77,7 @@ export default function Step5Checkout() {
           <p className="text-white text-sm"><span className="text-white/40">Name: </span>{eventDetails.name}</p>
           <p className="text-white text-sm"><span className="text-white/40">Date: </span>{eventDetails.date} at {eventDetails.time}</p>
           <p className="text-white text-sm"><span className="text-white/40">Location: </span>{eventDetails.location}</p>
-          <p className="text-[#D4AF37] font-bold text-sm mt-2">Total: ₦{total.toLocaleString()}</p>
+          <p className="text-[#D4AF37] font-bold text-sm mt-2">Total: GH₵{total.toLocaleString()}</p>
         </div>
 
         <a href={`https://wa.me/2349010000000?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer">
@@ -124,17 +124,17 @@ export default function Step5Checkout() {
                   <span>{item.image}</span> {item.name}
                   <span className="text-white/25">×{item.quantity}</span>
                 </span>
-                <span className="text-white font-medium">₦{(item.price * item.quantity).toLocaleString()}</span>
+                <span className="text-white font-medium">GH₵{(item.price * item.quantity).toLocaleString()}</span>
               </div>
             ))}
           </div>
           <div className="border-t border-white/8 pt-3 space-y-1">
             <div className="flex justify-between text-sm text-white/40">
-              <span>Service fee</span><span>₦2,500</span>
+              <span>Service fee</span><span>GH₵2,500</span>
             </div>
             <div className="flex justify-between font-bold">
               <span className="text-white">Total</span>
-              <span className="text-[#D4AF37] text-lg">₦{total.toLocaleString()}</span>
+              <span className="text-[#D4AF37] text-lg">GH₵{total.toLocaleString()}</span>
             </div>
           </div>
         </div>

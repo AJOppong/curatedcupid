@@ -74,7 +74,7 @@ export default function Step2SelectItems() {
                 <p className="text-white/35 text-xs mt-0.5 leading-snug line-clamp-2">{item.description}</p>
               </div>
               <div className="mt-auto">
-                <p className="text-[#D4AF37] font-bold text-sm mb-2">₦{item.price.toLocaleString()}</p>
+                <p className="text-[#D4AF37] font-bold text-sm mb-2">GH₵{item.price.toLocaleString()}</p>
 
                 {cartItem ? (
                   <div className="flex items-center gap-2">

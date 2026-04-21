@@ -51,7 +51,7 @@ export default function Step3Cart() {
 
               <div className="flex-1 min-w-0">
                 <p className="text-white font-medium text-sm truncate">{item.name}</p>
-                <p className="text-[#D4AF37] text-xs mt-0.5">₦{item.price.toLocaleString()} each</p>
+                <p className="text-[#D4AF37] text-xs mt-0.5">GH₵{item.price.toLocaleString()} each</p>
               </div>
 
               <div className="flex items-center gap-2">
@@ -75,7 +75,7 @@ export default function Step3Cart() {
               </div>
 
               <p className="text-white font-semibold text-sm w-20 text-right">
-                ₦{(item.price * item.quantity).toLocaleString()}
+                GH₵{(item.price * item.quantity).toLocaleString()}
               </p>
 
               <button
@@ -93,15 +93,15 @@ export default function Step3Cart() {
       <div className="glass border border-white/8 rounded-2xl p-5">
         <div className="flex items-center justify-between mb-3">
           <span className="text-white/40 text-sm">Subtotal</span>
-          <span className="text-white text-sm">₦{cartTotal.toLocaleString()}</span>
+          <span className="text-white text-sm">GH₵{cartTotal.toLocaleString()}</span>
         </div>
         <div className="flex items-center justify-between mb-3">
           <span className="text-white/40 text-sm">Service fee</span>
-          <span className="text-white text-sm">₦2,500</span>
+          <span className="text-white text-sm">GH₵2,500</span>
         </div>
         <div className="border-t border-white/8 pt-3 flex items-center justify-between">
           <span className="text-white font-semibold">Total</span>
-          <span className="text-[#D4AF37] font-bold text-xl">₦{(cartTotal + 2500).toLocaleString()}</span>
+          <span className="text-[#D4AF37] font-bold text-xl">GH₵{(cartTotal + 2500).toLocaleString()}</span>
         </div>
       </div>
 
