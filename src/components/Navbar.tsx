@@ -19,35 +19,35 @@ export default function Navbar() {
       <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#F2B8C6] to-[#9b87f5] flex items-center justify-center shadow-[0_0_12px_rgba(242,184,198,0.5)]">
-            <Heart className="w-4 h-4 text-white fill-white" />
+          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#E91E8C] to-[#7C3AED] flex items-center justify-center shadow-[0_0_12px_rgba(233,30,140,0.5)]">
+            <Heart className="w-3.5 h-3.5 text-white fill-white" />
           </div>
-          <span className="font-semibold text-lg tracking-tight">
-            Curated<span className="text-[#F2B8C6]">Cupid</span>
+          <span className="font-semibold text-base tracking-tight text-white">
+            Curated<span className="text-[#E91E8C]">Cupid</span>
           </span>
         </Link>
 
         {/* Nav links */}
         <div className="hidden md:flex items-center gap-8 text-sm text-white/60">
-          <Link href="/#services" className="hover:text-[#F2B8C6] transition-colors">Services</Link>
-          <Link href="/#gallery" className="hover:text-[#F2B8C6] transition-colors">Gallery</Link>
-          <Link href="/#about" className="hover:text-[#F2B8C6] transition-colors">About</Link>
+          <Link href="/#services" className="hover:text-white transition-colors">Services</Link>
+          <Link href="/#gallery" className="hover:text-white transition-colors">Gallery</Link>
+          <Link href="/#about" className="hover:text-white transition-colors">Contact</Link>
         </div>
 
-        {/* CTA + Cart */}
-        <div className="flex items-center gap-4">
+        {/* Cart + CTA */}
+        <div className="flex items-center gap-3">
           <Link href="/builder" className="relative">
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-10 h-10 rounded-full glass border border-white/10 flex items-center justify-center hover:border-[#F2B8C6]/40 transition-colors"
+              className="w-9 h-9 rounded-full glass border border-white/10 flex items-center justify-center hover:border-[#E91E8C]/40 transition-colors"
             >
               <ShoppingCart className="w-4 h-4 text-white/70" />
               {itemCount > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-gradient-to-br from-[#F2B8C6] to-[#c994ac] text-[#0B0B0F] text-xs font-bold flex items-center justify-center"
+                  className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#E91E8C] text-white text-[10px] font-bold flex items-center justify-center"
                 >
                   {itemCount}
                 </motion.span>
@@ -56,9 +56,9 @@ export default function Navbar() {
           </Link>
           <Link
             href="/builder"
-            className="hidden md:block px-5 py-2 rounded-xl bg-gradient-to-r from-[#F2B8C6] to-[#c994ac] text-[#0B0B0F] text-sm font-semibold shadow-[0_0_20px_rgba(242,184,198,0.3)] hover:shadow-[0_0_30px_rgba(242,184,198,0.5)] transition-shadow"
+            className="hidden md:flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#E91E8C] text-white text-sm font-semibold shadow-[0_0_20px_rgba(233,30,140,0.4)] hover:shadow-[0_0_30px_rgba(233,30,140,0.6)] hover:-translate-y-0.5 transition-all"
           >
-            Start Your Surprise
+            Book Now
           </Link>
         </div>
       </nav>

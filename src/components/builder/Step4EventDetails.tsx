@@ -5,7 +5,7 @@ import Button from "@/components/ui/Button";
 import { ArrowRight, ArrowLeft, User, Phone, Calendar, Clock, MapPin, Palette, MessageSquare } from "lucide-react";
 
 const inputClass =
-  "w-full glass border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#F2B8C6]/50 focus:shadow-[0_0_15px_rgba(242,184,198,0.1)] transition-all bg-transparent";
+  "w-full glass border border-white/8 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_15px_rgba(233,30,140,0.1)] transition-all bg-transparent";
 
 interface FieldProps {
   label: string;
@@ -16,8 +16,8 @@ interface FieldProps {
 function Field({ label, icon, children }: FieldProps) {
   return (
     <div className="space-y-1.5">
-      <label className="flex items-center gap-2 text-white/60 text-xs font-medium">
-        <span className="text-[#F2B8C6]">{icon}</span>
+      <label className="flex items-center gap-2 text-white/50 text-xs font-medium">
+        <span className="text-[#E91E8C]">{icon}</span>
         {label}
       </label>
       {children}
@@ -44,9 +44,9 @@ export default function Step4EventDetails() {
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
-          Event <span className="text-[#F2B8C6]">Details</span>
+          Event <span className="text-[#E91E8C]">Details</span>
         </h2>
-        <p className="text-white/50 text-sm">Tell us everything we need to make it perfect</p>
+        <p className="text-white/40 text-sm">Tell us everything we need to make it perfect</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">

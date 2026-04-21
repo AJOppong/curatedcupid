@@ -27,35 +27,44 @@ function StepIndicator() {
         const isDone = step > s.num;
         return (
           <div key={s.num} className="flex items-center">
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex flex-col items-center gap-1.5">
               <motion.div
                 animate={{
                   background: isDone
-                    ? "linear-gradient(135deg,#F2B8C6,#c994ac)"
+                    ? "#E91E8C"
                     : isActive
-                    ? "linear-gradient(135deg,#9b87f5,#F2B8C6)"
-                    : "rgba(255,255,255,0.05)",
-                  borderColor: isActive || isDone ? "rgba(242,184,198,0.6)" : "rgba(255,255,255,0.1)",
-                  boxShadow: isActive ? "0 0 20px rgba(155,135,245,0.4)" : "none",
+                    ? "linear-gradient(135deg,#E91E8C,#7C3AED)"
+                    : "rgba(255,255,255,0.04)",
+                  borderColor: isActive || isDone
+                    ? "rgba(233,30,140,0.6)"
+                    : "rgba(255,255,255,0.08)",
+                  boxShadow: isActive
+                    ? "0 0 20px rgba(233,30,140,0.45)"
+                    : "none",
                 }}
-                className="w-8 h-8 rounded-full border flex items-center justify-center text-xs font-bold transition-all"
+                className="w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-all duration-300"
               >
                 {isDone ? (
-                  <Check className="w-3.5 h-3.5 text-[#0B0B0F]" />
+                  <Check className="w-3.5 h-3.5 text-white" />
                 ) : (
-                  <span className={isActive ? "text-white" : "text-white/30"}>{s.num}</span>
+                  <span className={isActive ? "text-white" : "text-white/25"}>{s.num}</span>
                 )}
               </motion.div>
-              <span className={`text-[10px] font-medium hidden sm:block ${isActive ? "text-[#F2B8C6]" : isDone ? "text-white/50" : "text-white/20"}`}>
+              <span className={`text-[10px] font-medium hidden sm:block transition-colors ${
+                isActive ? "text-[#E91E8C]" : isDone ? "text-white/40" : "text-white/15"
+              }`}>
                 {s.label}
               </span>
             </div>
             {i < STEPS.length - 1 && (
-              <div className="w-8 md:w-12 h-px mx-1 mb-4" style={{
-                background: step > s.num
-                  ? "linear-gradient(90deg,#F2B8C6,#c994ac)"
-                  : "rgba(255,255,255,0.08)"
-              }} />
+              <div
+                className="w-8 md:w-12 h-px mx-1 mb-4 transition-all duration-500"
+                style={{
+                  background: step > s.num
+                    ? "linear-gradient(90deg,#E91E8C,#7C3AED)"
+                    : "rgba(255,255,255,0.06)"
+                }}
+              />
             )}
           </div>
         );
@@ -77,23 +86,23 @@ function BuilderContent() {
 
   return (
     <div className="min-h-screen pt-24 pb-16 px-4">
-      {/* Ambient glow blobs */}
+      {/* Ambient glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 -left-32 w-96 h-96 rounded-full bg-[#9b87f5]/8 blur-[100px]" />
-        <div className="absolute bottom-1/4 -right-32 w-96 h-96 rounded-full bg-[#F2B8C6]/8 blur-[100px]" />
+        <div className="absolute top-1/3 -left-32 w-96 h-96 rounded-full bg-[#E91E8C]/6 blur-[120px]" />
+        <div className="absolute bottom-1/3 -right-32 w-96 h-96 rounded-full bg-[#7C3AED]/6 blur-[120px]" />
       </div>
 
       <div className="max-w-4xl mx-auto">
         <StepIndicator />
 
-        <div className="glass border border-white/8 rounded-3xl p-6 md:p-10 shadow-[0_0_60px_rgba(0,0,0,0.5)]">
+        <div className="glass border border-white/6 rounded-3xl p-6 md:p-10 shadow-[0_0_80px_rgba(0,0,0,0.6)]">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.25, ease: "easeInOut" }}
+              transition={{ duration: 0.22, ease: "easeInOut" }}
             >
               {stepComponents[step]}
             </motion.div>
