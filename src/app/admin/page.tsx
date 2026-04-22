@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
+import { BuilderProvider } from "@/context/BuilderContext";
 
 interface Booking {
   id: string;
@@ -31,6 +32,14 @@ interface Booking {
 }
 
 export default function AdminDashboard() {
+  return (
+    <BuilderProvider>
+      <AdminContent />
+    </BuilderProvider>
+  );
+}
+
+function AdminContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -40,7 +49,7 @@ export default function AdminDashboard() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === "cupid2026") { // Simple mock password
+    if (password === "cupid2026") { 
       setIsAuthenticated(true);
       localStorage.setItem("admin_auth", "true");
     } else {
@@ -276,7 +285,7 @@ export default function AdminDashboard() {
                     <div className="space-y-3">
                       <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Items</p>
                       <div className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
-                        {selectedBooking.items.map((item: any, idx: number) => (
+                        {selectedBooking.items && selectedBooking.items.map((item: any, idx: number) => (
                           <div key={idx} className="flex items-center justify-between text-xs">
                             <span className="text-white/60">{item.image} {item.name} x{item.quantity}</span>
                             <span className="text-white">GH₵{(item.price * item.quantity).toLocaleString()}</span>
