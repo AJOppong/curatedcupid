@@ -10,7 +10,7 @@ import Step4EventDetails from "@/components/builder/Step4EventDetails";
 import Step5Checkout from "@/components/builder/Step5Checkout";
 import { Check } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useEffect, Suspense } from "react";
+import { useEffect, useRef, Suspense } from "react";
 import { predefinedPackages, shopItems } from "@/lib/data";
 
 const STEPS = [
@@ -79,24 +79,27 @@ function StepIndicator() {
 function BuilderContent() {
   const { step, preloadItems, setStep, setBaseService, clearCart } = useBuilder();
   const searchParams = useSearchParams();
+  const hasLoaded = useRef(false);
 
   useEffect(() => {
+    if (hasLoaded.current) return;
     const pkgName = searchParams.get("package");
     if (pkgName) {
       const pkg = predefinedPackages.find(p => p.name === pkgName);
       if (pkg) {
+        hasLoaded.current = true;
         clearCart();
         const itemsToLoad = pkg.items.map(itemId => {
           const item = shopItems.find(si => si.id === itemId);
           return item ? { id: item.id, name: item.name, price: item.price, image: item.emoji } : null;
         }).filter(Boolean) as any;
-        
         preloadItems(itemsToLoad, pkg.name);
         setBaseService("Surprise Package");
         setStep(2);
       }
     }
-  }, [searchParams, preloadItems, setStep, setBaseService, clearCart]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const stepComponents: Record<number, React.ReactNode> = {
     1: <Step1BaseService />,
