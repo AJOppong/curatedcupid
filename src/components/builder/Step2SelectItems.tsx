@@ -142,12 +142,20 @@ export default function Step2SelectItems() {
 
             {/* Navigation Buttons */}
             <div className="flex gap-3">
-              <Button variant="secondary" onClick={() => setStep(1)} className="flex-1 text-xs py-3">
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="flex-1 py-3 rounded-full glass border border-white/10 text-white text-xs font-semibold flex items-center justify-center gap-2 hover:border-white/30 transition-all"
+              >
                 <ArrowLeft className="w-3 h-3" /> Back
-              </Button>
-              <Button onClick={() => setStep(3)} className="flex-1 py-3 shadow-[0_0_20px_rgba(233,30,140,0.25)]">
+              </button>
+              <button
+                type="button"
+                onClick={() => setStep(3)}
+                className="flex-1 py-3 rounded-full bg-gradient-to-r from-[#E91E8C] to-[#c4186f] text-white text-sm font-bold flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(233,30,140,0.35)] hover:shadow-[0_0_30px_rgba(233,30,140,0.55)] transition-all"
+              >
                 <ShoppingCart className="w-4 h-4" /> View Cart <ArrowRight className="w-3 h-3" />
-              </Button>
+              </button>
             </div>
           </div>
 
