@@ -3,10 +3,11 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useBuilder } from "@/context/BuilderContext";
 import Button from "@/components/ui/Button";
-import { ArrowRight, ArrowLeft, Trash2, Plus, Minus, ShoppingBag } from "lucide-react";
+import { ArrowRight, ArrowLeft, Trash2, Plus, Minus, ShoppingBag, Package } from "lucide-react";
 
 export default function Step3Cart() {
-  const { cart, removeFromCart, updateQuantity, cartTotal, setStep } = useBuilder();
+  const { cart, removeFromCart, updateQuantity, cartTotal, setStep, selectedPackageName } = useBuilder();
+  const totalWithFee = cartTotal + 50;
 
   if (cart.length === 0) {
     return (
@@ -25,12 +26,21 @@ export default function Step3Cart() {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
           Your <span className="text-[#E91E8C]">Cart</span>
         </h2>
         <p className="text-white/40 text-sm">Review your selected items before continuing</p>
       </div>
+
+      {/* Package Badge */}
+      {selectedPackageName && (
+        <div className="flex items-center gap-2 px-4 py-2 glass border border-[#E91E8C]/20 rounded-xl w-fit">
+          <Package className="w-3.5 h-3.5 text-[#E91E8C]" />
+          <span className="text-white/70 text-xs font-bold">{selectedPackageName}</span>
+        </div>
+      )}
 
       {/* Cart Items */}
       <div className="space-y-3">
@@ -45,27 +55,26 @@ export default function Step3Cart() {
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
               className="glass border border-white/8 rounded-2xl p-4 flex items-center gap-4"
             >
+              {/* Emoji */}
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#E91E8C]/8 to-[#7C3AED]/8 border border-white/5 flex items-center justify-center text-2xl flex-shrink-0">
                 {item.image}
               </div>
 
+              {/* Name & Price */}
               <div className="flex-1 min-w-0">
                 <p className="text-white font-medium text-sm truncate">{item.name}</p>
                 <p className="text-[#D4AF37] text-xs mt-0.5">GH₵{item.price.toLocaleString()} each</p>
               </div>
 
-              <div className="flex items-center gap-2">
+              {/* Quantity Controls */}
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <button
-                  onClick={() =>
-                    item.quantity === 1
-                      ? removeFromCart(item.id)
-                      : updateQuantity(item.id, item.quantity - 1)
-                  }
+                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
                   className="w-7 h-7 rounded-full glass border border-white/10 flex items-center justify-center text-white/60 hover:text-[#E91E8C] hover:border-[#E91E8C]/30 transition-colors"
                 >
                   <Minus className="w-3 h-3" />
                 </button>
-                <span className="text-white text-sm font-medium w-6 text-center">{item.quantity}</span>
+                <span className="text-white text-sm font-bold w-6 text-center">{item.quantity}</span>
                 <button
                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
                   className="w-7 h-7 rounded-full glass border border-white/10 flex items-center justify-center text-white/60 hover:text-[#E91E8C] hover:border-[#E91E8C]/30 transition-colors"
@@ -74,13 +83,15 @@ export default function Step3Cart() {
                 </button>
               </div>
 
-              <p className="text-white font-semibold text-sm w-20 text-right">
+              {/* Line Total */}
+              <p className="text-white font-semibold text-sm w-20 text-right flex-shrink-0">
                 GH₵{(item.price * item.quantity).toLocaleString()}
               </p>
 
+              {/* Remove */}
               <button
                 onClick={() => removeFromCart(item.id)}
-                className="text-white/20 hover:text-red-400 transition-colors ml-1"
+                className="text-white/20 hover:text-red-400 hover:bg-red-500/10 p-1.5 rounded-lg transition-all ml-1 flex-shrink-0"
               >
                 <Trash2 className="w-4 h-4" />
               </button>
@@ -90,26 +101,27 @@ export default function Step3Cart() {
       </div>
 
       {/* Total Summary */}
-      <div className="glass border border-white/8 rounded-2xl p-5">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-white/40 text-sm">Subtotal</span>
-          <span className="text-white text-sm">GH₵{cartTotal.toLocaleString()}</span>
+      <div className="glass border border-white/8 rounded-2xl p-5 space-y-3">
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-white/40">Subtotal ({cart.reduce((s, i) => s + i.quantity, 0)} items)</span>
+          <span className="text-white">GH₵{cartTotal.toLocaleString()}</span>
         </div>
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-white/40 text-sm">Service & Packaging fee</span>
-          <span className="text-white text-sm">GH₵50</span>
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-white/40">Service & Packaging fee</span>
+          <span className="text-white">GH₵50</span>
         </div>
         <div className="border-t border-white/8 pt-3 flex items-center justify-between">
-          <span className="text-white font-semibold">Total</span>
-          <span className="text-[#D4AF37] font-bold text-xl">GH₵{(cartTotal + 50).toLocaleString()}</span>
+          <span className="text-white font-bold">Total</span>
+          <span className="text-[#D4AF37] font-black text-2xl">GH₵{totalWithFee.toLocaleString()}</span>
         </div>
       </div>
 
+      {/* Navigation */}
       <div className="flex items-center justify-between pt-2">
         <Button variant="secondary" onClick={() => setStep(2)}>
-          <ArrowLeft className="w-4 h-4" /> Add More
+          <ArrowLeft className="w-4 h-4" /> Edit Items
         </Button>
-        <Button onClick={() => setStep(4)} className="px-8">
+        <Button onClick={() => setStep(4)} className="px-8 shadow-[0_0_25px_rgba(233,30,140,0.3)]">
           <ShoppingBag className="w-4 h-4" /> Book Now <ArrowRight className="w-4 h-4" />
         </Button>
       </div>

@@ -114,7 +114,7 @@ function BuilderContent() {
         <div className="absolute bottom-1/3 -right-32 w-96 h-96 rounded-full bg-[#7C3AED]/6 blur-[120px]" />
       </div>
 
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         <StepIndicator />
 
         <div className="glass border border-white/6 rounded-3xl p-6 md:p-10 shadow-[0_0_80px_rgba(0,0,0,0.6)]">
