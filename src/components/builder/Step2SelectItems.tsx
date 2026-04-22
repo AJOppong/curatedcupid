@@ -4,13 +4,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useBuilder } from "@/context/BuilderContext";
 import { shopItems, predefinedPackages } from "@/lib/data";
 import Button from "@/components/ui/Button";
-import { ArrowRight, ArrowLeft, Plus, Minus, ShoppingCart, Check, Package, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowLeft, Plus, Minus, ShoppingCart, Check, Package, Sparkles, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 const CATEGORIES = ["All", "Decor", "Lighting", "Flowers", "Treats", "Gifts", "Personal", "Drinks", "Experience"];
 
 export default function Step2SelectItems() {
-  const { addToCart, removeFromCart, updateQuantity, clearCart, preloadItems, cart, setStep, baseService } = useBuilder();
+  const { addToCart, removeFromCart, updateQuantity, clearCart, preloadItems, cart, setStep, baseService, selectedPackageName } = useBuilder();
   const [activeCategory, setActiveCategory] = useState("All");
   const [addedIds, setAddedIds] = useState<string[]>([]);
 
@@ -27,31 +27,91 @@ export default function Step2SelectItems() {
   };
 
   const handlePackageSelect = (pkg: typeof predefinedPackages[0]) => {
-    clearCart();
     const itemsToLoad = pkg.items.map(itemId => {
       const item = shopItems.find(si => si.id === itemId);
       return item ? { id: item.id, name: item.name, price: item.price, image: item.emoji } : null;
     }).filter(Boolean) as any;
-    preloadItems(itemsToLoad);
+    preloadItems(itemsToLoad, pkg.name);
   };
 
   return (
     <div className="space-y-8">
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
-          {baseService === "Surprise Package" ? "Select a" : "Build Your"} <span className="text-[#E91E8C]">Experience</span>
+          {selectedPackageName ? `Customizing ${selectedPackageName}` : "Build Your Experience"}
         </h2>
         <p className="text-white/40 text-sm">
-          {baseService === "Surprise Package" 
-            ? "Choose a curated package to start, then customize as you wish" 
+          {selectedPackageName 
+            ? "Review your package items below. You can remove items or add new ones."
             : "Select items to add to your custom experience"}
         </p>
       </div>
 
-      {baseService === "Surprise Package" && (
+      {/* Selected Package Items Section */}
+      {cart.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#E91E8C] uppercase tracking-widest">
+              <Package className="w-3 h-3" /> {selectedPackageName || "Your Selection"}
+            </div>
+            {selectedPackageName && (
+              <button onClick={() => clearCart()} className="text-[10px] text-white/20 hover:text-red-400 transition-colors uppercase font-bold">
+                Clear All
+              </button>
+            )}
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {cart.map((item) => (
+              <motion.div 
+                key={item.id}
+                layout
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="glass border border-[#E91E8C]/20 rounded-2xl p-3 flex items-center justify-between"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#E91E8C]/10 flex items-center justify-center text-xl">
+                    {item.image}
+                  </div>
+                  <div>
+                    <p className="text-white text-xs font-bold">{item.name}</p>
+                    <p className="text-[#D4AF37] text-[10px] font-bold">GH₵{item.price.toLocaleString()}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                    className="w-6 h-6 rounded-lg glass border border-white/10 flex items-center justify-center text-white/40 hover:text-white"
+                  >
+                    <Minus className="w-3 h-3" />
+                  </button>
+                  <span className="text-white text-xs font-bold w-4 text-center">{item.quantity}</span>
+                  <button
+                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    className="w-6 h-6 rounded-lg glass border border-white/10 flex items-center justify-center text-white/40 hover:text-white"
+                  >
+                    <Plus className="w-3 h-3" />
+                  </button>
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className="ml-1 p-1.5 text-white/20 hover:text-red-500 transition-colors"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+          <div className="h-px bg-white/5 w-full mt-4" />
+        </div>
+      )}
+
+      {/* Recommended Packages (Only if nothing selected yet or Surprise Package) */}
+      {baseService === "Surprise Package" && !selectedPackageName && (
         <div className="space-y-4">
           <div className="flex items-center gap-2 text-xs font-bold text-white/30 uppercase tracking-widest">
-            <Sparkles className="w-3 h-3 text-[#E91E8C]" /> Recommended Packages
+            <Sparkles className="w-3 h-3 text-[#E91E8C]" /> Select a Starting Package
           </div>
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-1 px-1">
             {predefinedPackages.map((pkg) => (
@@ -68,7 +128,7 @@ export default function Step2SelectItems() {
                 <h4 className="text-white font-bold text-sm mb-1">{pkg.name}</h4>
                 <p className="text-white/30 text-[10px] mb-3 line-clamp-1">{pkg.items.length} Premium Items included</p>
                 <div className="flex items-center gap-1 text-[9px] font-bold text-[#E91E8C] opacity-0 group-hover:opacity-100 transition-opacity">
-                  Select Package <ArrowRight className="w-2.5 h-2.5" />
+                  Choose Package <ArrowRight className="w-2.5 h-2.5" />
                 </div>
               </motion.button>
             ))}
@@ -77,12 +137,12 @@ export default function Step2SelectItems() {
         </div>
       )}
 
+      {/* Shop All Items Section */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-bold text-white/30 uppercase tracking-widest">
-             All Items
+             {selectedPackageName ? "Add More Items" : "All Items"}
           </div>
-          {/* Category Filter */}
           <div className="flex gap-2 overflow-x-auto max-w-[200px] md:max-w-none pb-2 scrollbar-hide">
             {CATEGORIES.map((cat) => (
               <button
@@ -100,7 +160,6 @@ export default function Step2SelectItems() {
           </div>
         </div>
 
-        {/* Items Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {filtered.map((item, i) => {
             const cartItem = getCartItem(item.id);
@@ -127,11 +186,7 @@ export default function Step2SelectItems() {
                   {cartItem ? (
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() =>
-                          cartItem.quantity === 1
-                            ? removeFromCart(item.id)
-                            : updateQuantity(item.id, cartItem.quantity - 1)
-                        }
+                        onClick={() => updateQuantity(item.id, cartItem.quantity - 1)}
                         className="w-7 h-7 rounded-full glass border border-white/10 flex items-center justify-center text-white/70 hover:text-[#E91E8C] hover:border-[#E91E8C]/30 transition-colors"
                       >
                         <Minus className="w-3 h-3" />

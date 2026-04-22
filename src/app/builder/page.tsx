@@ -91,7 +91,7 @@ function BuilderContent() {
           return item ? { id: item.id, name: item.name, price: item.price, image: item.emoji } : null;
         }).filter(Boolean) as any;
         
-        preloadItems(itemsToLoad);
+        preloadItems(itemsToLoad, pkg.name);
         setBaseService("Surprise Package");
         setStep(2);
       }

@@ -32,41 +32,47 @@ interface BuilderContextType {
   roomVibe: string | null;
   setRoomVibe: (vibe: string | null) => void;
   vibeImage: string | null;
-  setVibeImage: (image: string | null) => void;
   cart: CartItem[];
-  addToCart: (item: Omit<CartItem, "quantity">) => void;
+  cartTotal: number;
+  baseService: string;
+  roomVibe: string;
+  vibeImage: string;
+  selectedPackageName: string;
+  eventDetails: EventDetails;
+  setStep: (step: number) => void;
+  setBaseService: (service: string) => void;
+  setRoomVibe: (vibe: string, image: string) => void;
+  setSelectedPackageName: (name: string) => void;
+  addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
-  preloadItems: (items: Omit<CartItem, "quantity">[]) => void;
-  cartTotal: number;
-  eventDetails: EventDetails;
-  updateEventDetails: (details: Partial<EventDetails>) => void;
+  preloadItems: (items: CartItem[], packageName?: string) => void;
+  setEventDetails: (details: Partial<EventDetails>) => void;
 }
-
-const defaultEventDetails: EventDetails = {
-  name: "",
-  phone: "",
-  recipientName: "",
-  recipientPhone: "",
-  date: "",
-  time: "",
-  location: "",
-  theme: "",
-  instructions: "",
-};
 
 const BuilderContext = createContext<BuilderContextType | undefined>(undefined);
 
 export function BuilderProvider({ children }: { children: ReactNode }) {
   const [step, setStep] = useState(1);
-  const [baseService, setBaseService] = useState<BaseService>(null);
-  const [roomVibe, setRoomVibe] = useState<string | null>(null);
-  const [vibeImage, setVibeImage] = useState<string | null>(null);
+  const [baseService, setBaseService] = useState("");
+  const [roomVibe, setRoomVibe] = useState("");
+  const [vibeImage, setVibeImage] = useState("");
+  const [selectedPackageName, setSelectedPackageName] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [eventDetails, setEventDetails] = useState<EventDetails>(defaultEventDetails);
+  const [eventDetails, setEventDetailsState] = useState<EventDetails>({
+    name: "",
+    phone: "",
+    recipientName: "",
+    recipientPhone: "",
+    date: "",
+    time: "",
+    location: "",
+    theme: "",
+    instructions: "",
+  });
 
-  const addToCart = (item: Omit<CartItem, "quantity">) => {
+  const addToCart = (item: CartItem) => {
     setCart((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
@@ -78,48 +84,62 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const preloadItems = (items: Omit<CartItem, "quantity">[]) => {
-    setCart(items.map(item => ({ ...item, quantity: 1 })));
-  };
-
-  const clearCart = () => setCart([]);
-
   const removeFromCart = (id: string) => {
     setCart((prev) => prev.filter((i) => i.id !== id));
   };
 
   const updateQuantity = (id: string, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(id);
+      return;
+    }
     setCart((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, quantity: Math.max(1, quantity) } : i))
+      prev.map((i) => (i.id === id ? { ...i, quantity } : i))
     );
   };
 
-  const updateEventDetails = (details: Partial<EventDetails>) => {
-    setEventDetails((prev) => ({ ...prev, ...details }));
+  const clearCart = () => {
+    setCart([]);
+    setSelectedPackageName("");
   };
 
-  const cartTotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const preloadItems = (items: CartItem[], packageName?: string) => {
+    setCart(items.map(i => ({ ...i, quantity: 1 })));
+    if (packageName) setSelectedPackageName(packageName);
+  };
+
+  const setEventDetails = (details: Partial<EventDetails>) => {
+    setEventDetailsState((prev) => ({ ...prev, ...details }));
+  };
+
+  const setRoomVibeWithImage = (vibe: string, image: string) => {
+    setRoomVibe(vibe);
+    setVibeImage(image);
+  };
+
+  const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <BuilderContext.Provider
       value={{
         step,
-        setStep,
-        baseService,
-        setBaseService,
-        roomVibe,
-        setRoomVibe,
-        vibeImage,
-        setVibeImage,
         cart,
+        cartTotal,
+        baseService,
+        roomVibe,
+        vibeImage,
+        selectedPackageName,
+        eventDetails,
+        setStep,
+        setBaseService,
+        setRoomVibe: setRoomVibeWithImage,
+        setSelectedPackageName,
         addToCart,
         removeFromCart,
         updateQuantity,
         clearCart,
         preloadItems,
-        cartTotal,
-        eventDetails,
-        updateEventDetails,
+        setEventDetails,
       }}
     >
       {children}
