@@ -187,66 +187,66 @@ function Services() {
 // ── Packages ──────────────────────────────────────────
 const packages = [
   {
-    id: "rose-starter",
-    icon: <Heart className="w-5 h-5" />,
-    name: "Rose Starter",
-    price: "GH₵15,000",
-    tag: null,
-    features: ["Rose petal trail", "2 pillar candles", "Personalized love note", "1-hour setup"],
-    featured: false,
-  },
-  {
-    id: "sweet-surprise",
-    icon: <Gift className="w-5 h-5" />,
-    name: "Sweet Surprise",
-    price: "GH₵28,000",
-    tag: null,
-    features: ["Everything in Rose Starter", "Balloon arrangement", "LED fairy lights", "Chocolates & treats"],
-    featured: false,
-  },
-  {
-    id: "essential-romance",
-    icon: <Sparkles className="w-5 h-5" />,
-    name: "Essential Romance",
-    price: "GH₵45,000",
-    tag: null,
-    features: ["Rose petals arrangement", "Scented candles setup", "Romantic lighting", "Personalized message card", "2-hour setup window", "Photo opportunities"],
-    featured: false,
-  },
-  {
-    id: "luxury-experience",
+    id: "el-capo",
     icon: <Crown className="w-5 h-5" />,
-    name: "Luxury Experience",
-    price: "GH₵85,000",
+    name: "EL CAPO",
+    price: "GH₵250",
+    tag: null,
+    features: ["Raffaello Chocolates", "Jewelry", "Wine", "Val's Day Card"],
+    featured: false,
+  },
+  {
+    id: "non-anchora",
+    icon: <Heart className="w-5 h-5" />,
+    name: "NON ANCHORA",
+    price: "GH₵350",
+    tag: null,
+    features: ["Raffaello Chocolates", "Jewelry", "Wallet", "Wine", "Val's Day Card"],
+    featured: false,
+  },
+  {
+    id: "fuori-orario",
+    icon: <Sparkles className="w-5 h-5" />,
+    name: "FUORI ORARIO",
+    price: "GH₵500",
+    tag: null,
+    features: ["Raffaello Chocolates", "Jewelry", "Wallet", "Wine", "Custom Slippers", "Custom Handwritten Letter"],
+    featured: false,
+  },
+  {
+    id: "il-devoto",
+    icon: <Star className="w-5 h-5" />,
+    name: "IL DEVOTO",
+    price: "GH₵700",
     tag: "Most Popular",
-    features: ["Everything in Essential", "Premium floral arrangements", "Champagne & chocolates", "Balloon installations", "LED neon custom sign", "Professional photography (1hr)", "Music playlist curation", "4-hour setup window"],
+    features: ["Raffaello Chocolates", "Jewelry", "Wallet", "Wine", "Custom Slippers", "Nike Slides", "Custom Handwritten Letter"],
     featured: true,
   },
   {
-    id: "grand-affair",
-    icon: <Star className="w-5 h-5" />,
-    name: "Grand Affair",
-    price: "GH₵120,000",
-    tag: null,
-    features: ["Everything in Luxury", "Designer floral installations", "Gourmet dinner arrangement", "Premium champagne selection", "Full-day coordination"],
-    featured: false,
-  },
-  {
-    id: "ultimate-celebration",
-    icon: <Gem className="w-5 h-5" />,
-    name: "Ultimate Celebration",
-    price: "GH₵175,000",
-    tag: null,
-    features: ["Everything in Grand Affair", "Live musician (2hrs)", "Full photography package", "Videography highlights", "Spa package vouchers", "All-day setup & support"],
-    featured: false,
-  },
-  {
-    id: "royal-diamond",
+    id: "re-del-mio",
     icon: <Crown className="w-5 h-5" />,
-    name: "Royal Diamond",
-    price: "GH₵250,000",
+    name: "RE DEL MIO",
+    price: "GH₵830",
+    tag: null,
+    features: ["Raffaello Chocolates", "Jewelry", "Wallet", "Wine", "Custom Slippers", "Nike Slides", "Shirt", "Custom Handwritten Letter"],
+    featured: false,
+  },
+  {
+    id: "perch-sei-mio",
+    icon: <Gem className="w-5 h-5" />,
+    name: "PÉRCH SEI MIO",
+    price: "GH₵1,400",
+    tag: null,
+    features: ["Ferrero Rocher Chocolates", "Jewelry", "Wallet", "Wine", "Custom Slippers", "David Beckham Designer Perfume", "Nike Slides", "Shirt", "Custom Handwritten letter"],
+    featured: false,
+  },
+  {
+    id: "oltre-leternita",
+    icon: <Crown className="w-5 h-5" />,
+    name: "OLTRE L'ETERNITÀ",
+    price: "GH₵2,000",
     tag: "Premium",
-    features: ["Everything in Ultimate", "Exclusive venue styling", "Custom floral installations", "Dual photographers", "Drone footage", "Dedicated event coordinator", "VIP afterparty setup"],
+    features: ["Ferrero Rocher Chocolates", "Jewelry", "Wallet", "Wine", "Custom Slippers", "Nike Slides", "David Beckham Designer Perfume", "Shirt", "Food basket", "Oxford shoes", "Costum Handwritten Letter"],
     featured: false,
   },
 ];
@@ -264,7 +264,7 @@ function Packages() {
           {/* Most Popular pill */}
           <div className="mt-5 inline-flex">
             <div className="btn-pink-gradient px-4 py-1.5 rounded-full text-white text-xs font-semibold">
-              Most Popular → Luxury Experience
+              Most Popular → IL DEVOTO
             </div>
           </div>
         </motion.div>
