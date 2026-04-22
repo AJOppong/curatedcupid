@@ -40,7 +40,7 @@ export default function AdminDashboard() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === "cupid2024") { // Simple mock password
+    if (password === "cupid2026") { // Simple mock password
       setIsAuthenticated(true);
       localStorage.setItem("admin_auth", "true");
     } else {
