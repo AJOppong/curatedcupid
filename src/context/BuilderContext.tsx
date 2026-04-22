@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-export type BaseService = "Room Aesthetics" | "Surprise Package" | "Custom Setup" | null;
+export type BaseService = "Room Aesthetics" | "Surprise Package" | "Custom Setup" | string | null;
 
 export interface CartItem {
   id: string;
@@ -26,12 +26,6 @@ export interface EventDetails {
 
 interface BuilderContextType {
   step: number;
-  setStep: (step: number) => void;
-  baseService: BaseService;
-  setBaseService: (service: BaseService) => void;
-  roomVibe: string | null;
-  setRoomVibe: (vibe: string | null) => void;
-  vibeImage: string | null;
   cart: CartItem[];
   cartTotal: number;
   baseService: string;
