@@ -51,17 +51,10 @@ function AdminContent() {
     e.preventDefault();
     if (password === "cupid2026") { 
       setIsAuthenticated(true);
-      localStorage.setItem("admin_auth", "true");
     } else {
       alert("Invalid password");
     }
   };
-
-  useEffect(() => {
-    if (localStorage.getItem("admin_auth") === "true") {
-      setIsAuthenticated(true);
-    }
-  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {

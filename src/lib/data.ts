@@ -5,7 +5,10 @@ export interface ShopItem {
   category: string;
   description: string;
   emoji: string;
+  image?: string; // optional product image path
 }
+
+export const ROOM_DESIGN_PRICE = 200; // Base price for Room Aesthetics setup
 
 export const shopItems: ShopItem[] = [
   {
@@ -15,6 +18,7 @@ export const shopItems: ShopItem[] = [
     category: "Treats",
     description: "Premium almond and coconut confections",
     emoji: "🍬",
+    image: "/item_chocolates.png",
   },
   {
     id: "ferrero",
@@ -23,6 +27,7 @@ export const shopItems: ShopItem[] = [
     category: "Treats",
     description: "Gold-wrapped hazelnut milk chocolates",
     emoji: "🍫",
+    image: "/item_chocolates.png",
   },
   {
     id: "jewelry",
@@ -31,6 +36,7 @@ export const shopItems: ShopItem[] = [
     category: "Gifts",
     description: "Elegant necklace or bracelet in a luxury box",
     emoji: "💍",
+    image: "/item_jewelry.png",
   },
   {
     id: "premium-jewelry",
@@ -39,6 +45,7 @@ export const shopItems: ShopItem[] = [
     category: "Gifts",
     description: "High-end jewelry selection for special occasions",
     emoji: "💎",
+    image: "/item_jewelry.png",
   },
   {
     id: "wine",
@@ -47,6 +54,7 @@ export const shopItems: ShopItem[] = [
     category: "Drinks",
     description: "Carefully selected vintage for romantic evenings",
     emoji: "🍷",
+    image: "/item_wine.png",
   },
   {
     id: "vals-card",
@@ -63,6 +71,7 @@ export const shopItems: ShopItem[] = [
     category: "Gifts",
     description: "Genuine leather wallet in a sleek design",
     emoji: "👛",
+    image: "/item_wallet.png",
   },
   {
     id: "custom-slippers",
@@ -71,6 +80,7 @@ export const shopItems: ShopItem[] = [
     category: "Gifts",
     description: "Comfortable plush slippers with custom embroidery",
     emoji: "🩴",
+    image: "/item_shoes.png",
   },
   {
     id: "nike-slides",
@@ -79,6 +89,7 @@ export const shopItems: ShopItem[] = [
     category: "Gifts",
     description: "Authentic Nike comfort slides for him",
     emoji: "👟",
+    image: "/item_shoes.png",
   },
   {
     id: "handwritten-letter",
@@ -103,6 +114,7 @@ export const shopItems: ShopItem[] = [
     category: "Gifts",
     description: "Signature designer fragrance by David Beckham",
     emoji: "🧪",
+    image: "/item_perfume.png",
   },
   {
     id: "food-basket",
@@ -119,6 +131,7 @@ export const shopItems: ShopItem[] = [
     category: "Gifts",
     description: "Classic handcrafted leather Oxford shoes",
     emoji: "👞",
+    image: "/item_shoes.png",
   },
   {
     id: "fuel-coupons",
@@ -151,6 +164,7 @@ export const shopItems: ShopItem[] = [
     category: "Gifts",
     description: "Authentic comfort footwear by Birkenstock",
     emoji: "🩴",
+    image: "/item_shoes.png",
   },
   {
     id: "body-products",
@@ -201,6 +215,7 @@ export const baseServices = [
     color: "from-[#9b87f5]/20 to-[#F2B8C6]/10",
   },
 ];
+
 export const predefinedPackages = [
   {
     id: "el-capo",
@@ -240,7 +255,7 @@ export const predefinedPackages = [
   },
   {
     id: "oltre-leternita",
-    name: "OLTRE L’ETERNITÀ",
+    name: "OLTRE L'ETERNITÀ",
     price: 2000,
     items: ["ferrero", "premium-jewelry", "wallet", "wine", "custom-slippers", "nike-slides", "db-perfume", "shirt", "food-basket", "oxford-shoes", "handwritten-letter"]
   },
