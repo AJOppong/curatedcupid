@@ -16,13 +16,12 @@ const ROOM_VIBES = [
 ];
 
 export default function Step1BaseService() {
-  const { baseService, setBaseService, roomVibe, setRoomVibe, setVibeImage, setStep } = useBuilder();
+  const { baseService, setBaseService, roomVibe, setRoomVibe, setStep } = useBuilder();
 
   const handleServiceSelect = (name: string) => {
-    setBaseService(name as any);
+    setBaseService(name);
     if (name !== "Room Aesthetics") {
-      setRoomVibe(null);
-      setVibeImage(null);
+      setRoomVibe("", "");
     }
   };
 
@@ -85,8 +84,7 @@ export default function Step1BaseService() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => {
-                    setRoomVibe(vibe.name);
-                    setVibeImage(vibe.image);
+                    setRoomVibe(vibe.name, vibe.image);
                   }}
                   className={`group relative rounded-xl overflow-hidden aspect-video border-2 transition-all ${
                     roomVibe === vibe.name ? "border-[#E91E8C]" : "border-transparent"

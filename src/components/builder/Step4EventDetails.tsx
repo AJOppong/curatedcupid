@@ -31,7 +31,7 @@ function Field({ label, icon, children, optional }: FieldProps) {
 }
 
 export default function Step4EventDetails() {
-  const { eventDetails, updateEventDetails, setStep } = useBuilder();
+  const { eventDetails, setEventDetails: updateEventDetails, setStep } = useBuilder();
   const [showTimePicker, setShowTimePicker] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
