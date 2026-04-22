@@ -131,7 +131,7 @@ function AdminContent() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] pt-24 pb-12 px-4 md:px-8">
+    <div className="min-h-screen bg-[#0A0A0A] pt-20 pb-12 px-3 md:px-8">
       <Navbar />
       
       <div className="max-w-7xl mx-auto space-y-8">

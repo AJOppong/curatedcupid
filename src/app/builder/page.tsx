@@ -24,13 +24,13 @@ const STEPS = [
 function StepIndicator() {
   const { step } = useBuilder();
   return (
-    <div className="flex items-center justify-center gap-0 mb-10">
+    <div className="flex items-center justify-center gap-0 mb-8">
       {STEPS.map((s, i) => {
         const isActive = step === s.num;
         const isDone = step > s.num;
         return (
           <div key={s.num} className="flex items-center">
-            <div className="flex flex-col items-center gap-1.5">
+            <div className="flex flex-col items-center gap-1">
               <motion.div
                 animate={{
                   background: isDone
@@ -45,15 +45,15 @@ function StepIndicator() {
                     ? "0 0 20px rgba(233,30,140,0.45)"
                     : "none",
                 }}
-                className="w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-all duration-300"
+                className="w-7 h-7 md:w-8 md:h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-all duration-300"
               >
                 {isDone ? (
-                  <Check className="w-3.5 h-3.5 text-white" />
+                  <Check className="w-3 h-3 text-white" />
                 ) : (
-                  <span className={isActive ? "text-white" : "text-white/25"}>{s.num}</span>
+                  <span className={isActive ? "text-white" : "text-white/25"} style={{ fontSize: "10px" }}>{s.num}</span>
                 )}
               </motion.div>
-              <span className={`text-[10px] font-medium hidden sm:block transition-colors ${
+              <span className={`text-[9px] font-medium hidden sm:block transition-colors ${
                 isActive ? "text-[#E91E8C]" : isDone ? "text-white/40" : "text-white/15"
               }`}>
                 {s.label}
@@ -61,7 +61,7 @@ function StepIndicator() {
             </div>
             {i < STEPS.length - 1 && (
               <div
-                className="w-8 md:w-12 h-px mx-1 mb-4 transition-all duration-500"
+                className="w-6 md:w-10 h-px mx-0.5 mb-4 transition-all duration-500"
                 style={{
                   background: step > s.num
                     ? "linear-gradient(90deg,#E91E8C,#7C3AED)"
@@ -110,7 +110,7 @@ function BuilderContent() {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-4">
+    <div className="min-h-screen pt-20 pb-16 px-3 md:px-4">
       {/* Ambient glow */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/3 -left-32 w-96 h-96 rounded-full bg-[#E91E8C]/6 blur-[120px]" />
@@ -120,7 +120,7 @@ function BuilderContent() {
       <div className="max-w-5xl mx-auto">
         <StepIndicator />
 
-        <div className="glass border border-white/6 rounded-3xl p-6 md:p-10 shadow-[0_0_80px_rgba(0,0,0,0.6)]">
+        <div className="glass border border-white/6 rounded-2xl md:rounded-3xl p-4 md:p-10 shadow-[0_0_80px_rgba(0,0,0,0.6)]">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
