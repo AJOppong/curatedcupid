@@ -15,6 +15,8 @@ export interface CartItem {
 export interface EventDetails {
   name: string;
   phone: string;
+  recipientName: string;
+  recipientPhone: string;
   date: string;
   time: string;
   location: string;
@@ -27,10 +29,16 @@ interface BuilderContextType {
   setStep: (step: number) => void;
   baseService: BaseService;
   setBaseService: (service: BaseService) => void;
+  roomVibe: string | null;
+  setRoomVibe: (vibe: string | null) => void;
+  vibeImage: string | null;
+  setVibeImage: (image: string | null) => void;
   cart: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  clearCart: () => void;
+  preloadItems: (items: Omit<CartItem, "quantity">[]) => void;
   cartTotal: number;
   eventDetails: EventDetails;
   updateEventDetails: (details: Partial<EventDetails>) => void;
@@ -39,6 +47,8 @@ interface BuilderContextType {
 const defaultEventDetails: EventDetails = {
   name: "",
   phone: "",
+  recipientName: "",
+  recipientPhone: "",
   date: "",
   time: "",
   location: "",
@@ -51,6 +61,8 @@ const BuilderContext = createContext<BuilderContextType | undefined>(undefined);
 export function BuilderProvider({ children }: { children: ReactNode }) {
   const [step, setStep] = useState(1);
   const [baseService, setBaseService] = useState<BaseService>(null);
+  const [roomVibe, setRoomVibe] = useState<string | null>(null);
+  const [vibeImage, setVibeImage] = useState<string | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [eventDetails, setEventDetails] = useState<EventDetails>(defaultEventDetails);
 
@@ -65,6 +77,12 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
       return [...prev, { ...item, quantity: 1 }];
     });
   };
+
+  const preloadItems = (items: Omit<CartItem, "quantity">[]) => {
+    setCart(items.map(item => ({ ...item, quantity: 1 })));
+  };
+
+  const clearCart = () => setCart([]);
 
   const removeFromCart = (id: string) => {
     setCart((prev) => prev.filter((i) => i.id !== id));
@@ -89,10 +107,16 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
         setStep,
         baseService,
         setBaseService,
+        roomVibe,
+        setRoomVibe,
+        vibeImage,
+        setVibeImage,
         cart,
         addToCart,
         removeFromCart,
         updateQuantity,
+        clearCart,
+        preloadItems,
         cartTotal,
         eventDetails,
         updateEventDetails,

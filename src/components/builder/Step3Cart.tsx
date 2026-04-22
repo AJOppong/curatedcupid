@@ -96,12 +96,12 @@ export default function Step3Cart() {
           <span className="text-white text-sm">GH₵{cartTotal.toLocaleString()}</span>
         </div>
         <div className="flex items-center justify-between mb-3">
-          <span className="text-white/40 text-sm">Service fee</span>
-          <span className="text-white text-sm">GH₵2,500</span>
+          <span className="text-white/40 text-sm">Service & Packaging fee</span>
+          <span className="text-white text-sm">GH₵50</span>
         </div>
         <div className="border-t border-white/8 pt-3 flex items-center justify-between">
           <span className="text-white font-semibold">Total</span>
-          <span className="text-[#D4AF37] font-bold text-xl">GH₵{(cartTotal + 2500).toLocaleString()}</span>
+          <span className="text-[#D4AF37] font-bold text-xl">GH₵{(cartTotal + 50).toLocaleString()}</span>
         </div>
       </div>
 

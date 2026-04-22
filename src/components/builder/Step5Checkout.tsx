@@ -7,15 +7,15 @@ import Button from "@/components/ui/Button";
 import { supabase } from "@/lib/supabase";
 import {
   ArrowLeft, CheckCircle2, MessageCircle, User, Phone,
-  Calendar, MapPin, Palette, Package, Sparkles
+  Calendar, MapPin, Palette, Package, Sparkles, Gift, Clock
 } from "lucide-react";
 
 export default function Step5Checkout() {
-  const { cart, cartTotal, baseService, eventDetails, setStep } = useBuilder();
+  const { cart, cartTotal, baseService, roomVibe, eventDetails, setStep } = useBuilder();
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const total = cartTotal + 2500;
+  const total = cartTotal + 50;
 
   const handleConfirm = async () => {
     setLoading(true);
@@ -23,12 +23,15 @@ export default function Step5Checkout() {
       await supabase.from("bookings").insert([{
         name: eventDetails.name,
         phone: eventDetails.phone,
+        recipient_name: eventDetails.recipientName,
+        recipient_phone: eventDetails.recipientPhone,
         event_date: eventDetails.date,
         event_time: eventDetails.time,
         location: eventDetails.location,
         theme: eventDetails.theme,
         instructions: eventDetails.instructions,
         base_service: baseService,
+        room_vibe: roomVibe,
         items: cart,
         total_amount: total,
       }]);
@@ -42,9 +45,15 @@ export default function Step5Checkout() {
 
   const whatsappMessage = encodeURIComponent(
     `Hi Curated Cupid! 🌹\n\nI'd like to confirm my booking:\n\n` +
-    `*Name:* ${eventDetails.name}\n*Date:* ${eventDetails.date} at ${eventDetails.time}\n*Location:* ${eventDetails.location}\n*Service:* ${baseService}\n\n` +
+    `*Sender:* ${eventDetails.name} (${eventDetails.phone})\n` +
+    `*Recipient:* ${eventDetails.recipientName} (${eventDetails.recipientPhone})\n` +
+    `*Date:* ${eventDetails.date} at ${eventDetails.time}\n` +
+    `*Location:* ${eventDetails.location}\n` +
+    `*Service:* ${baseService}${roomVibe ? ` (${roomVibe} Vibe)` : ""}\n\n` +
     `*Items:*\n${cart.map((i) => `- ${i.name} x${i.quantity} (GH₵${(i.price * i.quantity).toLocaleString()})`).join("\n")}\n\n` +
-    `*Total:* GH₵${total.toLocaleString()}\n\nTheme: ${eventDetails.theme || "No preference"}\n\nNotes: ${eventDetails.instructions || "None"}`
+    `*Total:* GH₵${total.toLocaleString()}\n\n` +
+    `*Theme:* ${eventDetails.theme || "No preference"}\n` +
+    `*Notes:* ${eventDetails.instructions || "None"}`
   );
 
   if (submitted) {
@@ -65,22 +74,22 @@ export default function Step5Checkout() {
 
         <div>
           <h2 className="text-3xl font-bold text-white mb-2">
-            Booking <span className="text-[#E91E8C]">Confirmed!</span> 🌹
+            Booking <span className="text-[#E91E8C]">Confirmed!</span> ✨
           </h2>
           <p className="text-white/40 text-sm max-w-sm mx-auto">
-            Your romantic experience is being carefully crafted. We&apos;ll be in touch shortly to confirm all details.
+            Your celebration experience is being carefully crafted. We&apos;ll be in touch shortly to confirm all details.
           </p>
         </div>
 
         <div className="glass border border-white/8 rounded-2xl p-5 text-left max-w-sm mx-auto space-y-2">
           <p className="text-white/30 text-xs font-medium uppercase tracking-widest mb-3">Booking Summary</p>
-          <p className="text-white text-sm"><span className="text-white/40">Name: </span>{eventDetails.name}</p>
+          <p className="text-white text-sm"><span className="text-white/40">For: </span>{eventDetails.recipientName}</p>
           <p className="text-white text-sm"><span className="text-white/40">Date: </span>{eventDetails.date} at {eventDetails.time}</p>
           <p className="text-white text-sm"><span className="text-white/40">Location: </span>{eventDetails.location}</p>
           <p className="text-[#D4AF37] font-bold text-sm mt-2">Total: GH₵{total.toLocaleString()}</p>
         </div>
 
-        <a href={`https://wa.me/2349010000000?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer">
+        <a href={`https://wa.me/233550000000?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer">
           <Button variant="gold" className="gap-2 mx-auto">
             <MessageCircle className="w-4 h-4" /> Continue on WhatsApp
           </Button>
@@ -99,38 +108,51 @@ export default function Step5Checkout() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Event Details */}
-        <div className="glass border border-white/8 rounded-2xl p-5 space-y-3">
+        {/* Logistics & People */}
+        <div className="glass border border-white/8 rounded-2xl p-5 space-y-4">
           <p className="text-white/30 text-xs font-medium uppercase tracking-widest flex items-center gap-2">
-            <Sparkles className="w-3 h-3 text-[#E91E8C]" /> Event Details
+            <Sparkles className="w-3 h-3 text-[#E91E8C]" /> Logistics
           </p>
-          <div className="space-y-2 text-sm">
-            <p className="flex items-center gap-2 text-white"><User className="w-3 h-3 text-[#E91E8C]" />{eventDetails.name}</p>
-            <p className="flex items-center gap-2 text-white"><Phone className="w-3 h-3 text-[#E91E8C]" />{eventDetails.phone}</p>
-            <p className="flex items-center gap-2 text-white"><Calendar className="w-3 h-3 text-[#E91E8C]" />{eventDetails.date} at {eventDetails.time}</p>
-            <p className="flex items-center gap-2 text-white"><MapPin className="w-3 h-3 text-[#E91E8C]" />{eventDetails.location}</p>
-            {eventDetails.theme && <p className="flex items-center gap-2 text-white"><Palette className="w-3 h-3 text-[#E91E8C]" />{eventDetails.theme}</p>}
-            <p className="flex items-start gap-2 text-white"><Package className="w-3 h-3 text-[#E91E8C] mt-0.5" />{baseService}</p>
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <p className="text-[10px] text-white/20 uppercase font-bold">Your Details</p>
+              <p className="flex items-center gap-2 text-white text-sm"><User className="w-3 h-3 text-[#E91E8C]" />{eventDetails.name} ({eventDetails.phone})</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-[10px] text-white/20 uppercase font-bold">Recipient Details</p>
+              <p className="flex items-center gap-2 text-white text-sm"><Gift className="w-3 h-3 text-[#7C3AED]" />{eventDetails.recipientName} ({eventDetails.recipientPhone})</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-[10px] text-white/20 uppercase font-bold">Event</p>
+              <p className="flex items-center gap-2 text-white text-sm"><Calendar className="w-3 h-3 text-white/40" />{eventDetails.date}</p>
+              <p className="flex items-center gap-2 text-white text-sm"><Clock className="w-3 h-3 text-white/40" />{eventDetails.time}</p>
+              <p className="flex items-center gap-2 text-white text-sm"><MapPin className="w-3 h-3 text-white/40" />{eventDetails.location}</p>
+            </div>
           </div>
         </div>
 
-        {/* Items */}
-        <div className="glass border border-white/8 rounded-2xl p-5 space-y-3">
+        {/* Items & Pricing */}
+        <div className="glass border border-white/8 rounded-2xl p-5 space-y-4">
           <p className="text-white/30 text-xs font-medium uppercase tracking-widest">Selected Items</p>
           <div className="space-y-2">
-            {cart.map((item) => (
-              <div key={item.id} className="flex items-center justify-between text-sm">
-                <span className="text-white/60 flex items-center gap-1.5">
-                  <span>{item.image}</span> {item.name}
-                  <span className="text-white/25">×{item.quantity}</span>
-                </span>
-                <span className="text-white font-medium">GH₵{(item.price * item.quantity).toLocaleString()}</span>
-              </div>
-            ))}
+            <div className="flex items-center justify-between text-xs font-bold text-white/40 pb-2 border-b border-white/5">
+              <p className="flex items-center gap-2"><Package className="w-3 h-3" /> {baseService} {roomVibe && `(${roomVibe})`}</p>
+            </div>
+            <div className="space-y-2 pt-2 max-h-32 overflow-y-auto custom-scrollbar">
+              {cart.map((item) => (
+                <div key={item.id} className="flex items-center justify-between text-sm">
+                  <span className="text-white/60 flex items-center gap-1.5">
+                    <span>{item.image}</span> {item.name}
+                    <span className="text-white/25">×{item.quantity}</span>
+                  </span>
+                  <span className="text-white font-medium">GH₵{(item.price * item.quantity).toLocaleString()}</span>
+                </div>
+              ))}
+            </div>
           </div>
           <div className="border-t border-white/8 pt-3 space-y-1">
             <div className="flex justify-between text-sm text-white/40">
-              <span>Service fee</span><span>GH₵2,500</span>
+              <span>Service & Packaging fee</span><span>GH₵50</span>
             </div>
             <div className="flex justify-between font-bold">
               <span className="text-white">Total</span>
@@ -148,7 +170,7 @@ export default function Step5Checkout() {
           <CheckCircle2 className="w-4 h-4" /> Confirm Booking
         </Button>
         <a
-          href={`https://wa.me/2349010000000?text=${whatsappMessage}`}
+          href={`https://wa.me/233550000000?text=${whatsappMessage}`}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full sm:w-auto"

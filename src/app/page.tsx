@@ -37,9 +37,8 @@ function Hero() {
         <div className="absolute bottom-1/4 right-1/5 w-64 h-64 rounded-full bg-[#E91E8C]/8 blur-[80px]" />
       </div>
 
-      {/* Badge */}
       <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
-        <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Premium Romance Experiences" />
+        <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Premium Celebration Experiences" />
       </motion.div>
 
       {/* Headline */}
@@ -58,7 +57,7 @@ function Hero() {
         transition={{ duration: 0.6, delay: 0.25 }}
         className="mt-6 text-white/50 text-base md:text-lg max-w-lg leading-relaxed"
       >
-        Transform ordinary moments into extraordinary memories with our luxury romantic room aesthetics and curated surprise packages
+        Transform ordinary moments into extraordinary memories for lovers, friends and family with our luxury aesthetics and curated surprise packages
       </motion.p>
 
       {/* CTA Buttons */}
@@ -133,12 +132,12 @@ function Hero() {
 
 // ── Occasions We Create ───────────────────────────────
 const occasions = [
-  { icon: <Heart className="w-5 h-5" />, title: "Anniversary Setups", desc: "Celebrate your love story with custom romantic room designs featuring candles, rose petals, and elegant décor", iconBg: "bg-pink-900/40", iconColor: "text-pink-400", dot: "#E91E8C" },
-  { icon: <Cake className="w-5 h-5" />, title: "Birthday Surprises", desc: "Create unforgettable birthday moments with themed decorations, balloons, and personalized celebration packages", iconBg: "bg-teal-900/40", iconColor: "text-teal-400", dot: "#14B8A6" },
-  { icon: <Gem className="w-5 h-5" />, title: "Proposal Planning", desc: "Make your proposal perfect with luxury setups, professional photography coordination, and stunning ambiance", iconBg: "bg-amber-900/40", iconColor: "text-amber-400", dot: "#F59E0B", cardGlow: true },
-  { icon: <Gift className="w-5 h-5" />, title: "Curated Gift Boxes", desc: "Handpicked premium gift collections delivered beautifully packaged for your special someone", iconBg: "bg-rose-900/40", iconColor: "text-rose-400", dot: "#F43F5E" },
-  { icon: <Sparkles className="w-5 h-5" />, title: "Special Occasions", desc: "From graduations to date nights, we craft extraordinary moments for every milestone in your relationship", iconBg: "bg-cyan-900/40", iconColor: "text-cyan-400", dot: "#06B6D4" },
-  { icon: <Crown className="w-5 h-5" />, title: "Premium Add-ons", desc: "Enhance any package with live music, professional photography, champagne service, and exclusive extras", iconBg: "bg-violet-900/40", iconColor: "text-violet-400", dot: "#8B5CF6" },
+  { icon: <Heart className="w-5 h-5" />, title: "Celebration Setups", desc: "Celebrate your love story or milestones with custom room designs featuring candles, balloons, and elegant décor", iconBg: "bg-pink-900/40", iconColor: "text-pink-400", dot: "#E91E8C" },
+  { icon: <Cake className="w-5 h-5" />, title: "Birthday Surprises", desc: "Create unforgettable birthday moments for friends and family with themed decorations and personalized packages", iconBg: "bg-teal-900/40", iconColor: "text-teal-400", dot: "#14B8A6" },
+  { icon: <Gem className="w-5 h-5" />, title: "Proposal & Engagement", desc: "Make your big moment perfect with luxury setups, professional photography coordination, and stunning ambiance", iconBg: "bg-amber-900/40", iconColor: "text-amber-400", dot: "#F59E0B", cardGlow: true },
+  { icon: <Gift className="w-5 h-5" />, title: "Curated Gift Boxes", desc: "Handpicked premium gift collections delivered beautifully packaged for your special someone, friend or family", iconBg: "bg-rose-900/40", iconColor: "text-rose-400", dot: "#F43F5E" },
+  { icon: <Sparkles className="w-5 h-5" />, title: "Special Milestones", desc: "From graduations to reunions, we craft extraordinary moments for every important chapter in your life", iconBg: "bg-cyan-900/40", iconColor: "text-cyan-400", dot: "#06B6D4" },
+  { icon: <Crown className="w-5 h-5" />, title: "Premium Add-ons", desc: "Enhance any package with live music, professional photography, gourmet service, and exclusive extras", iconBg: "bg-violet-900/40", iconColor: "text-violet-400", dot: "#8B5CF6" },
 ];
 
 function Services() {
@@ -320,7 +319,7 @@ function Packages() {
                 </ul>
 
                 {/* CTA */}
-                <Link href="/builder">
+                <Link href={`/builder?package=${encodeURIComponent(pkg.name)}`}>
                   {pkg.featured ? (
                     <div className="btn-pink-gradient text-center py-3 rounded-xl text-white text-sm font-semibold cursor-pointer hover:scale-[1.02] transition-transform">
                       Book This Package
@@ -415,7 +414,7 @@ function WhyUs() {
         <motion.div {...fadeUp()} className="text-center mb-14">
           <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Why Curated Cupid" />
           <h2 className="text-4xl md:text-5xl font-bold text-white">
-            Serious about your <span className="text-gradient-pink">special moment</span>
+            Serious about your <span className="text-gradient-pink">special milestones</span>
           </h2>
         </motion.div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -539,7 +538,7 @@ function CTABanner() {
         <div className="text-5xl mb-4">💝</div>
         <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to create magic?</h2>
         <p className="text-white/40 text-sm mb-8 max-w-md mx-auto leading-relaxed">
-          Start building your personalized romantic experience today. Transparent pricing, no hidden fees — just love.
+          Start building your personalized celebration experience today. Transparent pricing, no hidden fees — just pure joy.
         </p>
         <Link href="/builder" className="inline-flex items-center gap-2 btn-pink-gradient px-10 py-4 rounded-full text-white font-bold text-sm hover:scale-105 hover:-translate-y-1 transition-all">
           <Heart className="w-4 h-4 fill-white" />
@@ -565,7 +564,7 @@ function Footer() {
               <span className="font-bold text-white">Curated<span className="text-gradient-pink">Cupid</span></span>
             </div>
             <p className="text-white/30 text-sm leading-relaxed max-w-xs">
-              Luxury romantic experiences crafted with love for every special moment in your story.
+              Luxury celebration experiences crafted with care for every special chapter in your story.
             </p>
           </div>
           <div>

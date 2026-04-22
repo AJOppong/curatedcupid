@@ -9,6 +9,9 @@ import Step3Cart from "@/components/builder/Step3Cart";
 import Step4EventDetails from "@/components/builder/Step4EventDetails";
 import Step5Checkout from "@/components/builder/Step5Checkout";
 import { Check } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, Suspense } from "react";
+import { predefinedPackages, shopItems } from "@/lib/data";
 
 const STEPS = [
   { label: "Service", num: 1 },
@@ -74,7 +77,26 @@ function StepIndicator() {
 }
 
 function BuilderContent() {
-  const { step } = useBuilder();
+  const { step, preloadItems, setStep, setBaseService, clearCart } = useBuilder();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const pkgName = searchParams.get("package");
+    if (pkgName) {
+      const pkg = predefinedPackages.find(p => p.name === pkgName);
+      if (pkg) {
+        clearCart();
+        const itemsToLoad = pkg.items.map(itemId => {
+          const item = shopItems.find(si => si.id === itemId);
+          return item ? { id: item.id, name: item.name, price: item.price, image: item.emoji } : null;
+        }).filter(Boolean) as any;
+        
+        preloadItems(itemsToLoad);
+        setBaseService("Surprise Package");
+        setStep(2);
+      }
+    }
+  }, [searchParams, preloadItems, setStep, setBaseService, clearCart]);
 
   const stepComponents: Record<number, React.ReactNode> = {
     1: <Step1BaseService />,
@@ -117,7 +139,9 @@ export default function BuilderPage() {
   return (
     <BuilderProvider>
       <Navbar />
-      <BuilderContent />
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-white">Loading...</div>}>
+        <BuilderContent />
+      </Suspense>
     </BuilderProvider>
   );
 }

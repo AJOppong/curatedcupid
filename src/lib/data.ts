@@ -201,3 +201,47 @@ export const baseServices = [
     color: "from-[#9b87f5]/20 to-[#F2B8C6]/10",
   },
 ];
+export const predefinedPackages = [
+  {
+    id: "el-capo",
+    name: "EL CAPO",
+    price: 250,
+    items: ["raffaello", "jewelry", "wine", "vals-card"]
+  },
+  {
+    id: "non-anchora",
+    name: "NON ANCHORA",
+    price: 350,
+    items: ["raffaello", "jewelry", "wallet", "wine", "vals-card"]
+  },
+  {
+    id: "fuori-orario",
+    name: "FUORI ORARIO",
+    price: 500,
+    items: ["raffaello", "jewelry", "wallet", "wine", "custom-slippers", "handwritten-letter"]
+  },
+  {
+    id: "il-devoto",
+    name: "IL DEVOTO",
+    price: 700,
+    items: ["raffaello", "jewelry", "wallet", "wine", "custom-slippers", "nike-slides", "handwritten-letter"]
+  },
+  {
+    id: "re-del-mio",
+    name: "RE DEL MIO",
+    price: 830,
+    items: ["raffaello", "jewelry", "wallet", "wine", "custom-slippers", "nike-slides", "shirt", "handwritten-letter"]
+  },
+  {
+    id: "perche-sei-mio",
+    name: "PERCHÉ SEI MIO",
+    price: 1400,
+    items: ["ferrero", "premium-jewelry", "wallet", "wine", "custom-slippers", "db-perfume", "nike-slides", "shirt", "handwritten-letter"]
+  },
+  {
+    id: "oltre-leternita",
+    name: "OLTRE L’ETERNITÀ",
+    price: 2000,
+    items: ["ferrero", "premium-jewelry", "wallet", "wine", "custom-slippers", "nike-slides", "db-perfume", "shirt", "food-basket", "oxford-shoes", "handwritten-letter"]
+  },
+];
