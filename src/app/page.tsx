@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, type Transition } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence, type Transition } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { BuilderProvider } from "@/context/BuilderContext";
@@ -9,7 +10,7 @@ import {
   Heart, Star, Sparkles, ArrowRight, Gift, Camera,
   Clock, Shield, ChevronDown, Crown, Gem, Cake,
   Check, Phone, Mail, MapPin, MessageCircle,
-  MessageSquare
+  MessageSquare, User, Send
 } from "lucide-react";
 
 const fadeUp = (delay = 0) => ({
@@ -474,22 +475,44 @@ function Contact() {
             {/* Social handles */}
             <div className="bg-[#12101F]/80 border border-white/5 rounded-2xl p-6 space-y-4">
               <h3 className="text-white font-semibold text-sm">Follow Our Magic</h3>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-4">
                 {[
-                  { name: "WhatsApp", emoji: "💬", color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/2349010000000" },
-                  { name: "TikTok", emoji: "🎵", color: "bg-white/5 text-white border-white/10", link: "https://tiktok.com/@curatedcupid" },
-                  { name: "Snapchat", emoji: "👻", color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", link: "https://snapchat.com/add/curatedcupid" },
-                  { name: "Instagram", emoji: "📸", color: "bg-pink-500/10 text-pink-400 border-pink-500/20", link: "https://instagram.com/curatedcupid" },
+                  { 
+                    name: "WhatsApp", 
+                    icon: <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>, 
+                    color: "bg-green-500/10 text-green-400 border-green-500/20", 
+                    link: "https://wa.me/2349010000000" 
+                  },
+                  { 
+                    name: "TikTok", 
+                    icon: <path d="M12.525.02c1.31-.032 2.612.019 3.847.156.085 1.561.566 3.022 1.634 4.125.954.916 2.213 1.493 3.513 1.611v3.91c-1.124-.044-2.217-.333-3.21-.837-.84-.439-1.55-.992-2.106-1.632v6.643c0 1.258-.233 2.451-.676 3.528-.466 1.134-1.164 2.115-2.05 2.915a8.706 8.706 0 01-3.228 1.86 9.475 9.475 0 01-3.32.585c-1.137-.008-2.247-.218-3.284-.622a8.625 8.625 0 01-2.73-1.66 8.525 8.525 0 01-1.893-2.525A8.344 8.344 0 01.32 14.542a8.318 8.318 0 01.597-3.12 8.441 8.441 0 011.59-2.615 8.525 8.525 0 012.353-1.82c1.021-.518 2.148-.795 3.33-.807v4.025c-1.157.066-2.14.593-2.784 1.423-.534.693-.787 1.464-.787 2.274 0 .394.054.764.156 1.108.118.396.3.754.544 1.056.24.298.54.54.887.712.347.172.73.258 1.144.258.423 0 .81-.086 1.157-.258a2.53 2.53 0 00.895-.712c.245-.302.433-.66.55-1.056.113-.376.17-.775.17-1.18V0h3.53z"/>, 
+                    color: "bg-white/5 text-white border-white/10", 
+                    link: "https://tiktok.com/@curatedcupid" 
+                  },
+                  { 
+                    name: "Snapchat", 
+                    icon: <path d="M12.016.03C11.555.03 11.23.111 11.02.213c-.322.158-.553.473-.706.969-.142.457-.306.63-.585.733-.284.103-.78.103-1.252-.083-.4-.158-.934-.338-1.527-.338-.853 0-1.554.407-1.874 1.085-.145.311-.205.656-.205 1.04 0 .565.132.883.279 1.13.208.35.532.55.952.55.263 0 .553-.08.795-.213.342-.188.468-.34.615-.466.155-.13.345-.251.656-.251.34 0 .57.143.766.452.2.316.326.837.326 1.637 0 .806-.126 1.327-.326 1.644-.195.311-.426.455-.766.455-.311 0-.5.122-.656.25-.147.127-.273.28-.615.468a1.645 1.645 0 01-.795.21c-.42 0-.744.204-.952.553-.147.247-.279.564-.279 1.13 0 .383.06.728.205 1.037.32.678 1.02 1.088 1.874 1.088.593 0 1.127-.18 1.527-.338.471-.186.968-.186 1.252-.083.28.103.443.276.585.733.153.496.384.811.706.969.21.102.535.183.996.183.46 0 .786-.081.996-.183.322-.158.553-.473.706-.969.142-.457.306-.63.585-.733.284-.103.78-.103 1.252.083.4.158.934.338 1.527.338.853 0 1.554-.407 1.874-1.085.145-.311.205-.656.205-1.04 0-.565-.132-.883-.279-1.13-.208-.35-.532-.55-.952-.55-.263 0-.553.08-.795.213-.342.188-.468.34-.615.466-.155.13-.345.251-.656.251-.34 0-.57-.143-.766-.452-.2-.316-.326-.837-.326-1.637 0-.806.126-1.327.326-1.644.195-.311.426-.455.766-.455.311 0 .5-.122.656-.25.147-.127.273-.28-.615-.468a1.645 1.645 0 01-.795-.21c-.42 0-.744-.204-.952-.553-.147-.247-.279-.564-.279-1.13 0-.383-.06-.728-.205-1.037-.32-.678-1.02-1.088-1.874-1.088-.593 0-1.127.18-1.527.338-.471.186-.968.186-1.252.083-.28.103-.443.276-.585.733-.153.496-.384.811-.706.969-.21.102-.535.183-.996.183z"/>, 
+                    color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", 
+                    link: "https://snapchat.com/add/curatedcupid" 
+                  },
+                  { 
+                    name: "Instagram", 
+                    icon: <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.805.249 2.227.412.56.216.96.474 1.38.894.42.42.678.82.894 1.38.163.422.358 1.057.412 2.227.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.249 1.805-.412 2.227-.216.56-.474.96-.894 1.38-.42.42-.82.678-1.38.894-.422.163-1.057.358-2.227.412-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.805-.249-2.227-.412-.56-.216-.96-.474-1.38-.894-.42-.42-.678-.82-.894-1.38-.163-.422-.358-1.057-.412-2.227-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.054-1.17.249-1.805.412-2.227.216-.56.474-.96.894-1.38.42-.42.82-.678 1.38-.894.422-.163 1.057-.358 2.227-.412 1.266-.058 1.646-.07 4.85-.07M12 0C8.741 0 8.333.014 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.741 0 12s.014 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126s1.384 1.078 2.126 1.384c.766.296 1.636.499 2.913.558C8.333 23.986 8.741 24 12 24s3.667-.014 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384s1.078-1.384 1.384-2.126c.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.014-3.667-.072-4.947c-.06-1.277-.262-2.148-.558-2.913-.306-.788-.718-1.459-1.384-2.126s-1.384-1.078-2.126-1.384c-.765-.296-1.636-.499-2.913-.558C15.667.014 15.259 0 12 0m0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324M12 16a4.162 4.162 0 110-8.324A4.162 4.162 0 0112 16m6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881"/>, 
+                    color: "bg-pink-500/10 text-pink-400 border-pink-500/20", 
+                    link: "https://instagram.com/curatedcupid" 
+                  },
                 ].map((social) => (
                   <a
                     key={social.name}
                     href={social.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border hover:scale-105 transition-all text-xs font-semibold ${social.color}`}
+                    className={`w-12 h-12 flex items-center justify-center rounded-xl border hover:scale-110 transition-all ${social.color}`}
+                    title={social.name}
                   >
-                    <span>{social.emoji}</span>
-                    {social.name}
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                      {social.icon}
+                    </svg>
                   </a>
                 ))}
               </div>
@@ -535,13 +558,26 @@ function Contact() {
 }
 
 // ── Reviews ──────────────────────────────────────────
-const reviews = [
+const initialReviews = [
   { name: "Sarah K.", role: "Anniversary Surprise", text: "The attention to detail was incredible. My husband was speechless! They made our regular Tuesday feel like a fairy tale.", rating: 5 },
   { name: "Michael O.", role: "Birthday Setup", text: "Fast, professional, and absolutely stunning. The room vibe was exactly what I wanted. Highly recommended!", rating: 5 },
   { name: "Emily B.", role: "Just Because", text: "I wanted to surprise my bestie for no reason, and Curated Cupid delivered! The gift box was so thoughtful.", rating: 5 },
 ];
 
 function Reviews() {
+  const [reviews, setReviews] = useState(initialReviews);
+  const [showForm, setShowForm] = useState(false);
+  const [newReview, setNewReview] = useState({ name: "", role: "Client", text: "", rating: 5 });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newReview.name && newReview.text) {
+      setReviews([newReview, ...reviews]);
+      setShowForm(false);
+      setNewReview({ name: "", role: "Client", text: "", rating: 5 });
+    }
+  };
+
   return (
     <section id="reviews" className="py-24 px-6 bg-gradient-to-b from-transparent to-[#E91E8C]/5">
       <div className="max-w-6xl mx-auto">
@@ -554,28 +590,106 @@ function Reviews() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {reviews.map((rev, i) => (
-            <motion.div
-              key={rev.name}
-              {...fadeUp(i * 0.1)}
-              className="glass border border-white/5 p-8 rounded-3xl relative"
-            >
-              <div className="flex gap-1 mb-4">
-                {[...Array(rev.rating)].map((_, i) => <Star key={i} className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />)}
-              </div>
-              <p className="text-white/70 text-sm italic mb-6 leading-relaxed">"{rev.text}"</p>
-              <div>
-                <p className="text-white font-bold text-sm">{rev.name}</p>
-                <p className="text-[#E91E8C] text-[10px] font-bold uppercase tracking-widest">{rev.role}</p>
-              </div>
-            </motion.div>
-          ))}
+          <AnimatePresence mode="popLayout">
+            {reviews.map((rev, i) => (
+              <motion.div
+                key={rev.name + i}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="glass border border-white/5 p-8 rounded-3xl relative"
+              >
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      className={`w-3 h-3 ${i < rev.rating ? "fill-[#D4AF37] text-[#D4AF37]" : "text-white/10"}`} 
+                    />
+                  ))}
+                </div>
+                <p className="text-white/70 text-sm italic mb-6 leading-relaxed">"{rev.text}"</p>
+                <div>
+                  <p className="text-white font-bold text-sm">{rev.name}</p>
+                  <p className="text-[#E91E8C] text-[10px] font-bold uppercase tracking-widest">{rev.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
 
         <motion.div {...fadeUp(0.4)} className="mt-12 text-center">
-          <button className="glass border border-white/10 px-6 py-3 rounded-full text-white/60 hover:text-white hover:border-white/20 text-xs font-bold transition-all">
-            Share Your Experience
-          </button>
+          {!showForm ? (
+            <button 
+              onClick={() => setShowForm(true)}
+              className="glass border border-white/10 px-8 py-4 rounded-full text-white/60 hover:text-white hover:border-[#E91E8C]/50 hover:bg-[#E91E8C]/5 text-sm font-bold transition-all"
+            >
+              Share Your Experience
+            </button>
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="max-w-xl mx-auto glass border border-white/10 p-8 rounded-3xl text-left"
+            >
+              <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-2">
+                <Heart className="w-5 h-5 text-[#E91E8C]" /> Share Your Story
+              </h3>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-white/40 text-xs font-bold uppercase tracking-wider">Your Name</label>
+                    <input 
+                      required
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#E91E8C]/40 transition-all"
+                      value={newReview.name}
+                      onChange={e => setNewReview({...newReview, name: e.target.value})}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-white/40 text-xs font-bold uppercase tracking-wider">Rating</label>
+                    <div className="flex gap-2 py-2">
+                      {[1,2,3,4,5].map(star => (
+                        <button 
+                          key={star}
+                          type="button"
+                          onClick={() => setNewReview({...newReview, rating: star})}
+                          className="transition-transform hover:scale-125"
+                        >
+                          <Star className={`w-5 h-5 ${star <= newReview.rating ? "fill-[#D4AF37] text-[#D4AF37]" : "text-white/20"}`} />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-white/40 text-xs font-bold uppercase tracking-wider">Your Thoughts</label>
+                  <textarea 
+                    required
+                    rows={3}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#E91E8C]/40 transition-all resize-none"
+                    placeholder="Tell us about your surprise experience..."
+                    value={newReview.text}
+                    onChange={e => setNewReview({...newReview, text: e.target.value})}
+                  />
+                </div>
+                <div className="flex gap-3 pt-2">
+                  <button 
+                    type="submit"
+                    className="flex-1 btn-pink-gradient py-3 rounded-xl text-white font-bold text-sm flex items-center justify-center gap-2"
+                  >
+                    <Send className="w-4 h-4" /> Post Review
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => setShowForm(false)}
+                    className="px-6 py-3 rounded-xl glass border border-white/10 text-white/40 text-sm font-bold hover:text-white transition-all"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          )}
         </motion.div>
       </div>
     </section>
@@ -657,10 +771,9 @@ export default function HomePage() {
       <main>
         <Hero />
         <Services />
-        <Packages />
         <Gallery />
-        <Reviews />
         <WhyUs />
+        <Reviews />
         <Contact />
         <CTABanner />
       </main>
