@@ -147,7 +147,7 @@ function Services() {
       <div className="max-w-6xl mx-auto">
         <motion.div {...fadeUp()} className="text-center mb-14">
           <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Our Services" />
-          <h2 className="text-4xl md:text-5xl font-bold text-white">Magic for Every Day</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-white">Making Every Day Extraordinary</h2>
           <p className="mt-3 text-white/40 text-sm max-w-md mx-auto leading-relaxed">
             From special milestones to "just because" moments, we transform any day into a dream experience
           </p>
@@ -218,7 +218,7 @@ const packages = [
     icon: <Star className="w-5 h-5" />,
     name: "IL DEVOTO",
     price: "GH₵700",
-    tag: null,
+    tag: "Most Popular",
     features: ["Raffaello Chocolates", "Jewelry", "Wallet", "Wine", "Custom Slippers", "Nike Slides", "Custom Handwritten Letter"],
     featured: true,
   },
@@ -277,9 +277,13 @@ function Packages() {
                   : "border-white/5 bg-[#12101F]/80"
               }`}
             >
-              {/* Top tag — Premium only */}
+              {/* Top tag */}
               {pkg.tag && (
-                <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-bold bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#D4AF37]">
+                <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-bold ${
+                  pkg.tag === "Most Popular"
+                    ? "btn-pink-gradient text-white"
+                    : "bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#D4AF37]"
+                }`}>
                   {pkg.tag}
                 </div>
               )}
@@ -309,11 +313,17 @@ function Packages() {
                   ))}
                 </ul>
 
-                {/* CTA — uniform behaviour for all packages */}
+                {/* CTA */}
                 <Link href={`/builder?package=${encodeURIComponent(pkg.name)}`}>
-                  <div className="btn-pink-gradient text-center py-3 rounded-xl text-white text-sm font-semibold cursor-pointer hover:scale-[1.02] hover:opacity-90 transition-all">
-                    Book This Package
-                  </div>
+                  {pkg.featured ? (
+                    <div className="btn-pink-gradient text-center py-3 rounded-xl text-white text-sm font-semibold cursor-pointer hover:scale-[1.02] hover:opacity-90 transition-all">
+                      Book This Package
+                    </div>
+                  ) : (
+                    <div className="text-center py-3 rounded-xl border border-white/10 text-white/60 text-sm font-medium hover:border-white/20 hover:text-white transition-all cursor-pointer">
+                      Book This Package
+                    </div>
+                  )}
                 </Link>
               </div>
             </motion.div>
