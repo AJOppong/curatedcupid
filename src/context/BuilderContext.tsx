@@ -22,6 +22,7 @@ export interface EventDetails {
   location: string;
   theme: string;
   instructions: string;
+  roomDescription: string;
 }
 
 interface BuilderContextType {
@@ -64,6 +65,7 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
     location: "",
     theme: "",
     instructions: "",
+    roomDescription: "",
   });
 
   const addToCart = (item: CartItem) => {

@@ -184,6 +184,22 @@ export default function Step4EventDetails() {
           </Field>
         </div>
 
+        {/* Room Description (Conditional) */}
+        {useBuilder().baseService === "Room Aesthetics" && (
+          <div className="space-y-4">
+            <h3 className="text-sm font-bold text-white/80 border-l-2 border-[#E91E8C] pl-3">Room Setup Description</h3>
+            <Field label="Describe your dream setup" icon={<MessageSquare className="w-3 h-3" />}>
+              <textarea
+                rows={3}
+                placeholder="Tell us more about how you want the room to look... (colors, specific placements, surprise elements, etc.)"
+                className={`${inputClass} resize-none`}
+                value={eventDetails.roomDescription}
+                onChange={(e) => updateEventDetails({ roomDescription: e.target.value })}
+              />
+            </Field>
+          </div>
+        )}
+
         {/* Optional Customization */}
         <div className="space-y-4">
           <h3 className="text-sm font-bold text-white/80 border-l-2 border-white/10 pl-3">Additional (Optional)</h3>

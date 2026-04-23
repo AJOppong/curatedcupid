@@ -8,7 +8,7 @@ import { ArrowRight, ArrowLeft, Plus, Minus, Check, Package, Sparkles, Trash2, P
 import { useState } from "react";
 import Image from "next/image";
 
-const CATEGORIES = ["All", "Decor", "Lighting", "Flowers", "Treats", "Gifts", "Personal", "Drinks", "Experience"];
+const CATEGORIES = ["All", "Selected", "Decor", "Lighting", "Flowers", "Treats", "Gifts", "Personal", "Drinks", "Experience"];
 
 export default function Step2SelectItems() {
   const {
@@ -22,6 +22,8 @@ export default function Step2SelectItems() {
 
   const filtered = activeCategory === "All"
     ? shopItems
+    : activeCategory === "Selected"
+    ? shopItems.filter(item => cart.some(c => c.id === item.id))
     : shopItems.filter((i) => i.category === activeCategory);
 
   const getCartItem = (id: string) => cart.find((c) => c.id === id);

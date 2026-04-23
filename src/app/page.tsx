@@ -8,7 +8,8 @@ import Navbar from "@/components/Navbar";
 import {
   Heart, Star, Sparkles, ArrowRight, Gift, Camera,
   Clock, Shield, ChevronDown, Crown, Gem, Cake,
-  Check, Phone, Mail, MapPin, MessageCircle
+  Check, Phone, Mail, MapPin, MessageCircle,
+  MessageSquare
 } from "lucide-react";
 
 const fadeUp = (delay = 0) => ({
@@ -38,7 +39,7 @@ function Hero() {
       </div>
 
       <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
-        <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Premium Celebration Experiences" />
+        <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Luxury Gifts & Aesthetic Setups" />
       </motion.div>
 
       {/* Headline */}
@@ -57,7 +58,7 @@ function Hero() {
         transition={{ duration: 0.6, delay: 0.25 }}
         className="mt-6 text-white/50 text-base md:text-lg max-w-lg leading-relaxed"
       >
-        Transform ordinary moments into extraordinary memories for lovers, friends and family with our luxury aesthetics and curated surprise packages
+        Luxury aesthetics for special moments and everyday surprises. Transform ordinary days into extraordinary memories for your loved ones.
       </motion.p>
 
       {/* CTA Buttons */}
@@ -146,9 +147,9 @@ function Services() {
       <div className="max-w-6xl mx-auto">
         <motion.div {...fadeUp()} className="text-center mb-14">
           <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Our Services" />
-          <h2 className="text-4xl md:text-5xl font-bold text-white">Occasions We Create</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-white">Magic for Every Day</h2>
           <p className="mt-3 text-white/40 text-sm max-w-md mx-auto leading-relaxed">
-            From intimate moments to grand celebrations, we specialize in transforming spaces into dream experiences
+            From special milestones to "just because" moments, we transform any day into a dream experience
           </p>
         </motion.div>
 
@@ -217,7 +218,7 @@ const packages = [
     icon: <Star className="w-5 h-5" />,
     name: "IL DEVOTO",
     price: "GH₵700",
-    tag: "Most Popular",
+    tag: null,
     features: ["Raffaello Chocolates", "Jewelry", "Wallet", "Wine", "Custom Slippers", "Nike Slides", "Custom Handwritten Letter"],
     featured: true,
   },
@@ -255,20 +256,14 @@ function Packages() {
     <section id="packages" className="py-24 px-6">
       <div className="max-w-7xl mx-auto">
         <motion.div {...fadeUp()} className="text-center mb-14">
-          <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Pricing Packages" />
-          <h2 className="text-4xl md:text-5xl font-bold text-white">Choose Your Experience</h2>
+          <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Package Pricing" />
+          <h2 className="text-4xl md:text-5xl font-bold text-white">Select Your Gift</h2>
           <p className="mt-3 text-white/40 text-sm max-w-md mx-auto leading-relaxed">
-            Thoughtfully crafted packages designed to create magical moments that last a lifetime
+            Thoughtfully curated packages designed to deliver pure joy, no matter the day
           </p>
-          {/* Most Popular pill */}
-          <div className="mt-5 inline-flex">
-            <div className="btn-pink-gradient px-4 py-1.5 rounded-full text-white text-xs font-semibold">
-              Most Popular → IL DEVOTO
-            </div>
-          </div>
         </motion.div>
 
-        {/* Packages Grid: 3 cols, rows of 3-3-1(centered) */}
+        {/* Packages Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {packages.map((pkg, i) => (
             <motion.div
@@ -280,15 +275,11 @@ function Packages() {
                 pkg.featured
                   ? "border-[#E91E8C]/40 bg-gradient-to-b from-[#1A0E1A] to-[#0F0C1A] shadow-[0_0_40px_rgba(233,30,140,0.15)]"
                   : "border-white/5 bg-[#12101F]/80"
-              } ${i === 6 ? "md:col-start-1 lg:col-start-2" : ""}`}
+              }`}
             >
-              {/* Top tag */}
+              {/* Top tag — Premium only */}
               {pkg.tag && (
-                <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-bold ${
-                  pkg.tag === "Most Popular"
-                    ? "btn-pink-gradient text-white"
-                    : "bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#D4AF37]"
-                }`}>
+                <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-bold bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#D4AF37]">
                   {pkg.tag}
                 </div>
               )}
@@ -318,17 +309,11 @@ function Packages() {
                   ))}
                 </ul>
 
-                {/* CTA */}
+                {/* CTA — uniform behaviour for all packages */}
                 <Link href={`/builder?package=${encodeURIComponent(pkg.name)}`}>
-                  {pkg.featured ? (
-                    <div className="btn-pink-gradient text-center py-3 rounded-xl text-white text-sm font-semibold cursor-pointer hover:scale-[1.02] transition-transform">
-                      Book This Package
-                    </div>
-                  ) : (
-                    <div className="text-center py-3 rounded-xl border border-white/10 text-white/60 text-sm font-medium hover:border-white/20 hover:text-white transition-all cursor-pointer">
-                      Book This Package
-                    </div>
-                  )}
+                  <div className="btn-pink-gradient text-center py-3 rounded-xl text-white text-sm font-semibold cursor-pointer hover:scale-[1.02] hover:opacity-90 transition-all">
+                    Book This Package
+                  </div>
                 </Link>
               </div>
             </motion.div>
@@ -414,7 +399,7 @@ function WhyUs() {
         <motion.div {...fadeUp()} className="text-center mb-14">
           <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Why Curated Cupid" />
           <h2 className="text-4xl md:text-5xl font-bold text-white">
-            Serious about your <span className="text-gradient-pink">special milestones</span>
+            Passionate about making <span className="text-gradient-pink">every moment count</span>
           </h2>
         </motion.div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -476,16 +461,29 @@ function Contact() {
               ))}
             </div>
 
-            {/* WhatsApp CTA */}
-            <a
-              href="https://wa.me/2349010000000"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-green-600/20 border border-green-500/30 text-green-400 text-sm font-medium hover:bg-green-600/30 transition-all"
-            >
-              <MessageCircle className="w-4 h-4" />
-              Chat on WhatsApp
-            </a>
+            {/* Social handles */}
+            <div className="bg-[#12101F]/80 border border-white/5 rounded-2xl p-6 space-y-4">
+              <h3 className="text-white font-semibold text-sm">Follow Our Magic</h3>
+              <div className="flex flex-wrap gap-3">
+                {[
+                  { name: "WhatsApp", emoji: "💬", color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/2349010000000" },
+                  { name: "TikTok", emoji: "🎵", color: "bg-white/5 text-white border-white/10", link: "https://tiktok.com/@curatedcupid" },
+                  { name: "Snapchat", emoji: "👻", color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", link: "https://snapchat.com/add/curatedcupid" },
+                  { name: "Instagram", emoji: "📸", color: "bg-pink-500/10 text-pink-400 border-pink-500/20", link: "https://instagram.com/curatedcupid" },
+                ].map((social) => (
+                  <a
+                    key={social.name}
+                    href={social.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl border hover:scale-105 transition-all text-xs font-semibold ${social.color}`}
+                  >
+                    <span>{social.emoji}</span>
+                    {social.name}
+                  </a>
+                ))}
+              </div>
+            </div>
           </motion.div>
 
           {/* Contact Form */}
@@ -526,6 +524,54 @@ function Contact() {
   );
 }
 
+// ── Reviews ──────────────────────────────────────────
+const reviews = [
+  { name: "Sarah K.", role: "Anniversary Surprise", text: "The attention to detail was incredible. My husband was speechless! They made our regular Tuesday feel like a fairy tale.", rating: 5 },
+  { name: "Michael O.", role: "Birthday Setup", text: "Fast, professional, and absolutely stunning. The room vibe was exactly what I wanted. Highly recommended!", rating: 5 },
+  { name: "Emily B.", role: "Just Because", text: "I wanted to surprise my bestie for no reason, and Curated Cupid delivered! The gift box was so thoughtful.", rating: 5 },
+];
+
+function Reviews() {
+  return (
+    <section id="reviews" className="py-24 px-6 bg-gradient-to-b from-transparent to-[#E91E8C]/5">
+      <div className="max-w-6xl mx-auto">
+        <motion.div {...fadeUp()} className="text-center mb-14">
+          <SectionBadge icon={<MessageSquare className="w-3 h-3" />} label="Testimonials" />
+          <h2 className="text-4xl md:text-5xl font-bold text-white">Loved by Our Clients</h2>
+          <p className="mt-3 text-white/40 text-sm max-w-md mx-auto">
+            Real stories from people who experienced the magic of Curated Cupid
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {reviews.map((rev, i) => (
+            <motion.div
+              key={rev.name}
+              {...fadeUp(i * 0.1)}
+              className="glass border border-white/5 p-8 rounded-3xl relative"
+            >
+              <div className="flex gap-1 mb-4">
+                {[...Array(rev.rating)].map((_, i) => <Star key={i} className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />)}
+              </div>
+              <p className="text-white/70 text-sm italic mb-6 leading-relaxed">"{rev.text}"</p>
+              <div>
+                <p className="text-white font-bold text-sm">{rev.name}</p>
+                <p className="text-[#E91E8C] text-[10px] font-bold uppercase tracking-widest">{rev.role}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div {...fadeUp(0.4)} className="mt-12 text-center">
+          <button className="glass border border-white/10 px-6 py-3 rounded-full text-white/60 hover:text-white hover:border-white/20 text-xs font-bold transition-all">
+            Share Your Experience
+          </button>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
 // ── CTA Banner ────────────────────────────────────────
 function CTABanner() {
   return (
@@ -536,9 +582,9 @@ function CTABanner() {
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(233,30,140,0.12), transparent 60%), #12101F" }}
       >
         <div className="text-5xl mb-4">💝</div>
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to create magic?</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Make someone smile today</h2>
         <p className="text-white/40 text-sm mb-8 max-w-md mx-auto leading-relaxed">
-          Start building your personalized celebration experience today. Transparent pricing, no hidden fees — just pure joy.
+          Start building your personalized surprise experience. Transparent pricing, handcrafted details — just pure joy.
         </p>
         <Link href="/builder" className="inline-flex items-center gap-2 btn-pink-gradient px-10 py-4 rounded-full text-white font-bold text-sm hover:scale-105 hover:-translate-y-1 transition-all">
           <Heart className="w-4 h-4 fill-white" />
@@ -603,6 +649,7 @@ export default function HomePage() {
         <Services />
         <Packages />
         <Gallery />
+        <Reviews />
         <WhyUs />
         <Contact />
         <CTABanner />
