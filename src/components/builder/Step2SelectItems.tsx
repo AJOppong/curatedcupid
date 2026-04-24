@@ -5,6 +5,7 @@ import { useBuilder } from "@/context/BuilderContext";
 import { shopItems, predefinedPackages, ROOM_DESIGN_PRICE } from "@/lib/data";
 import Button from "@/components/ui/Button";
 import { ArrowRight, ArrowLeft, Plus, Minus, Check, Package, Sparkles, Trash2, PlusCircle, ShoppingCart, Home, Gift } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 
@@ -67,9 +68,12 @@ export default function Step2SelectItems() {
         </div>
       );
     }
+    
+    const IconComponent = emojiStr && (LucideIcons as any)[emojiStr] ? (LucideIcons as any)[emojiStr] : LucideIcons.HelpCircle;
+    
     return (
       <div className={`flex items-center justify-center ${className}`}>
-        {emojiStr}
+        <IconComponent className="w-1/2 h-1/2 text-[var(--text-main)] opacity-80" />
       </div>
     );
   };

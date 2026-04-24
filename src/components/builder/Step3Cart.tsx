@@ -7,12 +7,31 @@ import {
   ArrowRight, ArrowLeft, Trash2, Plus, Minus,
   ShoppingBag, Package, Gift, Sparkles, ChevronLeft
 } from "lucide-react";
+import * as LucideIcons from "lucide-react";
+import Image from "next/image";
 
 export default function Step3Cart() {
   const { cart, removeFromCart, updateQuantity, cartTotal, setStep, selectedPackageName } = useBuilder();
   const SERVICE_FEE = 50;
   const totalWithFee = cartTotal + SERVICE_FEE;
   const itemCount = cart.reduce((s, i) => s + i.quantity, 0);
+
+  const renderCartIcon = (imageStr: string, className?: string) => {
+    const isPath = imageStr && imageStr.startsWith('/');
+    if (isPath) {
+      return (
+        <div className={`relative overflow-hidden ${className}`}>
+          <Image src={imageStr} alt="Item" fill className="object-cover" />
+        </div>
+      );
+    }
+    const IconComponent = imageStr && (LucideIcons as any)[imageStr] ? (LucideIcons as any)[imageStr] : LucideIcons.HelpCircle;
+    return (
+      <div className={`flex items-center justify-center ${className}`}>
+        <IconComponent className="w-1/2 h-1/2 text-[var(--text-main)] opacity-80" />
+      </div>
+    );
+  };
 
   // Empty state
   if (cart.length === 0) {
@@ -79,8 +98,8 @@ export default function Step3Cart() {
                 className="glass border border-[var(--border)] rounded-2xl p-4 flex items-center gap-4 group hover:border-[var(--border)] transition-all"
               >
                 {/* Icon */}
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#E91E8C]/10 to-[#7C3AED]/10 border border-[var(--border)] flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-105 transition-transform">
-                  {item.image}
+                <div className="w-14 h-14 rounded-2xl bg-[var(--glass-bg)] border border-[var(--border)] flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-105 transition-transform overflow-hidden">
+                  {renderCartIcon(item.image, "w-full h-full")}
                 </div>
 
                 {/* Name & unit price */}
@@ -161,7 +180,7 @@ export default function Step3Cart() {
               {cart.map((item) => (
                 <div key={item.id} className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-base flex-shrink-0">{item.image}</span>
+                    <span className="w-5 h-5 flex-shrink-0 rounded flex items-center justify-center overflow-hidden border border-[var(--border)]">{renderCartIcon(item.image, "w-full h-full")}</span>
                     <span className="text-[var(--text-muted)] text-xs truncate">{item.name}</span>
                     {item.quantity > 1 && (
                       <span className="text-[10px] font-bold text-[var(--text-muted)] flex-shrink-0">×{item.quantity}</span>

@@ -9,6 +9,7 @@ import {
   MapPin, Gift, Eye, Trash2, ShieldCheck, LogOut,
   ShoppingBag, Plus, Save, X, Palette, Star
 } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { BuilderProvider } from "@/context/BuilderContext";
@@ -476,7 +477,14 @@ function AdminContent() {
                   <div key={item.id} className="glass border border-white/10 p-4 rounded-2xl flex flex-col gap-2">
                     <div className="flex items-center justify-between mb-2">
                       <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-2xl border border-white/5 relative overflow-hidden">
-                        {item.image ? <img src={item.image} alt="" className="w-full h-full object-cover"/> : item.emoji}
+                        {item.image ? (
+                          <img src={item.image} alt="" className="w-full h-full object-cover"/>
+                        ) : (
+                          (() => {
+                            const Icon = item.emoji && (LucideIcons as any)[item.emoji] ? (LucideIcons as any)[item.emoji] : LucideIcons.HelpCircle;
+                            return <Icon className="w-5 h-5 text-white/80" />;
+                          })()
+                        )}
                       </div>
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${item.active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
                         {item.active ? 'Active' : 'Inactive'}
@@ -630,7 +638,7 @@ function AdminContent() {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1"><label className="text-white/60 text-xs">Emoji</label><input value={newItem.emoji || ''} onChange={e => setNewItem({...newItem, emoji: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" placeholder="e.g. 🍷" /></div>
+                  <div className="space-y-1"><label className="text-white/60 text-xs">Icon Name (Lucide)</label><input value={newItem.emoji || ''} onChange={e => setNewItem({...newItem, emoji: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" placeholder="e.g. Wine, Gift" /></div>
                   <div className="space-y-1"><label className="text-white/60 text-xs">Image URL (Optional)</label><input value={newItem.image || ''} onChange={e => setNewItem({...newItem, image: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" placeholder="/images/item.jpg" /></div>
                 </div>
                 <div className="space-y-1"><label className="text-white/60 text-xs">Description</label><textarea required rows={2} value={newItem.description || ''} onChange={e => setNewItem({...newItem, description: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm resize-none" /></div>

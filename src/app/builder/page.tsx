@@ -91,7 +91,7 @@ function BuilderContent() {
         clearCart();
         const itemsToLoad = pkg.items.map(itemId => {
           const item = shopItems.find(si => si.id === itemId);
-          return item ? { id: item.id, name: item.name, price: item.price, image: item.emoji } : null;
+          return item ? { id: item.id, name: item.name, price: item.price, image: item.image || item.emoji } : null;
         }).filter(Boolean) as any;
         preloadItems(itemsToLoad, pkg.name);
         setBaseService("Surprise Package");

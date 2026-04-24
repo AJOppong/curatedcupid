@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useBuilder } from "@/context/BuilderContext";
 import { baseServices, roomTransportOptions } from "@/lib/data";
 import Button from "@/components/ui/Button";
+import * as LucideIcons from "lucide-react";
 import { ArrowRight, ArrowLeft, Check, AlertCircle, Truck } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -49,6 +50,7 @@ export default function Step1BaseService() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {baseServices.map((service, i) => {
           const isSelected = baseService === service.name;
+          const IconComponent = (LucideIcons as any)[service.emoji] || LucideIcons.HelpCircle;
           return (
             <motion.button
               key={service.id}
@@ -69,7 +71,7 @@ export default function Step1BaseService() {
                   <Check className="w-3.5 h-3.5 text-[var(--text-main)]" />
                 </div>
               )}
-              <span className="text-4xl mb-4 block">{service.emoji}</span>
+              <IconComponent className="w-10 h-10 mb-4 text-[#E91E8C]" />
               <h3 className="text-lg font-semibold text-[var(--text-main)] mb-2">{service.name}</h3>
               <p className="text-[var(--text-muted)] text-sm leading-relaxed">{service.description}</p>
             </motion.button>

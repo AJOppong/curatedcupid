@@ -13,7 +13,7 @@ import {
   Heart, Star, Sparkles, ArrowRight, Gift, Camera,
   Clock, Shield, ChevronDown, Crown, Gem, Cake,
   Check, Phone, Mail, MapPin, MessageCircle,
-  MessageSquare, Play, Flower2, Plus, X
+  MessageSquare, Play, Flower2, Plus, X, Video, Wine, Sparkles, Music, Ghost
 } from "lucide-react";
 
 
@@ -295,9 +295,9 @@ const galleryItems = [
   { type: "image", src: "/gallery-room.png", label: "Romantic Candlelit Setup", tag: "Anniversary" },
   { type: "image", src: "/gallery-birthday.png", label: "Luxury Bedroom Design", tag: "Celebration" },
   { type: "image", src: "/gallery-elegant.png", label: "Elegant Interior", tag: "Romance" },
-  { type: "video", src: null, emoji: "🎥", label: "Event Highlight", tag: "Proposal" },
-  { type: "image", src: null, emoji: "🥂", label: "Champagne Setup", tag: "VIP" },
-  { type: "video", src: null, emoji: "✨", label: "LED Light Display", tag: "Trending" },
+  { type: "video", src: null, icon: <Video className="w-12 h-12 text-[#E91E8C]" />, label: "Event Highlight", tag: "Proposal" },
+  { type: "image", src: null, icon: <Wine className="w-12 h-12 text-[#E91E8C]" />, label: "Champagne Setup", tag: "VIP" },
+  { type: "video", src: null, icon: <Sparkles className="w-12 h-12 text-[#E91E8C]" />, label: "LED Light Display", tag: "Trending" },
 ];
 
 function Gallery() {
@@ -331,7 +331,7 @@ function Gallery() {
                 </>
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-5xl bg-gradient-to-br from-[#E91E8C]/8 to-purple-900/20 group-hover:scale-105 transition-transform duration-500">
-                  {item.emoji}
+                  {item.icon}
                 </div>
               )}
               {item.type === "video" && (
@@ -625,10 +625,10 @@ function Contact() {
               <h3 className="text-[var(--text-main)] font-semibold text-sm">Follow Our Magic</h3>
               <div className="flex flex-wrap gap-3">
                 {[
-                  { name: "WhatsApp", emoji: "💬", color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/233241234567" },
-                  { name: "TikTok", emoji: "🎵", color: "bg-white/5 text-[var(--text-main)] border-[var(--border)]", link: "https://tiktok.com/@curatedcupid" },
-                  { name: "Snapchat", emoji: "👻", color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", link: "https://snapchat.com/add/curatedcupid" },
-                  { name: "Instagram", emoji: "📸", color: "bg-pink-500/10 text-pink-400 border-pink-500/20", link: "https://instagram.com/curatedcupid" },
+                  { name: "WhatsApp", icon: <MessageCircle className="w-4 h-4" />, color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/233241234567" },
+                  { name: "TikTok", icon: <Music className="w-4 h-4" />, color: "bg-white/5 text-[var(--text-main)] border-[var(--border)]", link: "https://tiktok.com/@curatedcupid" },
+                  { name: "Snapchat", icon: <Ghost className="w-4 h-4" />, color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", link: "https://snapchat.com/add/curatedcupid" },
+                  { name: "Instagram", icon: <Camera className="w-4 h-4" />, color: "bg-pink-500/10 text-pink-400 border-pink-500/20", link: "https://instagram.com/curatedcupid" },
                 ].map((social) => (
                   <a
                     key={social.name}
@@ -637,7 +637,7 @@ function Contact() {
                     rel="noopener noreferrer"
                     className={`flex items-center gap-2 px-4 py-2 rounded-xl border hover:scale-105 transition-all text-xs font-semibold ${social.color}`}
                   >
-                    <span>{social.emoji}</span>
+                    <span>{social.icon}</span>
                     {social.name}
                   </a>
                 ))}
@@ -689,10 +689,10 @@ function CTABanner() {
     <section className="py-20 px-6">
       <motion.div
         {...fadeUp()}
-        className="max-w-3xl mx-auto relative overflow-hidden rounded-3xl border border-[#E91E8C]/15 p-12 text-center"
+        className="max-w-3xl mx-auto relative overflow-hidden rounded-3xl border border-[#E91E8C]/15 p-12 text-center flex flex-col items-center"
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(233,30,140,0.12), transparent 60%), #12101F" }}
       >
-        <div className="text-5xl mb-4">💝</div>
+        <div className="text-5xl mb-4 text-[#E91E8C]"><Heart className="w-12 h-12 fill-[#E91E8C]" /></div>
         <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-main)] mb-4">Make someone smile today</h2>
         <p className="text-[var(--text-muted)] text-sm mb-8 max-w-md mx-auto leading-relaxed">
           Start building your personalized surprise experience. Transparent pricing, handcrafted details — just pure joy.
@@ -746,7 +746,7 @@ function Footer() {
         </div>
         <div className="border-t border-[var(--border)] pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-[var(--text-main)]/20 text-xs">
           <p>© {new Date().getFullYear()} Curated Cupid. All rights reserved.</p>
-          <p>Made with 💕 in Kumasi</p>
+          <p className="flex items-center gap-1">Made with <Heart className="w-3 h-3 text-[#E91E8C] fill-[#E91E8C]" /> in Kumasi</p>
         </div>
       </div>
     </footer>

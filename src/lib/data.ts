@@ -1,3 +1,11 @@
+import React from "react";
+import { 
+  Candy, Gift, Gem, Wine, MailHeart, Wallet, Footprints, Mail, 
+  Shirt, Beaker, ShoppingBag, Fuel, Wind, TreePine, Droplet, 
+  Scissors, Flower2, Flower, Sun, Sparkles, Circle, Store, 
+  Bike, Car, Package, Bed
+} from "lucide-react";
+
 export interface ShopItem {
   id: string;
   name: string;
@@ -35,45 +43,45 @@ export interface TransportOption {
 export const ROOM_DESIGN_PRICE = 200;
 
 export const shopItems: ShopItem[] = [
-  { id: "raffaello", name: "Raffaello Chocolates", price: 60, category: "Treats", description: "Premium almond and coconut confections", emoji: "🍬", image: "/item_chocolates.png" },
-  { id: "ferrero", name: "Ferrero Rocher", price: 120, category: "Treats", description: "Gold-wrapped hazelnut milk chocolates", emoji: "🍫", image: "/item_chocolates.png" },
-  { id: "jewelry", name: "Jewelry", price: 50, category: "Gifts", description: "Elegant necklace or bracelet in a luxury box", emoji: "💍", image: "/item_jewelry.png" },
-  { id: "premium-jewelry", name: "Premium Jewelry", price: 70, category: "Gifts", description: "High-end jewelry selection for special occasions", emoji: "💎", image: "/item_jewelry.png" },
-  { id: "wine", name: "Wine", price: 90, category: "Drinks", description: "Carefully selected vintage for romantic evenings", emoji: "🍷", image: "/item_wine.png" },
-  { id: "vals-card", name: "Valentine's Day Card", price: 20, category: "Personal", description: "Handcrafted romantic card with your message", emoji: "💌", image: "/item_card.png" },
-  { id: "wallet", name: "Wallet", price: 80, category: "Gifts", description: "Genuine leather wallet in a sleek design", emoji: "👛", image: "/item_wallet.png" },
-  { id: "custom-slippers", name: "Custom Slippers", price: 100, category: "Gifts", description: "Comfortable plush slippers with custom embroidery", emoji: "🩴", image: "/item_shoes.png" },
-  { id: "nike-slides", name: "Nike Slides", price: 150, category: "Gifts", description: "Authentic Nike comfort slides for him", emoji: "👟", image: "/item_shoes.png" },
-  { id: "handwritten-letter", name: "Custom Handwritten Letter", price: 30, category: "Personal", description: "Calligraphy letter on premium parchment paper", emoji: "✉️", image: "/item_letter.png" },
-  { id: "shirt", name: "Shirt", price: 120, category: "Gifts", description: "High-quality cotton shirt in his size", emoji: "👔", image: "/item_shirt.png" },
-  { id: "db-perfume", name: "David Beckham Perfume", price: 350, category: "Gifts", description: "Signature designer fragrance by David Beckham", emoji: "🧪", image: "/item_perfume.png" },
-  { id: "food-basket", name: "Food Basket", price: 250, category: "Treats", description: "Gourmet selection of snacks, fruits and delicacies", emoji: "🧺", image: "/item_basket.png" },
-  { id: "oxford-shoes", name: "Oxford Shoes", price: 300, category: "Gifts", description: "Classic handcrafted leather Oxford shoes", emoji: "👞", image: "/item_shoes.png" },
-  { id: "fuel-coupons", name: "Fuel Coupons", price: 200, category: "Gifts", description: "Prepaid fuel vouchers for easy mobility", emoji: "⛽", image: "/item_coupons.png" },
-  { id: "room-diffuser", name: "Room Diffuser", price: 120, category: "Decor", description: "Essential oil diffuser for a romantic atmosphere", emoji: "💨", image: "/item_diffuser.png" },
-  { id: "car-freshener", name: "Car Freshener", price: 30, category: "Decor", description: "Premium scent for his vehicle", emoji: "🌲", image: "/item_freshener.png" },
-  { id: "birkenstocks", name: "Birkenstocks", price: 325, category: "Gifts", description: "Authentic comfort footwear by Birkenstock", emoji: "🩴", image: "/item_shoes.png" },
-  { id: "body-products", name: "Body Products", price: 150, category: "Personal", description: "Luxury grooming and body care collection", emoji: "🧴", image: "/item_body_products.png" },
-  { id: "custom-jersey", name: "Custom Jersey", price: 200, category: "Gifts", description: "His favourite team's jersey with custom name", emoji: "👕", image: "/item_jersey.png" },
-  { id: "grooming-products", name: "Grooming Products", price: 150, category: "Personal", description: "Complete beard and face care grooming set", emoji: "🪒", image: "/item_grooming.png" },
+  { id: "raffaello", name: "Raffaello Chocolates", price: 60, category: "Treats", description: "Premium almond and coconut confections", emoji: "Candy", image: "/item_chocolates.png" },
+  { id: "ferrero", name: "Ferrero Rocher", price: 120, category: "Treats", description: "Gold-wrapped hazelnut milk chocolates", emoji: "Gift", image: "/item_chocolates.png" },
+  { id: "jewelry", name: "Jewelry", price: 50, category: "Gifts", description: "Elegant necklace or bracelet in a luxury box", emoji: "Gem", image: "/item_jewelry.png" },
+  { id: "premium-jewelry", name: "Premium Jewelry", price: 70, category: "Gifts", description: "High-end jewelry selection for special occasions", emoji: "Gem", image: "/item_jewelry.png" },
+  { id: "wine", name: "Wine", price: 90, category: "Drinks", description: "Carefully selected vintage for romantic evenings", emoji: "Wine", image: "/item_wine.png" },
+  { id: "vals-card", name: "Valentine's Day Card", price: 20, category: "Personal", description: "Handcrafted romantic card with your message", emoji: "MailHeart", image: "/item_card.png" },
+  { id: "wallet", name: "Wallet", price: 80, category: "Gifts", description: "Genuine leather wallet in a sleek design", emoji: "Wallet", image: "/item_wallet.png" },
+  { id: "custom-slippers", name: "Custom Slippers", price: 100, category: "Gifts", description: "Comfortable plush slippers with custom embroidery", emoji: "Footprints", image: "/item_shoes.png" },
+  { id: "nike-slides", name: "Nike Slides", price: 150, category: "Gifts", description: "Authentic Nike comfort slides for him", emoji: "Footprints", image: "/item_shoes.png" },
+  { id: "handwritten-letter", name: "Custom Handwritten Letter", price: 30, category: "Personal", description: "Calligraphy letter on premium parchment paper", emoji: "Mail", image: "/item_letter.png" },
+  { id: "shirt", name: "Shirt", price: 120, category: "Gifts", description: "High-quality cotton shirt in his size", emoji: "Shirt", image: "/item_shirt.png" },
+  { id: "db-perfume", name: "David Beckham Perfume", price: 350, category: "Gifts", description: "Signature designer fragrance by David Beckham", emoji: "Beaker", image: "/item_perfume.png" },
+  { id: "food-basket", name: "Food Basket", price: 250, category: "Treats", description: "Gourmet selection of snacks, fruits and delicacies", emoji: "ShoppingBag", image: "/item_basket.png" },
+  { id: "oxford-shoes", name: "Oxford Shoes", price: 300, category: "Gifts", description: "Classic handcrafted leather Oxford shoes", emoji: "Footprints", image: "/item_shoes.png" },
+  { id: "fuel-coupons", name: "Fuel Coupons", price: 200, category: "Gifts", description: "Prepaid fuel vouchers for easy mobility", emoji: "Fuel", image: "/item_coupons.png" },
+  { id: "room-diffuser", name: "Room Diffuser", price: 120, category: "Decor", description: "Essential oil diffuser for a romantic atmosphere", emoji: "Wind", image: "/item_diffuser.png" },
+  { id: "car-freshener", name: "Car Freshener", price: 30, category: "Decor", description: "Premium scent for his vehicle", emoji: "TreePine", image: "/item_freshener.png" },
+  { id: "birkenstocks", name: "Birkenstocks", price: 325, category: "Gifts", description: "Authentic comfort footwear by Birkenstock", emoji: "Footprints", image: "/item_shoes.png" },
+  { id: "body-products", name: "Body Products", price: 150, category: "Personal", description: "Luxury grooming and body care collection", emoji: "Droplet", image: "/item_body_products.png" },
+  { id: "custom-jersey", name: "Custom Jersey", price: 200, category: "Gifts", description: "His favourite team's jersey with custom name", emoji: "Shirt", image: "/item_jersey.png" },
+  { id: "grooming-products", name: "Grooming Products", price: 150, category: "Personal", description: "Complete beard and face care grooming set", emoji: "Scissors", image: "/item_grooming.png" },
 ];
 
 export const flowerItems: FlowerItem[] = [
-  { id: "single-rose", name: "Single Rose", price: 20, description: "A timeless symbol of love and affection", emoji: "🌹", image: "/flower_rose.png" },
-  { id: "rose-bouquet-12", name: "Rose Bouquet (12)", price: 150, description: "A dozen premium long-stem red roses", emoji: "💐", image: "/flower_bouquet_12.png" },
-  { id: "rose-bouquet-24", name: "Rose Bouquet (24)", price: 280, description: "Two dozen premium roses, beautifully wrapped", emoji: "🌹", image: "/flower_bouquet_24.png" },
-  { id: "mixed-bouquet", name: "Mixed Floral Bouquet", price: 200, description: "Seasonal mixed flowers in a stunning arrangement", emoji: "🌸", image: "/flower_mixed.png" },
-  { id: "sunflowers", name: "Sunflower Bouquet", price: 100, description: "Bright and cheerful sunflowers to lift any mood", emoji: "🌻", image: "/flower_sunflowers.png" },
-  { id: "lilies", name: "White Lilies", price: 120, description: "Elegant pure white lilies in a classic wrap", emoji: "🌷", image: "/flower_lilies.png" },
-  { id: "custom-arrangement", name: "Custom Arrangement", price: 350, description: "Bespoke floral design crafted for your unique occasion", emoji: "✨", image: "/flower_custom.png" },
-  { id: "condolence-wreath", name: "Condolence Wreath", price: 250, description: "A dignified white flower wreath for funerals and tributes", emoji: "⚪", image: "/flower_wreath.png" },
+  { id: "single-rose", name: "Single Rose", price: 20, description: "A timeless symbol of love and affection", emoji: "Flower2", image: "/flower_rose.png" },
+  { id: "rose-bouquet-12", name: "Rose Bouquet (12)", price: 150, description: "A dozen premium long-stem red roses", emoji: "Flower", image: "/flower_bouquet_12.png" },
+  { id: "rose-bouquet-24", name: "Rose Bouquet (24)", price: 280, description: "Two dozen premium roses, beautifully wrapped", emoji: "Flower2", image: "/flower_bouquet_24.png" },
+  { id: "mixed-bouquet", name: "Mixed Floral Bouquet", price: 200, description: "Seasonal mixed flowers in a stunning arrangement", emoji: "Flower2", image: "/flower_mixed.png" },
+  { id: "sunflowers", name: "Sunflower Bouquet", price: 100, description: "Bright and cheerful sunflowers to lift any mood", emoji: "Sun", image: "/flower_sunflowers.png" },
+  { id: "lilies", name: "White Lilies", price: 120, description: "Elegant pure white lilies in a classic wrap", emoji: "Flower", image: "/flower_lilies.png" },
+  { id: "custom-arrangement", name: "Custom Arrangement", price: 350, description: "Bespoke floral design crafted for your unique occasion", emoji: "Sparkles", image: "/flower_custom.png" },
+  { id: "condolence-wreath", name: "Condolence Wreath", price: 250, description: "A dignified white flower wreath for funerals and tributes", emoji: "Circle", image: "/flower_wreath.png" },
 ];
 
 export const deliveryMethods: DeliveryMethod[] = [
-  { id: "pickup", label: "Pickup", desc: "Collect from our location in Ayeduase", icon: "🏪", hasDetails: false },
-  { id: "bike", label: "Bike Delivery", desc: "Fast delivery via motorbike within Kumasi", icon: "🛵", hasDetails: false },
-  { id: "car", label: "Car Delivery", desc: "Premium delivery via car, anywhere in Kumasi", icon: "🚗", hasDetails: false },
-  { id: "other", label: "Other", desc: "Specify your preferred delivery arrangement", icon: "📦", hasDetails: true },
+  { id: "pickup", label: "Pickup", desc: "Collect from our location in Ayeduase", icon: "Store", hasDetails: false },
+  { id: "bike", label: "Bike Delivery", desc: "Fast delivery via motorbike within Kumasi", icon: "Bike", hasDetails: false },
+  { id: "car", label: "Car Delivery", desc: "Premium delivery via car, anywhere in Kumasi", icon: "Car", hasDetails: false },
+  { id: "other", label: "Other", desc: "Specify your preferred delivery arrangement", icon: "Package", hasDetails: true },
 ];
 
 export const roomTransportOptions: TransportOption[] = [
@@ -87,28 +95,28 @@ export const baseServices = [
     id: "room-aesthetics",
     name: "Room Aesthetics",
     description: "Transform any space into a breathtaking romantic or celebratory scene with curated décor, lighting and ambiance.",
-    emoji: "🛏️",
+    emoji: "Bed",
     color: "from-[#F2B8C6]/20 to-[#9b87f5]/10",
   },
   {
     id: "surprise-package",
     name: "Surprise Package",
     description: "A fully curated secret experience delivered to your loved one — we handle everything for any occasion.",
-    emoji: "🎁",
+    emoji: "Gift",
     color: "from-[#D4AF37]/20 to-[#F2B8C6]/10",
   },
   {
     id: "custom-setup",
     name: "Custom Setup",
     description: "Build your dream setup from scratch. Mix and match items exactly the way you envision it.",
-    emoji: "✨",
+    emoji: "Sparkles",
     color: "from-[#9b87f5]/20 to-[#F2B8C6]/10",
   },
   {
     id: "flower-delivery",
     name: "Flower Delivery",
     description: "Send beautiful, fresh premium blooms directly to your loved one for any occasion.",
-    emoji: "💐",
+    emoji: "Flower2",
     color: "from-[#E91E8C]/20 to-[#9b87f5]/10",
   },
 ];
