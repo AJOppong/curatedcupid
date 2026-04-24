@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { usePathname } from "next/navigation";
 
 type Theme = "light" | "dark" | "valentine" | "mothers-day" | "fathers-day" | "eid" | "christmas" | "new-year";
 
@@ -20,13 +21,17 @@ export function ThemeProvider({
   children: React.ReactNode;
   forcedTheme?: Theme;
 }) {
-  const [theme, setThemeState] = useState<Theme>(forcedTheme ?? "light");
-  const [isLoading, setIsLoading] = useState(!forcedTheme);
+  const pathname = usePathname();
+  const isAdminRoute = pathname?.startsWith("/admin");
+  const actualForcedTheme = isAdminRoute ? "dark" : forcedTheme;
+
+  const [theme, setThemeState] = useState<Theme>(actualForcedTheme ?? "light");
+  const [isLoading, setIsLoading] = useState(!actualForcedTheme);
 
   useEffect(() => {
     // If a forcedTheme is passed (e.g. admin always dark), skip DB fetch
-    if (forcedTheme) {
-      document.documentElement.setAttribute("data-theme", forcedTheme);
+    if (actualForcedTheme) {
+      document.documentElement.setAttribute("data-theme", actualForcedTheme);
       return;
     }
 
@@ -49,16 +54,16 @@ export function ThemeProvider({
     }
 
     loadTheme();
-  }, [forcedTheme]);
+  }, [actualForcedTheme]);
 
   useEffect(() => {
     // If forced, always keep that theme applied
-    const active = forcedTheme ?? theme;
+    const active = actualForcedTheme ?? theme;
     document.documentElement.setAttribute("data-theme", active);
-  }, [theme, forcedTheme]);
+  }, [theme, actualForcedTheme]);
 
   const setTheme = async (newTheme: Theme) => {
-    if (forcedTheme) return; // ignore changes when forced
+    if (actualForcedTheme) return; // ignore changes when forced
     setThemeState(newTheme);
     try {
       await supabase
@@ -70,7 +75,7 @@ export function ThemeProvider({
   };
 
   return (
-    <ThemeContext.Provider value={{ theme: forcedTheme ?? theme, setTheme, isLoading }}>
+    <ThemeContext.Provider value={{ theme: actualForcedTheme ?? theme, setTheme, isLoading }}>
       {children}
     </ThemeContext.Provider>
   );

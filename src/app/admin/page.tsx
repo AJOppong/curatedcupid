@@ -57,11 +57,9 @@ interface PackageItem {
 
 export default function AdminDashboard() {
   return (
-    <ThemeProvider forcedTheme="dark">
-      <BuilderProvider>
-        <AdminContent />
-      </BuilderProvider>
-    </ThemeProvider>
+    <BuilderProvider>
+      <AdminContent />
+    </BuilderProvider>
   );
 }
 
