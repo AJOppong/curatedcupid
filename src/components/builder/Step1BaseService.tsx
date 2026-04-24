@@ -2,28 +2,39 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useBuilder } from "@/context/BuilderContext";
-import { baseServices } from "@/lib/data";
+import { baseServices, roomTransportOptions } from "@/lib/data";
 import Button from "@/components/ui/Button";
-import { ArrowRight, ArrowLeft, Check } from "lucide-react";
+import { ArrowRight, ArrowLeft, Check, AlertCircle, Truck } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 
 const ROOM_VIBES = [
   { name: "Romantic", image: "/room_romantic_1776853657064.png", desc: "Warm candles, rose petals & intimacy" },
   { name: "Calm & Serene", image: "/room_calm_serene_1776854068465.png", desc: "Pastels, plants & peaceful energy" },
   { name: "Bestie Vibes", image: "/room_bestie_vibes_1776854146490.png", desc: "Fun balloons, snacks & vibrant colors" },
   { name: "Congratulatory", image: "/room_congratulatory_vibes_1776854366422.png", desc: "Celebration, gold/silver & achievements" },
+  { name: "Other", image: null, desc: "Describe your own custom aesthetic" },
 ];
 
 export default function Step1BaseService() {
-  const { baseService, setBaseService, roomVibe, setRoomVibe, setStep } = useBuilder();
+  const {
+    baseService, setBaseService, roomVibe, setRoomVibe,
+    customVibe, setCustomVibe, roomTransport, setRoomTransport, setStep,
+  } = useBuilder();
+
+  const [transportConfirmed, setTransportConfirmed] = useState(false);
 
   const handleServiceSelect = (name: string) => {
     setBaseService(name);
-    if (name !== "Room Aesthetics") {
-      setRoomVibe("", "");
-    }
+    if (name !== "Room Aesthetics") setRoomVibe("", "");
   };
+
+  const vibeSelected = baseService === "Room Aesthetics" && roomVibe;
+  const canProceed =
+    baseService &&
+    (baseService !== "Room Aesthetics" ||
+      (roomVibe && (roomVibe !== "Other" || customVibe.trim()) && transportConfirmed));
 
   return (
     <div className="space-y-8">
@@ -34,6 +45,7 @@ export default function Step1BaseService() {
         <p className="text-white/40 text-sm">Select the type of celebration you&apos;d like to create</p>
       </div>
 
+      {/* Service Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {baseServices.map((service, i) => {
           const isSelected = baseService === service.name;
@@ -65,55 +77,132 @@ export default function Step1BaseService() {
         })}
       </div>
 
+      {/* Room Aesthetics — sub-flow */}
       <AnimatePresence>
         {baseService === "Room Aesthetics" && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="space-y-6 pt-6 border-t border-white/5"
+            className="space-y-6 pt-6 border-t border-white/5 overflow-hidden"
           >
+            {/* Exclusivity notice */}
+            <div className="flex items-start gap-3 bg-amber-500/8 border border-amber-500/20 rounded-2xl px-4 py-3">
+              <AlertCircle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+              <p className="text-amber-200/80 text-xs leading-relaxed">
+                <span className="font-bold">Room Bookings are Exclusive.</span> Please ensure the room or venue is already
+                reserved/booked by you before proceeding. Curated Cupid will only be responsible for the décor setup.
+              </p>
+            </div>
+
+            {/* Vibe picker */}
             <div className="text-center">
               <h3 className="text-xl font-bold text-white mb-1">Select Room Vibe</h3>
               <p className="text-white/30 text-xs">Choose the aesthetic that fits your occasion</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {ROOM_VIBES.map((vibe) => (
-                <motion.button
-                  key={vibe.name}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => {
-                    setRoomVibe(vibe.name, vibe.image);
-                  }}
-                  className={`group relative rounded-xl overflow-hidden aspect-video border-2 transition-all ${
-                    roomVibe === vibe.name ? "border-[#E91E8C]" : "border-transparent"
-                  }`}
-                >
-                  <Image src={vibe.image} alt={vibe.name} fill className="object-cover opacity-60 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                  <div className="absolute bottom-2 left-2 text-left">
-                    <p className="text-white text-xs font-bold">{vibe.name}</p>
-                    <p className="text-white/50 text-[10px] line-clamp-1">{vibe.desc}</p>
-                  </div>
-                </motion.button>
-              ))}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              {ROOM_VIBES.map((vibe) => {
+                const isSelected = roomVibe === vibe.name;
+                return (
+                  <motion.button
+                    key={vibe.name}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setRoomVibe(vibe.name, vibe.image ?? "")}
+                    className={`group relative rounded-xl overflow-hidden border-2 transition-all ${
+                      isSelected ? "border-[#E91E8C]" : "border-transparent"
+                    } ${vibe.image ? "aspect-video" : "aspect-video bg-white/4 flex flex-col items-center justify-center gap-2 p-4"}`}
+                  >
+                    {vibe.image ? (
+                      <>
+                        <Image src={vibe.image} alt={vibe.name} fill className="object-cover opacity-60 group-hover:opacity-100 transition-opacity" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                        <div className="absolute bottom-2 left-2 text-left">
+                          <p className="text-white text-xs font-bold">{vibe.name}</p>
+                          <p className="text-white/50 text-[10px] line-clamp-1">{vibe.desc}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-2xl">✍️</span>
+                        <p className="text-white text-xs font-bold">{vibe.name}</p>
+                        <p className="text-white/40 text-[10px] text-center">{vibe.desc}</p>
+                      </>
+                    )}
+                    {isSelected && (
+                      <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-[#E91E8C] flex items-center justify-center">
+                        <Check className="w-3 h-3 text-white" />
+                      </div>
+                    )}
+                  </motion.button>
+                );
+              })}
             </div>
+
+            {/* Custom vibe input */}
+            <AnimatePresence>
+              {roomVibe === "Other" && (
+                <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
+                  <input
+                    type="text"
+                    placeholder="Describe your preferred room aesthetic..."
+                    value={customVibe}
+                    onChange={(e) => setCustomVibe(e.target.value)}
+                    className="w-full glass border border-white/8 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 transition-all bg-transparent"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Transportation confirmation */}
+            <AnimatePresence>
+              {vibeSelected && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="space-y-3 pt-4 border-t border-white/5"
+                >
+                  <div className="flex items-center gap-2">
+                    <Truck className="w-4 h-4 text-[#E91E8C]" />
+                    <h4 className="text-sm font-bold text-white">Room Transport Service</h4>
+                  </div>
+                  <p className="text-white/30 text-xs">Would you like Curated Cupid to transport the décor to your venue?</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {roomTransportOptions.map((opt) => (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => { setRoomTransport(opt.id, opt.price); setTransportConfirmed(true); }}
+                        className={`rounded-xl p-4 border text-left transition-all ${
+                          roomTransport === opt.id && transportConfirmed
+                            ? "border-[#E91E8C] bg-[#E91E8C]/8 shadow-[0_0_15px_rgba(233,30,140,0.15)]"
+                            : "glass border-white/8 hover:border-white/20"
+                        }`}
+                      >
+                        <p className="text-white text-sm font-semibold mb-1">{opt.label}</p>
+                        <p className="text-white/40 text-xs mb-2">{opt.desc}</p>
+                        <p className="text-[#D4AF37] font-bold text-sm">
+                          {opt.price === 0 ? "Free" : `GH₵${opt.price}`}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* Navigation */}
       <div className="flex items-center justify-between pt-4">
         <Link href="/">
           <Button variant="secondary">
             <ArrowLeft className="w-4 h-4" /> Back to Home
           </Button>
         </Link>
-        <Button 
-          onClick={() => setStep(2)} 
-          disabled={!baseService || (baseService === "Room Aesthetics" && !roomVibe)} 
-          className="px-8 py-3 rounded-full"
-        >
+        <Button onClick={() => setStep(2)} disabled={!canProceed} className="px-8 py-3 rounded-full">
           Continue <ArrowRight className="w-4 h-4" />
         </Button>
       </div>

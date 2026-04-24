@@ -5,17 +5,22 @@ import { motion } from "framer-motion";
 import { useBuilder } from "@/context/BuilderContext";
 import Button from "@/components/ui/Button";
 import { supabase } from "@/lib/supabase";
+import { deliveryMethods, roomTransportOptions } from "@/lib/data";
 import {
   ArrowLeft, CheckCircle2, MessageCircle, User, Phone,
-  Calendar, MapPin, Palette, Package, Sparkles, Gift, Clock
+  Calendar, MapPin, Package, Sparkles, Gift, Clock, Truck, AlertTriangle
 } from "lucide-react";
 
 export default function Step5Checkout() {
-  const { cart, cartTotal, baseService, roomVibe, eventDetails, setStep } = useBuilder();
+  const { cart, cartTotal, baseService, roomVibe, customVibe, roomTransport, roomTransportPrice, eventDetails, setStep } = useBuilder();
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [refundAcknowledged, setRefundAcknowledged] = useState(false);
 
-  const total = cartTotal + 50;
+  const total = cartTotal + 50 + (baseService === "Room Aesthetics" ? roomTransportPrice : 0);
+
+  const deliveryObj = deliveryMethods.find(d => d.id === eventDetails.deliveryMethod);
+  const transportObj = roomTransportOptions.find(t => t.id === roomTransport);
 
   const handleConfirm = async () => {
     setLoading(true);
@@ -31,9 +36,11 @@ export default function Step5Checkout() {
         theme: eventDetails.theme,
         instructions: eventDetails.instructions,
         base_service: baseService,
-        room_vibe: roomVibe,
+        room_vibe: roomVibe === "Other" ? customVibe : roomVibe,
         items: cart,
         total_amount: total,
+        delivery_method: eventDetails.deliveryMethodDetails ? `${deliveryObj?.label} - ${eventDetails.deliveryMethodDetails}` : deliveryObj?.label,
+        room_transport: baseService === "Room Aesthetics" ? transportObj?.label : null
       }]);
     } catch (e) {
       console.error(e);
@@ -47,9 +54,11 @@ export default function Step5Checkout() {
     `Hi Curated Cupid! 🌹\n\nI'd like to confirm my booking:\n\n` +
     `*Sender:* ${eventDetails.name} (${eventDetails.phone})\n` +
     `*Recipient:* ${eventDetails.recipientName} (${eventDetails.recipientPhone})\n` +
-    `*Date:* ${eventDetails.date} at ${eventDetails.time}\n` +
+    `*Delivery Date:* ${eventDetails.date} at ${eventDetails.time}\n` +
     `*Location:* ${eventDetails.location}\n` +
-    `*Service:* ${baseService}${roomVibe ? ` (${roomVibe} Vibe)` : ""}\n\n` +
+    `*Delivery Method:* ${deliveryObj?.label} ${eventDetails.deliveryMethodDetails ? `(${eventDetails.deliveryMethodDetails})` : ""}\n` +
+    `*Service:* ${baseService}${roomVibe ? ` (${roomVibe === "Other" ? customVibe : roomVibe} Vibe)` : ""}\n\n` +
+    `${baseService === "Room Aesthetics" ? `*Room Transport:* ${transportObj?.label}\n\n` : ""}` +
     `*Items:*\n${cart.map((i) => `- ${i.name} x${i.quantity} (GH₵${(i.price * i.quantity).toLocaleString()})`).join("\n")}\n\n` +
     `*Total:* GH₵${total.toLocaleString()}\n\n` +
     `*Theme:* ${eventDetails.theme || "No preference"}\n` +
@@ -123,38 +132,51 @@ export default function Step5Checkout() {
               <p className="flex items-center gap-2 text-white text-sm"><Gift className="w-3 h-3 text-[#7C3AED]" />{eventDetails.recipientName} ({eventDetails.recipientPhone})</p>
             </div>
             <div className="space-y-1">
-              <p className="text-[10px] text-white/20 uppercase font-bold">Event</p>
+              <p className="text-[10px] text-white/20 uppercase font-bold">Delivery / Event</p>
               <p className="flex items-center gap-2 text-white text-sm"><Calendar className="w-3 h-3 text-white/40" />{eventDetails.date}</p>
               <p className="flex items-center gap-2 text-white text-sm"><Clock className="w-3 h-3 text-white/40" />{eventDetails.time}</p>
               <p className="flex items-center gap-2 text-white text-sm"><MapPin className="w-3 h-3 text-white/40" />{eventDetails.location}</p>
+              <p className="flex items-center gap-2 text-white text-sm mt-1"><Truck className="w-3 h-3 text-white/40" />{deliveryObj?.label} {eventDetails.deliveryMethodDetails && `(${eventDetails.deliveryMethodDetails})`}</p>
+              {baseService === "Room Aesthetics" && (
+                <p className="flex items-center gap-2 text-white text-sm mt-1">
+                  <span className="text-white/40 w-3 h-3 flex items-center justify-center text-[10px]">🛏️</span> 
+                  Room Transport: {transportObj?.label}
+                </p>
+              )}
             </div>
           </div>
         </div>
 
         {/* Items & Pricing */}
-        <div className="glass border border-white/8 rounded-2xl p-5 space-y-4">
-          <p className="text-white/30 text-xs font-medium uppercase tracking-widest">Selected Items</p>
-          <div className="space-y-2">
+        <div className="glass border border-white/8 rounded-2xl p-5 flex flex-col">
+          <p className="text-white/30 text-xs font-medium uppercase tracking-widest mb-4">Selected Items</p>
+          <div className="space-y-2 flex-1">
             <div className="flex items-center justify-between text-xs font-bold text-white/40 pb-2 border-b border-white/5">
-              <p className="flex items-center gap-2"><Package className="w-3 h-3" /> {baseService} {roomVibe && `(${roomVibe})`}</p>
+              <p className="flex items-center gap-2"><Package className="w-3 h-3" /> {baseService} {roomVibe && `(${roomVibe === "Other" ? customVibe : roomVibe})`}</p>
             </div>
-            <div className="space-y-2 pt-2 max-h-32 overflow-y-auto custom-scrollbar">
+            <div className="space-y-2 pt-2 max-h-[14rem] overflow-y-auto custom-scrollbar pr-2">
               {cart.map((item) => (
                 <div key={item.id} className="flex items-center justify-between text-sm">
-                  <span className="text-white/60 flex items-center gap-1.5">
-                    <span>{item.image}</span> {item.name}
-                    <span className="text-white/25">×{item.quantity}</span>
+                  <span className="text-white/60 flex items-center gap-2 truncate">
+                    <span className="w-5 flex justify-center text-base">{item.image.length < 5 ? item.image : "✨"}</span> 
+                    <span className="truncate">{item.name}</span>
+                    <span className="text-white/25 flex-shrink-0">×{item.quantity}</span>
                   </span>
-                  <span className="text-white font-medium">GH₵{(item.price * item.quantity).toLocaleString()}</span>
+                  <span className="text-white font-medium flex-shrink-0 ml-2">GH₵{(item.price * item.quantity).toLocaleString()}</span>
                 </div>
               ))}
             </div>
           </div>
-          <div className="border-t border-white/8 pt-3 space-y-1">
+          <div className="border-t border-white/8 pt-3 space-y-1 mt-4">
             <div className="flex justify-between text-sm text-white/40">
               <span>Service & Packaging fee</span><span>GH₵50</span>
             </div>
-            <div className="flex justify-between font-bold">
+            {baseService === "Room Aesthetics" && roomTransportPrice > 0 && (
+              <div className="flex justify-between text-sm text-white/40">
+                <span>Room Transport</span><span>GH₵{roomTransportPrice}</span>
+              </div>
+            )}
+            <div className="flex justify-between font-bold pt-1">
               <span className="text-white">Total</span>
               <span className="text-[#D4AF37] text-lg">GH₵{total.toLocaleString()}</span>
             </div>
@@ -162,20 +184,39 @@ export default function Step5Checkout() {
         </div>
       </div>
 
+      {/* No Refund Notice */}
+      <div className="glass bg-red-950/20 border-red-500/20 rounded-2xl p-4 flex gap-3 items-start cursor-pointer transition-colors hover:bg-red-950/30" onClick={() => setRefundAcknowledged(!refundAcknowledged)}>
+        <button 
+          type="button"
+          className={`w-5 h-5 mt-0.5 rounded border flex items-center justify-center transition-all flex-shrink-0 ${refundAcknowledged ? "bg-red-500 border-red-500" : "border-white/20 bg-transparent"}`}
+        >
+          {refundAcknowledged && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
+        </button>
+        <div>
+          <p className="flex items-center gap-1.5 text-red-400 font-bold text-sm mb-1">
+            <AlertTriangle className="w-4 h-4" /> Final Booking Policy
+          </p>
+          <p className="text-white/60 text-xs leading-relaxed">
+            Please note: All bookings are final. We do not offer refunds once a booking is confirmed and payment is processed. By proceeding, you acknowledge and agree to this policy.
+          </p>
+        </div>
+      </div>
+
       <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
         <Button variant="secondary" onClick={() => setStep(4)} className="w-full sm:w-auto">
           <ArrowLeft className="w-4 h-4" /> Edit Details
         </Button>
-        <Button onClick={handleConfirm} loading={loading} className="w-full sm:w-auto flex-1">
-          <CheckCircle2 className="w-4 h-4" /> Confirm Booking
+        <Button onClick={handleConfirm} disabled={!refundAcknowledged} loading={loading} className="w-full sm:w-auto flex-1">
+          <CheckCircle2 className="w-4 h-4" /> Confirm Booking & Pay
         </Button>
         <a
-          href={`https://wa.me/233550000000?text=${whatsappMessage}`}
-          target="_blank"
+          href={refundAcknowledged ? `https://wa.me/233550000000?text=${whatsappMessage}` : "#"}
+          target={refundAcknowledged ? "_blank" : "_self"}
           rel="noopener noreferrer"
           className="w-full sm:w-auto"
+          onClick={(e) => !refundAcknowledged && e.preventDefault()}
         >
-          <Button variant="gold" className="w-full justify-center gap-2">
+          <Button variant="gold" disabled={!refundAcknowledged} className="w-full justify-center gap-2">
             <MessageCircle className="w-4 h-4" /> Book via WhatsApp
           </Button>
         </a>

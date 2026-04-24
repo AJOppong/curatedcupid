@@ -1,9 +1,11 @@
 "use client";
 
 import { useBuilder } from "@/context/BuilderContext";
+import { deliveryMethods } from "@/lib/data";
 import Button from "@/components/ui/Button";
-import { ArrowRight, ArrowLeft, User, Phone, Calendar, Clock, MapPin, Palette, MessageSquare, Gift } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, ArrowLeft, User, Phone, Calendar, Clock, MapPin, Palette, MessageSquare, Gift, Truck } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const inputClass =
   "w-full glass border border-white/8 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_15px_rgba(233,30,140,0.1)] transition-all bg-transparent";
@@ -33,6 +35,19 @@ function Field({ label, icon, children, optional }: FieldProps) {
 export default function Step4EventDetails() {
   const { eventDetails, setEventDetails: updateEventDetails, setStep } = useBuilder();
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showDeliveryPicker, setShowDeliveryPicker] = useState(false);
+
+  const deliveryRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (deliveryRef.current && !deliveryRef.current.contains(event.target as Node)) {
+        setShowDeliveryPicker(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +64,10 @@ export default function Step4EventDetails() {
     eventDetails.recipientPhone.trim() &&
     eventDetails.date &&
     eventDetails.time &&
-    eventDetails.location.trim();
+    eventDetails.location.trim() &&
+    eventDetails.deliveryMethod;
+
+  const selectedDelivery = deliveryMethods.find((d) => d.id === eventDetails.deliveryMethod);
 
   return (
     <div className="space-y-6">
@@ -119,7 +137,7 @@ export default function Step4EventDetails() {
         <div className="space-y-4">
           <h3 className="text-sm font-bold text-white/80 border-l-2 border-white/20 pl-3">Logistics</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Field label="Event Date" icon={<Calendar className="w-3 h-3" />}>
+            <Field label="Delivery / Event Date" icon={<Calendar className="w-3 h-3" />}>
               <input
                 type="date"
                 className={inputClass}
@@ -128,7 +146,7 @@ export default function Step4EventDetails() {
                 required
               />
             </Field>
-            <Field label="Event Time" icon={<Clock className="w-3 h-3" />}>
+            <Field label="Delivery / Event Time" icon={<Clock className="w-3 h-3" />}>
               <div className="relative">
                 <input
                   type="text"
@@ -172,16 +190,85 @@ export default function Step4EventDetails() {
             </Field>
           </div>
 
-          <Field label="Location / Venue" icon={<MapPin className="w-3 h-3" />}>
-            <input
-              type="text"
-              placeholder="e.g. Ayeduase, Apartment 4B"
-              className={inputClass}
-              value={eventDetails.location}
-              onChange={(e) => updateEventDetails({ location: e.target.value })}
-              required
-            />
-          </Field>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Field label="Means of Delivery" icon={<Truck className="w-3 h-3" />}>
+              <div className="relative" ref={deliveryRef}>
+                <button
+                  type="button"
+                  onClick={() => setShowDeliveryPicker(!showDeliveryPicker)}
+                  className={`w-full text-left glass border rounded-xl px-4 py-3 text-sm transition-all flex justify-between items-center ${
+                    eventDetails.deliveryMethod ? "border-[#E91E8C]/50 text-white shadow-[0_0_15px_rgba(233,30,140,0.1)]" : "border-white/8 text-white/20"
+                  }`}
+                >
+                  <span>
+                    {selectedDelivery ? (
+                      <span className="flex items-center gap-2"><span className="text-lg">{selectedDelivery.icon}</span> {selectedDelivery.label}</span>
+                    ) : "Select delivery method..."}
+                  </span>
+                  <span className="text-[10px]">▼</span>
+                </button>
+                
+                <AnimatePresence>
+                  {showDeliveryPicker && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute top-full left-0 right-0 mt-2 p-2 glass border border-white/10 rounded-2xl z-50 shadow-2xl flex flex-col gap-1"
+                    >
+                      {deliveryMethods.map((method) => (
+                        <button
+                          key={method.id}
+                          type="button"
+                          onClick={() => {
+                            updateEventDetails({ deliveryMethod: method.id, deliveryMethodDetails: "" });
+                            setShowDeliveryPicker(false);
+                          }}
+                          className={`flex items-start gap-3 p-3 rounded-xl transition-all text-left ${
+                            eventDetails.deliveryMethod === method.id ? "bg-[#E91E8C]/15 border border-[#E91E8C]/30" : "hover:bg-white/5 border border-transparent"
+                          }`}
+                        >
+                          <span className="text-xl">{method.icon}</span>
+                          <div>
+                            <p className="text-sm font-bold text-white mb-0.5">{method.label}</p>
+                            <p className="text-xs text-white/40">{method.desc}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </Field>
+
+            <Field label="Location / Venue" icon={<MapPin className="w-3 h-3" />}>
+              <input
+                type="text"
+                placeholder="e.g. Ayeduase, Apartment 4B"
+                className={inputClass}
+                value={eventDetails.location}
+                onChange={(e) => updateEventDetails({ location: e.target.value })}
+                required
+              />
+            </Field>
+          </div>
+
+          <AnimatePresence>
+            {selectedDelivery?.hasDetails && (
+              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}>
+                <Field label="Delivery Instructions" icon={<MessageSquare className="w-3 h-3" />}>
+                  <input
+                    type="text"
+                    placeholder="Specify your preferred delivery arrangement..."
+                    className={inputClass}
+                    value={eventDetails.deliveryMethodDetails}
+                    onChange={(e) => updateEventDetails({ deliveryMethodDetails: e.target.value })}
+                    required
+                  />
+                </Field>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Room Description (Conditional) */}
@@ -225,7 +312,7 @@ export default function Step4EventDetails() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4">
+        <div className="flex items-center justify-between pt-4 border-t border-white/5">
           <Button type="button" variant="secondary" onClick={() => setStep(3)}>
             <ArrowLeft className="w-4 h-4" /> Back
           </Button>

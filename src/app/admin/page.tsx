@@ -6,12 +6,14 @@ import Navbar from "@/components/Navbar";
 import { 
   Package, Calendar, CheckCircle2, Clock, 
   Search, Filter, ChevronRight, User, Phone, 
-  MapPin, Gift, Eye, Trash2, ShieldCheck, LogOut
+  MapPin, Gift, Eye, Trash2, ShieldCheck, LogOut,
+  ShoppingBag, Plus, Save, X
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { BuilderProvider } from "@/context/BuilderContext";
 
+// Types
 interface Booking {
   id: string;
   created_at: string;
@@ -31,6 +33,27 @@ interface Booking {
   status: "pending" | "confirmed" | "completed" | "cancelled";
 }
 
+interface ShopItem {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  description: string;
+  emoji: string;
+  image: string;
+  gender: string;
+  active: boolean;
+}
+
+interface PackageItem {
+  id: string;
+  name: string;
+  price: number;
+  items: string[];
+  gender: string;
+  active: boolean;
+}
+
 export default function AdminDashboard() {
   return (
     <BuilderProvider>
@@ -42,10 +65,25 @@ export default function AdminDashboard() {
 function AdminContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
+  const [activeTab, setActiveTab] = useState<"bookings" | "items" | "packages">("bookings");
+
+  // Bookings state
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingBookings, setLoadingBookings] = useState(false);
   const [filter, setFilter] = useState<Booking["status"] | "all">("all");
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+
+  // Items state
+  const [items, setItems] = useState<ShopItem[]>([]);
+  const [loadingItems, setLoadingItems] = useState(false);
+  const [showItemModal, setShowItemModal] = useState(false);
+  const [newItem, setNewItem] = useState<Partial<ShopItem>>({ gender: 'all', active: true });
+
+  // Packages state
+  const [packages, setPackages] = useState<PackageItem[]>([]);
+  const [loadingPackages, setLoadingPackages] = useState(false);
+  const [showPackageModal, setShowPackageModal] = useState(false);
+  const [newPackage, setNewPackage] = useState<Partial<PackageItem>>({ items: [], gender: 'all', active: true });
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,24 +96,19 @@ function AdminContent() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetchBookings();
+      if (activeTab === "bookings") fetchBookings();
+      if (activeTab === "items") fetchItems();
+      if (activeTab === "packages") fetchPackages();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, activeTab]);
 
+  // ─── BOOKINGS CRUD ───────────────────────────────────────────────
   const fetchBookings = async () => {
-    setLoading(true);
+    setLoadingBookings(true);
     try {
-      const { data, error } = await supabase
-        .from("bookings")
-        .select("*")
-        .order("created_at", { ascending: false });
-
+      const { data, error } = await supabase.from("bookings").select("*").order("created_at", { ascending: false });
       if (data) setBookings(data as Booking[]);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
+    } catch (e) { console.error(e); } finally { setLoadingBookings(false); }
   };
 
   const updateStatus = async (id: string, status: Booking["status"]) => {
@@ -83,9 +116,7 @@ function AdminContent() {
       await supabase.from("bookings").update({ status }).eq("id", id);
       setBookings(prev => prev.map(b => b.id === id ? { ...b, status } : b));
       if (selectedBooking?.id === id) setSelectedBooking(prev => prev ? { ...prev, status } : null);
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) { console.error(e); }
   };
 
   const deleteBooking = async (id: string) => {
@@ -94,9 +125,73 @@ function AdminContent() {
       await supabase.from("bookings").delete().eq("id", id);
       setBookings(prev => prev.filter(b => b.id !== id));
       setSelectedBooking(null);
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) { console.error(e); }
+  };
+
+  // ─── ITEMS CRUD ──────────────────────────────────────────────────
+  const fetchItems = async () => {
+    setLoadingItems(true);
+    try {
+      const { data, error } = await supabase.from("shop_items").select("*").order("name");
+      if (data) setItems(data as ShopItem[]);
+    } catch (e) { console.error(e); } finally { setLoadingItems(false); }
+  };
+
+  const handleSaveItem = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const id = newItem.id || newItem.name?.toLowerCase().replace(/\s+/g, '-');
+      const itemToSave = { ...newItem, id };
+      const { error } = await supabase.from('shop_items').upsert([itemToSave]);
+      if (!error) {
+        setShowItemModal(false);
+        setNewItem({ gender: 'all', active: true });
+        fetchItems();
+      } else {
+        alert(error.message);
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  const deleteItem = async (id: string) => {
+    if (!confirm("Delete this item?")) return;
+    try {
+      await supabase.from('shop_items').delete().eq('id', id);
+      fetchItems();
+    } catch (e) { console.error(e); }
+  };
+
+  // ─── PACKAGES CRUD ───────────────────────────────────────────────
+  const fetchPackages = async () => {
+    setLoadingPackages(true);
+    try {
+      const { data, error } = await supabase.from("packages").select("*").order("price");
+      if (data) setPackages(data as PackageItem[]);
+    } catch (e) { console.error(e); } finally { setLoadingPackages(false); }
+  };
+
+  const handleSavePackage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const id = newPackage.id || newPackage.name?.toLowerCase().replace(/\s+/g, '-');
+      const packageToSave = { ...newPackage, id };
+      const { error } = await supabase.from('packages').upsert([packageToSave]);
+      if (!error) {
+        setShowPackageModal(false);
+        setNewPackage({ items: [], gender: 'all', active: true });
+        fetchPackages();
+      } else {
+        alert(error.message);
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  const deletePackage = async (id: string) => {
+    if (!confirm("Delete this package?")) return;
+    try {
+      await supabase.from('packages').delete().eq('id', id);
+      fetchPackages();
+    } catch (e) { console.error(e); }
   };
 
   const filteredBookings = bookings.filter(b => filter === "all" || b.status === filter);
@@ -138,208 +233,370 @@ function AdminContent() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-white">Admin <span className="text-[#E91E8C]">Dashboard</span></h1>
-            <p className="text-white/40 text-sm">Manage bookings and orders</p>
+            <p className="text-white/40 text-sm">Manage bookings, items, and packages</p>
           </div>
           <div className="flex items-center gap-3">
             <button 
               onClick={() => {
-                localStorage.removeItem("admin_auth");
                 setIsAuthenticated(false);
               }}
               className="px-4 py-2 rounded-xl glass border border-white/10 text-white/60 text-xs font-bold hover:text-white transition-all flex items-center gap-2"
             >
               <LogOut className="w-3 h-3" /> Logout
             </button>
-            <Button onClick={fetchBookings} variant="secondary" className="text-xs py-2">Refresh Data</Button>
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Tabs */}
+        <div className="flex gap-2 p-1 glass border border-white/10 rounded-xl w-fit">
           {[
-            { label: "Total Bookings", val: bookings.length, color: "text-white" },
-            { label: "Pending", val: bookings.filter(b => b.status === "pending").length, color: "text-amber-400" },
-            { label: "Confirmed", val: bookings.filter(b => b.status === "confirmed").length, color: "text-blue-400" },
-            { label: "Completed", val: bookings.filter(b => b.status === "completed").length, color: "text-green-400" },
-          ].map(stat => (
-            <div key={stat.label} className="glass border border-white/5 p-5 rounded-2xl">
-              <p className="text-white/30 text-[10px] uppercase font-bold tracking-widest">{stat.label}</p>
-              <p className={`text-2xl font-bold mt-1 ${stat.color}`}>{stat.val}</p>
-            </div>
+            { id: "bookings", label: "Bookings", icon: <Calendar className="w-4 h-4" /> },
+            { id: "items", label: "Shop Items", icon: <ShoppingBag className="w-4 h-4" /> },
+            { id: "packages", label: "Packages", icon: <Package className="w-4 h-4" /> },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                activeTab === tab.id ? "bg-[#E91E8C] text-white" : "text-white/40 hover:text-white hover:bg-white/5"
+              }`}
+            >
+              {tab.icon} {tab.label}
+            </button>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* List */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-3 mb-2 overflow-x-auto pb-2 scrollbar-hide">
-              {(["all", "pending", "confirmed", "completed", "cancelled"] as const).map(s => (
-                <button
-                  key={s}
-                  onClick={() => setFilter(s)}
-                  className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all whitespace-nowrap ${
-                    filter === s ? "bg-[#E91E8C] text-white" : "glass border border-white/5 text-white/40 hover:text-white"
-                  }`}
-                >
-                  {s}
-                </button>
+        {/* ─── BOOKINGS TAB ────────────────────────────────────────────── */}
+        {activeTab === "bookings" && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { label: "Total Bookings", val: bookings.length, color: "text-white" },
+                { label: "Pending", val: bookings.filter(b => b.status === "pending").length, color: "text-amber-400" },
+                { label: "Confirmed", val: bookings.filter(b => b.status === "confirmed").length, color: "text-blue-400" },
+                { label: "Completed", val: bookings.filter(b => b.status === "completed").length, color: "text-green-400" },
+              ].map(stat => (
+                <div key={stat.label} className="glass border border-white/5 p-5 rounded-2xl">
+                  <p className="text-white/30 text-[10px] uppercase font-bold tracking-widest">{stat.label}</p>
+                  <p className={`text-2xl font-bold mt-1 ${stat.color}`}>{stat.val}</p>
+                </div>
               ))}
             </div>
 
-            <div className="space-y-3">
-              {loading ? (
-                <div className="py-20 text-center text-white/20">Loading bookings...</div>
-              ) : filteredBookings.length === 0 ? (
-                <div className="py-20 text-center text-white/20">No bookings found</div>
-              ) : (
-                filteredBookings.map(booking => (
-                  <motion.div
-                    key={booking.id}
-                    layoutId={booking.id}
-                    onClick={() => setSelectedBooking(booking)}
-                    className={`glass border p-4 rounded-2xl flex items-center justify-between cursor-pointer transition-all hover:bg-white/5 ${
-                      selectedBooking?.id === booking.id ? "border-[#E91E8C]/50 shadow-[0_0_20px_rgba(233,30,140,0.1)]" : "border-white/5"
-                    }`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${
-                        booking.status === "completed" ? "bg-green-500/10 text-green-500" :
-                        booking.status === "confirmed" ? "bg-blue-500/10 text-blue-500" :
-                        booking.status === "cancelled" ? "bg-red-500/10 text-red-500" :
-                        "bg-amber-500/10 text-amber-500"
-                      }`}>
-                        {booking.status === "completed" ? <CheckCircle2 className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* List */}
+              <div className="lg:col-span-2 space-y-4">
+                <div className="flex items-center gap-3 mb-2 overflow-x-auto pb-2 scrollbar-hide">
+                  {(["all", "pending", "confirmed", "completed", "cancelled"] as const).map(s => (
+                    <button
+                      key={s}
+                      onClick={() => setFilter(s)}
+                      className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all whitespace-nowrap ${
+                        filter === s ? "bg-[#E91E8C] text-white" : "glass border border-white/5 text-white/40 hover:text-white"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                  <Button onClick={fetchBookings} variant="secondary" className="ml-auto text-xs py-1.5 px-3">Refresh</Button>
+                </div>
+
+                <div className="space-y-3">
+                  {loadingBookings ? (
+                    <div className="py-20 text-center text-white/20">Loading bookings...</div>
+                  ) : filteredBookings.length === 0 ? (
+                    <div className="py-20 text-center text-white/20">No bookings found</div>
+                  ) : (
+                    filteredBookings.map(booking => (
+                      <motion.div
+                        key={booking.id}
+                        layoutId={booking.id}
+                        onClick={() => setSelectedBooking(booking)}
+                        className={`glass border p-4 rounded-2xl flex items-center justify-between cursor-pointer transition-all hover:bg-white/5 ${
+                          selectedBooking?.id === booking.id ? "border-[#E91E8C]/50 shadow-[0_0_20px_rgba(233,30,140,0.1)]" : "border-white/5"
+                        }`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${
+                            booking.status === "completed" ? "bg-green-500/10 text-green-500" :
+                            booking.status === "confirmed" ? "bg-blue-500/10 text-blue-500" :
+                            booking.status === "cancelled" ? "bg-red-500/10 text-red-500" :
+                            "bg-amber-500/10 text-amber-500"
+                          }`}>
+                            {booking.status === "completed" ? <CheckCircle2 className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
+                          </div>
+                          <div>
+                            <p className="text-white font-bold text-sm">{booking.name}</p>
+                            <div className="flex items-center gap-2 text-[10px] text-white/30 mt-0.5">
+                              <Calendar className="w-3 h-3" /> {new Date(booking.event_date).toLocaleDateString()} at {booking.event_time}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-white font-bold text-sm">GH₵{booking.total_amount.toLocaleString()}</p>
+                          <p className={`text-[10px] font-bold uppercase mt-0.5 ${
+                            booking.status === "completed" ? "text-green-500" :
+                            booking.status === "confirmed" ? "text-blue-500" :
+                            booking.status === "cancelled" ? "text-red-500" :
+                            "text-amber-500"
+                          }`}>{booking.status}</p>
+                        </div>
+                      </motion.div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              {/* Details */}
+              <div className="relative">
+                <AnimatePresence mode="wait">
+                  {selectedBooking ? (
+                    <motion.div
+                      key={selectedBooking.id}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      className="glass border border-white/10 rounded-3xl p-6 sticky top-24 space-y-6 shadow-2xl"
+                    >
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-bold text-white">Booking Details</h3>
+                        <button onClick={() => setSelectedBooking(null)} className="text-white/20 hover:text-white"><LogOut className="w-4 h-4 rotate-180" /></button>
                       </div>
-                      <div>
-                        <p className="text-white font-bold text-sm">{booking.name}</p>
-                        <div className="flex items-center gap-2 text-[10px] text-white/30 mt-0.5">
-                          <Calendar className="w-3 h-3" /> {new Date(booking.event_date).toLocaleDateString()} at {booking.event_time}
+
+                      <div className="space-y-4">
+                        <div className="space-y-3">
+                          <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Client</p>
+                          <div className="space-y-2">
+                            <p className="flex items-center gap-2 text-white text-sm"><User className="w-3 h-3 text-[#E91E8C]" /> {selectedBooking.name}</p>
+                            <p className="flex items-center gap-2 text-white text-sm"><Phone className="w-3 h-3 text-[#E91E8C]" /> {selectedBooking.phone}</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Recipient</p>
+                          <div className="space-y-2">
+                            <p className="flex items-center gap-2 text-white text-sm"><Gift className="w-3 h-3 text-[#7C3AED]" /> {selectedBooking.recipient_name}</p>
+                            <p className="flex items-center gap-2 text-white text-sm"><Phone className="w-3 h-3 text-[#7C3AED]" /> {selectedBooking.recipient_phone}</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Event</p>
+                          <div className="space-y-2">
+                            <p className="flex items-center gap-2 text-white text-sm"><Calendar className="w-3 h-3 text-white/30" /> {selectedBooking.event_date}</p>
+                            <p className="flex items-center gap-2 text-white text-sm"><Clock className="w-3 h-3 text-white/30" /> {selectedBooking.event_time}</p>
+                            <p className="flex items-center gap-2 text-white text-sm"><MapPin className="w-3 h-3 text-white/30" /> {selectedBooking.location}</p>
+                            <p className="flex items-center gap-2 text-white text-sm"><Package className="w-3 h-3 text-white/30" /> {selectedBooking.base_service} {selectedBooking.room_vibe ? `(${selectedBooking.room_vibe})` : ""}</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-3">
+                          <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Items</p>
+                          <div className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                            {selectedBooking.items && selectedBooking.items.map((item: any, idx: number) => (
+                              <div key={idx} className="flex items-center justify-between text-xs">
+                                <span className="text-white/60">{item.image} {item.name} x{item.quantity}</span>
+                                <span className="text-white">GH₵{(item.price * item.quantity).toLocaleString()}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {selectedBooking.theme && (
+                          <div className="space-y-1">
+                            <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Theme</p>
+                            <p className="text-white text-sm">{selectedBooking.theme}</p>
+                          </div>
+                        )}
+
+                        {selectedBooking.instructions && (
+                          <div className="space-y-1">
+                            <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Instructions</p>
+                            <p className="text-white text-xs leading-relaxed italic text-white/60">"{selectedBooking.instructions}"</p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="pt-4 border-t border-white/5 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <p className="text-white font-bold">Total Amount</p>
+                          <p className="text-[#D4AF37] text-xl font-black">GH₵{selectedBooking.total_amount.toLocaleString()}</p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <select 
+                            value={selectedBooking.status}
+                            onChange={(e) => updateStatus(selectedBooking.id, e.target.value as any)}
+                            className="glass border border-white/10 rounded-xl px-3 py-2 text-xs text-white bg-transparent focus:outline-none"
+                          >
+                            <option value="pending" className="bg-[#1A1A1A]">Pending</option>
+                            <option value="confirmed" className="bg-[#1A1A1A]">Confirmed</option>
+                            <option value="completed" className="bg-[#1A1A1A]">Completed</option>
+                            <option value="cancelled" className="bg-[#1A1A1A]">Cancelled</option>
+                          </select>
+                          <button 
+                            onClick={() => deleteBooking(selectedBooking.id)}
+                            className="flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl px-3 py-2 text-xs font-bold transition-all"
+                          >
+                            <Trash2 className="w-3 h-3" /> Delete
+                          </button>
                         </div>
                       </div>
+                    </motion.div>
+                  ) : (
+                    <div className="glass border border-white/5 border-dashed rounded-3xl p-12 text-center sticky top-24">
+                      <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-4">
+                        <Eye className="w-5 h-5 text-white/20" />
+                      </div>
+                      <p className="text-white/20 text-sm">Select a booking to view details</p>
                     </div>
-                    <div className="text-right">
-                      <p className="text-white font-bold text-sm">GH₵{booking.total_amount.toLocaleString()}</p>
-                      <p className={`text-[10px] font-bold uppercase mt-0.5 ${
-                        booking.status === "completed" ? "text-green-500" :
-                        booking.status === "confirmed" ? "text-blue-500" :
-                        booking.status === "cancelled" ? "text-red-500" :
-                        "text-amber-500"
-                      }`}>{booking.status}</p>
-                    </div>
-                  </motion.div>
-                ))
-              )}
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
+        )}
 
-          {/* Details */}
-          <div className="relative">
-            <AnimatePresence mode="wait">
-              {selectedBooking ? (
-                <motion.div
-                  key={selectedBooking.id}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  className="glass border border-white/10 rounded-3xl p-6 sticky top-24 space-y-6 shadow-2xl"
-                >
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-bold text-white">Booking Details</h3>
-                    <button onClick={() => setSelectedBooking(null)} className="text-white/20 hover:text-white"><LogOut className="w-4 h-4 rotate-180" /></button>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="space-y-3">
-                      <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Client</p>
-                      <div className="space-y-2">
-                        <p className="flex items-center gap-2 text-white text-sm"><User className="w-3 h-3 text-[#E91E8C]" /> {selectedBooking.name}</p>
-                        <p className="flex items-center gap-2 text-white text-sm"><Phone className="w-3 h-3 text-[#E91E8C]" /> {selectedBooking.phone}</p>
+        {/* ─── ITEMS TAB ────────────────────────────────────────────── */}
+        {activeTab === "items" && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-bold text-white">Manage Shop Items</h2>
+              <Button onClick={() => setShowItemModal(true)} className="gap-2 py-2 text-sm"><Plus className="w-4 h-4"/> Add New Item</Button>
+            </div>
+            
+            {loadingItems ? (
+               <div className="py-20 text-center text-white/20">Loading items...</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {items.map(item => (
+                  <div key={item.id} className="glass border border-white/10 p-4 rounded-2xl flex flex-col gap-2">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-2xl border border-white/5 relative overflow-hidden">
+                        {item.image ? <img src={item.image} alt="" className="w-full h-full object-cover"/> : item.emoji}
                       </div>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${item.active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                        {item.active ? 'Active' : 'Inactive'}
+                      </span>
                     </div>
-
-                    <div className="space-y-3">
-                      <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Recipient</p>
-                      <div className="space-y-2">
-                        <p className="flex items-center gap-2 text-white text-sm"><Gift className="w-3 h-3 text-[#7C3AED]" /> {selectedBooking.recipient_name}</p>
-                        <p className="flex items-center gap-2 text-white text-sm"><Phone className="w-3 h-3 text-[#7C3AED]" /> {selectedBooking.recipient_phone}</p>
+                    <h3 className="text-white font-bold text-sm leading-tight">{item.name}</h3>
+                    <p className="text-white/40 text-xs line-clamp-2">{item.description}</p>
+                    <div className="mt-auto pt-3 flex items-center justify-between">
+                      <span className="text-[#D4AF37] font-bold text-sm">GH₵{item.price}</span>
+                      <div className="flex gap-2">
+                        <button onClick={() => {setNewItem(item); setShowItemModal(true);}} className="text-blue-400 hover:text-blue-300 text-xs font-bold">Edit</button>
+                        <button onClick={() => deleteItem(item.id)} className="text-red-500 hover:text-red-400 text-xs font-bold">Delete</button>
                       </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Event</p>
-                      <div className="space-y-2">
-                        <p className="flex items-center gap-2 text-white text-sm"><Calendar className="w-3 h-3 text-white/30" /> {selectedBooking.event_date}</p>
-                        <p className="flex items-center gap-2 text-white text-sm"><Clock className="w-3 h-3 text-white/30" /> {selectedBooking.event_time}</p>
-                        <p className="flex items-center gap-2 text-white text-sm"><MapPin className="w-3 h-3 text-white/30" /> {selectedBooking.location}</p>
-                        <p className="flex items-center gap-2 text-white text-sm"><Package className="w-3 h-3 text-white/30" /> {selectedBooking.base_service} {selectedBooking.room_vibe ? `(${selectedBooking.room_vibe})` : ""}</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Items</p>
-                      <div className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
-                        {selectedBooking.items && selectedBooking.items.map((item: any, idx: number) => (
-                          <div key={idx} className="flex items-center justify-between text-xs">
-                            <span className="text-white/60">{item.image} {item.name} x{item.quantity}</span>
-                            <span className="text-white">GH₵{(item.price * item.quantity).toLocaleString()}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {selectedBooking.theme && (
-                      <div className="space-y-1">
-                        <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Theme</p>
-                        <p className="text-white text-sm">{selectedBooking.theme}</p>
-                      </div>
-                    )}
-
-                    {selectedBooking.instructions && (
-                      <div className="space-y-1">
-                        <p className="text-[10px] text-white/20 uppercase font-bold tracking-widest">Instructions</p>
-                        <p className="text-white text-xs leading-relaxed italic text-white/60">"{selectedBooking.instructions}"</p>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="pt-4 border-t border-white/5 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <p className="text-white font-bold">Total Amount</p>
-                      <p className="text-[#D4AF37] text-xl font-black">GH₵{selectedBooking.total_amount.toLocaleString()}</p>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2">
-                      <select 
-                        value={selectedBooking.status}
-                        onChange={(e) => updateStatus(selectedBooking.id, e.target.value as any)}
-                        className="glass border border-white/10 rounded-xl px-3 py-2 text-xs text-white bg-transparent focus:outline-none"
-                      >
-                        <option value="pending" className="bg-[#1A1A1A]">Pending</option>
-                        <option value="confirmed" className="bg-[#1A1A1A]">Confirmed</option>
-                        <option value="completed" className="bg-[#1A1A1A]">Completed</option>
-                        <option value="cancelled" className="bg-[#1A1A1A]">Cancelled</option>
-                      </select>
-                      <button 
-                        onClick={() => deleteBooking(selectedBooking.id)}
-                        className="flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl px-3 py-2 text-xs font-bold transition-all"
-                      >
-                        <Trash2 className="w-3 h-3" /> Delete
-                      </button>
                     </div>
                   </div>
-                </motion.div>
-              ) : (
-                <div className="glass border border-white/5 border-dashed rounded-3xl p-12 text-center sticky top-24">
-                  <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center mx-auto mb-4">
-                    <Eye className="w-5 h-5 text-white/20" />
-                  </div>
-                  <p className="text-white/20 text-sm">Select a booking to view details</p>
-                </div>
-              )}
-            </AnimatePresence>
+                ))}
+                {items.length === 0 && <div className="col-span-4 py-20 text-center text-white/30">No items found. Create one!</div>}
+              </div>
+            )}
           </div>
-        </div>
+        )}
+
+        {/* ─── PACKAGES TAB ─────────────────────────────────────────── */}
+        {activeTab === "packages" && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-bold text-white">Manage Packages</h2>
+              <Button onClick={() => setShowPackageModal(true)} className="gap-2 py-2 text-sm"><Plus className="w-4 h-4"/> Add New Package</Button>
+            </div>
+
+            {loadingPackages ? (
+               <div className="py-20 text-center text-white/20">Loading packages...</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {packages.map(pkg => (
+                  <div key={pkg.id} className="glass border border-white/10 p-5 rounded-2xl flex flex-col gap-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-white font-bold text-lg uppercase">{pkg.name}</h3>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${pkg.active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                        {pkg.active ? 'Active' : 'Inactive'}
+                      </span>
+                    </div>
+                    <span className="text-[#D4AF37] font-bold text-xl">GH₵{pkg.price}</span>
+                    <div className="flex gap-2 text-xs font-bold uppercase text-white/30">
+                      <span className="px-2 py-1 bg-white/5 rounded-md">{pkg.gender}</span>
+                      <span className="px-2 py-1 bg-white/5 rounded-md">{pkg.items?.length || 0} items</span>
+                    </div>
+                    <div className="mt-auto pt-3 flex justify-end gap-3 border-t border-white/10">
+                      <button onClick={() => {setNewPackage(pkg); setShowPackageModal(true);}} className="text-blue-400 hover:text-blue-300 text-sm font-bold">Edit</button>
+                      <button onClick={() => deletePackage(pkg.id)} className="text-red-500 hover:text-red-400 text-sm font-bold">Delete</button>
+                    </div>
+                  </div>
+                ))}
+                {packages.length === 0 && <div className="col-span-3 py-20 text-center text-white/30">No packages found. Create one!</div>}
+              </div>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* ─── MODALS ─────────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {showItemModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-[#12101F] border border-white/10 rounded-3xl p-6 w-full max-w-lg relative max-h-[90vh] overflow-y-auto">
+              <button onClick={() => setShowItemModal(false)} className="absolute top-4 right-4 text-white/40 hover:text-white"><X className="w-5 h-5" /></button>
+              <h3 className="text-2xl font-bold text-white mb-4">{newItem.id ? 'Edit Item' : 'Add New Item'}</h3>
+              <form onSubmit={handleSaveItem} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1"><label className="text-white/60 text-xs">Name</label><input required value={newItem.name || ''} onChange={e => setNewItem({...newItem, name: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" /></div>
+                  <div className="space-y-1"><label className="text-white/60 text-xs">Price (GH₵)</label><input required type="number" value={newItem.price || ''} onChange={e => setNewItem({...newItem, price: parseInt(e.target.value)})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" /></div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1"><label className="text-white/60 text-xs">Category</label><input required value={newItem.category || ''} onChange={e => setNewItem({...newItem, category: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" /></div>
+                  <div className="space-y-1">
+                    <label className="text-white/60 text-xs">Gender Tag</label>
+                    <select value={newItem.gender || 'all'} onChange={e => setNewItem({...newItem, gender: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2.5 text-white text-sm outline-none border-none focus:ring-0 [&>option]:bg-[#12101F]">
+                      <option value="all">All</option><option value="ladies">Ladies</option><option value="guys">Guys</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1"><label className="text-white/60 text-xs">Emoji</label><input value={newItem.emoji || ''} onChange={e => setNewItem({...newItem, emoji: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" placeholder="e.g. 🍷" /></div>
+                  <div className="space-y-1"><label className="text-white/60 text-xs">Image URL (Optional)</label><input value={newItem.image || ''} onChange={e => setNewItem({...newItem, image: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" placeholder="/images/item.jpg" /></div>
+                </div>
+                <div className="space-y-1"><label className="text-white/60 text-xs">Description</label><textarea required rows={2} value={newItem.description || ''} onChange={e => setNewItem({...newItem, description: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm resize-none" /></div>
+                <div className="flex items-center gap-2 mt-2">
+                  <input type="checkbox" id="active" checked={newItem.active} onChange={e => setNewItem({...newItem, active: e.target.checked})} className="w-4 h-4 rounded accent-[#E91E8C]" />
+                  <label htmlFor="active" className="text-white/80 text-sm">Item is Active</label>
+                </div>
+                <Button type="submit" className="w-full pt-4 mt-2">Save Item</Button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+
+        {showPackageModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-[#12101F] border border-white/10 rounded-3xl p-6 w-full max-w-lg relative max-h-[90vh] overflow-y-auto">
+              <button onClick={() => setShowPackageModal(false)} className="absolute top-4 right-4 text-white/40 hover:text-white"><X className="w-5 h-5" /></button>
+              <h3 className="text-2xl font-bold text-white mb-4">{newPackage.id ? 'Edit Package' : 'Add New Package'}</h3>
+              <form onSubmit={handleSavePackage} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1"><label className="text-white/60 text-xs">Name</label><input required value={newPackage.name || ''} onChange={e => setNewPackage({...newPackage, name: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" /></div>
+                  <div className="space-y-1"><label className="text-white/60 text-xs">Price (GH₵)</label><input required type="number" value={newPackage.price || ''} onChange={e => setNewPackage({...newPackage, price: parseInt(e.target.value)})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" /></div>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-white/60 text-xs">Gender Tag</label>
+                  <select value={newPackage.gender || 'all'} onChange={e => setNewPackage({...newPackage, gender: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2.5 text-white text-sm outline-none border-none focus:ring-0 [&>option]:bg-[#12101F]">
+                    <option value="all">All</option><option value="ladies">Ladies</option><option value="guys">Guys</option>
+                  </select>
+                </div>
+                <div className="space-y-1"><label className="text-white/60 text-xs">Items (Comma separated IDs)</label><textarea required rows={3} value={newPackage.items?.join(', ') || ''} onChange={e => setNewPackage({...newPackage, items: e.target.value.split(',').map(i => i.trim()).filter(Boolean)})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm resize-none" placeholder="wine, jewelry, ferrero..." /></div>
+                <div className="flex items-center gap-2 mt-2">
+                  <input type="checkbox" id="p-active" checked={newPackage.active} onChange={e => setNewPackage({...newPackage, active: e.target.checked})} className="w-4 h-4 rounded accent-[#E91E8C]" />
+                  <label htmlFor="p-active" className="text-white/80 text-sm">Package is Active</label>
+                </div>
+                <Button type="submit" className="w-full pt-4 mt-2">Save Package</Button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

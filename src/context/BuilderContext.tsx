@@ -23,6 +23,8 @@ export interface EventDetails {
   theme: string;
   instructions: string;
   roomDescription: string;
+  deliveryMethod: string;
+  deliveryMethodDetails: string;
 }
 
 interface BuilderContextType {
@@ -32,11 +34,16 @@ interface BuilderContextType {
   baseService: string;
   roomVibe: string;
   vibeImage: string;
+  customVibe: string;
+  roomTransport: string;
+  roomTransportPrice: number;
   selectedPackageName: string;
   eventDetails: EventDetails;
   setStep: (step: number) => void;
   setBaseService: (service: string) => void;
   setRoomVibe: (vibe: string, image: string) => void;
+  setCustomVibe: (v: string) => void;
+  setRoomTransport: (id: string, price: number) => void;
   setSelectedPackageName: (name: string) => void;
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
@@ -53,6 +60,9 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
   const [baseService, setBaseService] = useState("");
   const [roomVibe, setRoomVibe] = useState("");
   const [vibeImage, setVibeImage] = useState("");
+  const [customVibe, setCustomVibe] = useState("");
+  const [roomTransport, setRoomTransportId] = useState("self");
+  const [roomTransportPrice, setRoomTransportPrice] = useState(0);
   const [selectedPackageName, setSelectedPackageName] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [eventDetails, setEventDetailsState] = useState<EventDetails>({
@@ -66,51 +76,45 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
     theme: "",
     instructions: "",
     roomDescription: "",
+    deliveryMethod: "",
+    deliveryMethodDetails: "",
   });
 
   const addToCart = (item: CartItem) => {
     setCart((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
-        return prev.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
+        return prev.map((i) => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
       }
       return [...prev, { ...item, quantity: 1 }];
     });
   };
 
-  const removeFromCart = (id: string) => {
-    setCart((prev) => prev.filter((i) => i.id !== id));
-  };
+  const removeFromCart = (id: string) => setCart((prev) => prev.filter((i) => i.id !== id));
 
   const updateQuantity = (id: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(id);
-      return;
-    }
-    setCart((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, quantity } : i))
-    );
+    if (quantity <= 0) { removeFromCart(id); return; }
+    setCart((prev) => prev.map((i) => (i.id === id ? { ...i, quantity } : i)));
   };
 
-  const clearCart = () => {
-    setCart([]);
-    setSelectedPackageName("");
-  };
+  const clearCart = () => { setCart([]); setSelectedPackageName(""); };
 
   const preloadItems = (items: CartItem[], packageName?: string) => {
-    setCart(items.map(i => ({ ...i, quantity: 1 })));
+    setCart(items.map((i) => ({ ...i, quantity: 1 })));
     if (packageName) setSelectedPackageName(packageName);
   };
 
-  const setEventDetails = (details: Partial<EventDetails>) => {
+  const setEventDetails = (details: Partial<EventDetails>) =>
     setEventDetailsState((prev) => ({ ...prev, ...details }));
-  };
 
   const setRoomVibeWithImage = (vibe: string, image: string) => {
     setRoomVibe(vibe);
     setVibeImage(image);
+  };
+
+  const setRoomTransport = (id: string, price: number) => {
+    setRoomTransportId(id);
+    setRoomTransportPrice(price);
   };
 
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -118,24 +122,13 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
   return (
     <BuilderContext.Provider
       value={{
-        step,
-        cart,
-        cartTotal,
-        baseService,
-        roomVibe,
-        vibeImage,
-        selectedPackageName,
-        eventDetails,
-        setStep,
-        setBaseService,
-        setRoomVibe: setRoomVibeWithImage,
-        setSelectedPackageName,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        preloadItems,
-        setEventDetails,
+        step, cart, cartTotal, baseService, roomVibe, vibeImage,
+        customVibe, roomTransport, roomTransportPrice,
+        selectedPackageName, eventDetails,
+        setStep, setBaseService, setRoomVibe: setRoomVibeWithImage,
+        setCustomVibe, setRoomTransport,
+        setSelectedPackageName, addToCart, removeFromCart,
+        updateQuantity, clearCart, preloadItems, setEventDetails,
       }}
     >
       {children}
@@ -145,8 +138,6 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
 
 export function useBuilder() {
   const context = useContext(BuilderContext);
-  if (context === undefined) {
-    throw new Error("useBuilder must be used within a BuilderProvider");
-  }
+  if (context === undefined) throw new Error("useBuilder must be used within a BuilderProvider");
   return context;
 }

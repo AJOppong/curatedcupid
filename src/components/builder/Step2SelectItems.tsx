@@ -5,10 +5,11 @@ import { useBuilder } from "@/context/BuilderContext";
 import { shopItems, predefinedPackages, ROOM_DESIGN_PRICE } from "@/lib/data";
 import Button from "@/components/ui/Button";
 import { ArrowRight, ArrowLeft, Plus, Minus, Check, Package, Sparkles, Trash2, PlusCircle, ShoppingCart, Home, Gift } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
 
 const CATEGORIES = ["All", "Selected", "Decor", "Lighting", "Flowers", "Treats", "Gifts", "Personal", "Drinks", "Experience"];
+const GENDER_TABS = ["All", "Ladies", "Guys"];
 
 export default function Step2SelectItems() {
   const {
@@ -17,14 +18,20 @@ export default function Step2SelectItems() {
   } = useBuilder();
 
   const [activeCategory, setActiveCategory] = useState("All");
+  const [activeGender, setActiveGender] = useState("All");
   const [addedIds, setAddedIds] = useState<string[]>([]);
   const [roomChoice, setRoomChoice] = useState<"none" | "with-package" | "without">("none");
 
-  const filtered = activeCategory === "All"
+  const filteredItems = activeCategory === "All"
     ? shopItems
     : activeCategory === "Selected"
     ? shopItems.filter(item => cart.some(c => c.id === item.id))
     : shopItems.filter((i) => i.category === activeCategory);
+
+  const filteredPackages = useMemo(() => {
+    if (activeGender === "All") return predefinedPackages;
+    return predefinedPackages.filter(p => p.gender === activeGender.toLowerCase());
+  }, [activeGender]);
 
   const getCartItem = (id: string) => cart.find((c) => c.id === id);
   const cartItemCount = cart.reduce((s, i) => s + i.quantity, 0);
@@ -42,6 +49,25 @@ export default function Step2SelectItems() {
       return item ? { id: item.id, name: item.name, price: item.price, image: item.image || item.emoji, quantity: 1 } : null;
     }).filter(Boolean) as any;
     preloadItems(itemsToLoad, pkg.name);
+  };
+
+  const ItemIcon = ({ item, className }: { item: typeof shopItems[0] | any, className?: string }) => {
+    // If it's a cart item it has .image, if it's a shop item it has .image or .emoji
+    const imgSrc = item.image && item.image.startsWith('/') ? item.image : null;
+    const emojiStr = imgSrc ? null : (item.emoji || item.image);
+
+    if (imgSrc) {
+      return (
+        <div className={`relative overflow-hidden ${className}`}>
+          <Image src={imgSrc} alt={item.name} fill className="object-cover" />
+        </div>
+      );
+    }
+    return (
+      <div className={`flex items-center justify-center ${className}`}>
+        {emojiStr}
+      </div>
+    );
   };
 
   // ─── ROOM AESTHETICS FLOW ───────────────────────────────────────────────────
@@ -148,8 +174,25 @@ export default function Step2SelectItems() {
             <h2 className="text-2xl font-bold text-white mb-1">Choose a <span className="text-[#E91E8C]">Package</span></h2>
             <p className="text-white/40 text-sm">Select a gift package to pair with your room design</p>
           </div>
+
+          <div className="flex gap-2 justify-center mb-4">
+            {GENDER_TABS.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveGender(tab)}
+                className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase transition-all ${
+                  activeGender === tab
+                    ? "bg-[#E91E8C] text-white shadow-lg shadow-[#E91E8C]/20"
+                    : "glass border border-white/10 text-white/50 hover:text-white"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-            {predefinedPackages.map((pkg) => (
+            {filteredPackages.map((pkg) => (
               <motion.button
                 key={pkg.id}
                 whileHover={{ y: -4, scale: 1.02 }}
@@ -170,6 +213,9 @@ export default function Step2SelectItems() {
                 </div>
               </motion.button>
             ))}
+            {filteredPackages.length === 0 && (
+              <div className="w-full text-center py-8 text-white/30 text-sm">No packages found for this selection.</div>
+            )}
           </div>
           <button type="button" onClick={() => setRoomChoice("none")} className="flex items-center gap-2 text-white/30 hover:text-white text-xs font-bold transition-colors">
             <ArrowLeft className="w-3 h-3" /> Back
@@ -230,9 +276,7 @@ export default function Step2SelectItems() {
                     transition={{ delay: idx * 0.04, type: "spring", stiffness: 300, damping: 28 }}
                     className="glass border border-white/8 rounded-2xl p-3 flex items-center gap-3 group hover:border-[#E91E8C]/20 transition-all"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-xl flex-shrink-0 group-hover:scale-110 transition-transform">
-                      {item.image}
-                    </div>
+                    <ItemIcon item={item} className="w-10 h-10 rounded-xl bg-white/5 text-xl flex-shrink-0 group-hover:scale-110 transition-transform" />
                     <div className="flex-1 min-w-0">
                       <p className="text-white text-sm font-semibold truncate">{item.name}</p>
                       <p className="text-[#D4AF37] text-[11px] font-bold">GH₵{item.price.toLocaleString()}</p>
@@ -324,7 +368,7 @@ export default function Step2SelectItems() {
 
             {/* Items Grid */}
             <div className="grid grid-cols-2 gap-3 max-h-[520px] overflow-y-auto pr-1 scrollbar-hide">
-              {filtered.map((item, i) => {
+              {filteredItems.map((item, i) => {
                 const cartItem = getCartItem(item.id);
                 const justAdded = addedIds.includes(item.id);
                 return (
@@ -337,9 +381,7 @@ export default function Step2SelectItems() {
                       cartItem ? "border-[#E91E8C]/30 bg-[#E91E8C]/5" : "border-white/8 hover:border-white/15"
                     }`}
                   >
-                    <div className="w-full aspect-square rounded-xl bg-white/4 flex items-center justify-center text-3xl border border-white/5">
-                      {item.emoji}
-                    </div>
+                    <ItemIcon item={item} className="w-full aspect-square rounded-xl bg-white/4 text-3xl border border-white/5" />
                     <div>
                       <p className="text-white text-xs font-semibold leading-tight line-clamp-1">{item.name}</p>
                       <p className="text-[#D4AF37] text-[11px] font-bold mt-0.5">GH₵{item.price.toLocaleString()}</p>
@@ -406,11 +448,29 @@ export default function Step2SelectItems() {
 
       {/* Package Picker */}
       <div className="space-y-4">
-        <div className="flex items-center gap-2 text-xs font-bold text-white/30 uppercase tracking-widest">
-          <Sparkles className="w-3 h-3 text-[#E91E8C]" /> Curated Packages
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xs font-bold text-white/30 uppercase tracking-widest">
+            <Sparkles className="w-3 h-3 text-[#E91E8C]" /> Curated Packages
+          </div>
+          <div className="flex gap-2">
+            {GENDER_TABS.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveGender(tab)}
+                className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase transition-all ${
+                  activeGender === tab
+                    ? "bg-[#E91E8C] text-white shadow-lg shadow-[#E91E8C]/20"
+                    : "glass border border-white/10 text-white/50 hover:text-white"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
         </div>
+        
         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide -mx-1 px-1">
-          {predefinedPackages.map((pkg) => (
+          {filteredPackages.map((pkg) => (
             <motion.button
               key={pkg.id}
               whileHover={{ y: -4, scale: 1.02 }}
@@ -431,6 +491,9 @@ export default function Step2SelectItems() {
               </div>
             </motion.button>
           ))}
+          {filteredPackages.length === 0 && (
+            <div className="w-full text-center py-8 text-white/30 text-sm glass rounded-3xl border border-white/5">No packages found for this selection.</div>
+          )}
         </div>
       </div>
 
@@ -463,7 +526,7 @@ export default function Step2SelectItems() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filtered.map((item, i) => {
+          {filteredItems.map((item, i) => {
             const cartItem = getCartItem(item.id);
             const justAdded = addedIds.includes(item.id);
             return (
@@ -475,9 +538,7 @@ export default function Step2SelectItems() {
                 whileHover={{ y: -4 }}
                 className="glass border border-white/8 rounded-2xl p-4 flex flex-col gap-3 hover:border-[#E91E8C]/25 transition-all"
               >
-                <div className="w-full aspect-square rounded-xl bg-gradient-to-br from-[#E91E8C]/6 to-[#7C3AED]/6 flex items-center justify-center text-4xl border border-white/5">
-                  {item.emoji}
-                </div>
+                <ItemIcon item={item} className="w-full aspect-square rounded-xl bg-gradient-to-br from-[#E91E8C]/6 to-[#7C3AED]/6 text-4xl border border-white/5" />
                 <div>
                   <p className="text-white text-sm font-medium">{item.name}</p>
                   <p className="text-white/35 text-[10px] mt-0.5 line-clamp-1">{item.description}</p>

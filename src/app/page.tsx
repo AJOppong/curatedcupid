@@ -1,15 +1,18 @@
 "use client";
 
-import { motion, type Transition } from "framer-motion";
+import { motion, type Transition, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { BuilderProvider } from "@/context/BuilderContext";
+import { BuilderProvider, useBuilder } from "@/context/BuilderContext";
 import Navbar from "@/components/Navbar";
+import { flowerItems, predefinedPackages } from "@/lib/data";
+import { supabase } from "@/lib/supabase";
+import { useState, useEffect, useRef } from "react";
 import {
   Heart, Star, Sparkles, ArrowRight, Gift, Camera,
   Clock, Shield, ChevronDown, Crown, Gem, Cake,
   Check, Phone, Mail, MapPin, MessageCircle,
-  MessageSquare
+  MessageSquare, Play, Flower2, Plus, X
 } from "lucide-react";
 
 const fadeUp = (delay = 0) => ({
@@ -39,7 +42,7 @@ function Hero() {
       </div>
 
       <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
-        <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Luxury Gifts & Aesthetic Setups" />
+        <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Luxury Gifts & Event Setups" />
       </motion.div>
 
       {/* Headline */}
@@ -58,7 +61,7 @@ function Hero() {
         transition={{ duration: 0.6, delay: 0.25 }}
         className="mt-6 text-white/50 text-base md:text-lg max-w-lg leading-relaxed"
       >
-        Luxury aesthetics for special moments and everyday surprises. Transform ordinary days into extraordinary memories for your loved ones.
+        For every chapter, every person, every reason. We transform any day into a dream experience, from grand events to quiet surprises.
       </motion.p>
 
       {/* CTA Buttons */}
@@ -92,9 +95,9 @@ function Hero() {
         className="mt-16 grid grid-cols-3 gap-3 max-w-3xl w-full"
       >
         {[
-          { src: "/gallery-room.png", label: "Romantic Rooms" },
-          { src: "/gallery-birthday.png", label: "Elegant Celebrations" },
-          { src: "/gallery-elegant.png", label: "Surprise Setups" },
+          { src: "/gallery-room.png", label: "Event Setups" },
+          { src: "/gallery-birthday.png", label: "Celebrations" },
+          { src: "/gallery-elegant.png", label: "Surprise Packages" },
         ].map((item) => (
           <motion.div
             key={item.label}
@@ -109,21 +112,6 @@ function Hero() {
         ))}
       </motion.div>
 
-      {/* Social proof */}
-      <motion.div
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.85 }}
-        className="mt-12 flex flex-wrap justify-center items-center gap-6 text-white/30 text-xs"
-      >
-        <div className="flex items-center gap-1.5">
-          {[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />)}
-          <span className="ml-1">4.9/5 rating</span>
-        </div>
-        <div className="w-px h-4 bg-white/10" />
-        <span>200+ experiences delivered</span>
-        <div className="w-px h-4 bg-white/10" />
-        <span>Ayeduase - Kumasi</span>
-      </motion.div>
-
       <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute bottom-8 text-white/15">
         <ChevronDown className="w-5 h-5" />
       </motion.div>
@@ -133,11 +121,10 @@ function Hero() {
 
 // ── Occasions We Create ───────────────────────────────
 const occasions = [
-  { icon: <Heart className="w-5 h-5" />, title: "Celebration Setups", desc: "Celebrate your love story or milestones with custom room designs featuring candles, balloons, and elegant décor", iconBg: "bg-pink-900/40", iconColor: "text-pink-400", dot: "#E91E8C" },
-  { icon: <Cake className="w-5 h-5" />, title: "Birthday Surprises", desc: "Create unforgettable birthday moments for friends and family with themed decorations and personalized packages", iconBg: "bg-teal-900/40", iconColor: "text-teal-400", dot: "#14B8A6" },
-  { icon: <Gem className="w-5 h-5" />, title: "Proposal & Engagement", desc: "Make your big moment perfect with luxury setups, professional photography coordination, and stunning ambiance", iconBg: "bg-amber-900/40", iconColor: "text-amber-400", dot: "#F59E0B", cardGlow: true },
+  { icon: <Heart className="w-5 h-5" />, title: "Celebrations & Milestones", desc: "Anniversaries, Birthdays, Proposals, Engagements, Graduations, Reunions, Date Nights, or 'Just Because' moments.", iconBg: "bg-pink-900/40", iconColor: "text-pink-400", dot: "#E91E8C", cardGlow: true },
+  { icon: <Shield className="w-5 h-5" />, title: "Event Planning", desc: "End-to-end event planning and decor styling for corporate events, product launches, and grand celebrations.", iconBg: "bg-teal-900/40", iconColor: "text-teal-400", dot: "#14B8A6" },
+  { icon: <Gem className="w-5 h-5" />, title: "Funerals & Tributes", desc: "Dignified arrangements, floral tributes, and elegant setups to honor and celebrate the lives of loved ones.", iconBg: "bg-slate-800/40", iconColor: "text-slate-300", dot: "#94a3b8" },
   { icon: <Gift className="w-5 h-5" />, title: "Curated Gift Boxes", desc: "Handpicked premium gift collections delivered beautifully packaged for your special someone, friend or family", iconBg: "bg-rose-900/40", iconColor: "text-rose-400", dot: "#F43F5E" },
-  { icon: <Sparkles className="w-5 h-5" />, title: "Special Milestones", desc: "From graduations to reunions, we craft extraordinary moments for every important chapter in your life", iconBg: "bg-cyan-900/40", iconColor: "text-cyan-400", dot: "#06B6D4" },
   { icon: <Crown className="w-5 h-5" />, title: "Premium Add-ons", desc: "Enhance any package with live music, professional photography, gourmet service, and exclusive extras", iconBg: "bg-violet-900/40", iconColor: "text-violet-400", dot: "#8B5CF6" },
 ];
 
@@ -162,7 +149,7 @@ function Services() {
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
               className={`relative rounded-2xl p-6 border border-white/5 overflow-hidden group transition-all ${
                 s.cardGlow
-                  ? "bg-gradient-to-br from-amber-950/60 to-yellow-950/30"
+                  ? "bg-gradient-to-br from-pink-950/40 to-purple-950/20"
                   : "bg-[#12101F]/80"
               }`}
             >
@@ -185,149 +172,100 @@ function Services() {
 }
 
 // ── Packages ──────────────────────────────────────────
-const packages = [
-  {
-    id: "el-capo",
-    icon: <Crown className="w-5 h-5" />,
-    name: "EL CAPO",
-    price: "GH₵250",
-    tag: null,
-    features: ["Raffaello Chocolates", "Jewelry", "Wine", "Valentine's Day Card"],
-    featured: false,
-  },
-  {
-    id: "non-anchora",
-    icon: <Heart className="w-5 h-5" />,
-    name: "NON ANCHORA",
-    price: "GH₵350",
-    tag: null,
-    features: ["Raffaello Chocolates", "Jewelry", "Wallet", "Wine", "Valentine's Day Card"],
-    featured: false,
-  },
-  {
-    id: "fuori-orario",
-    icon: <Sparkles className="w-5 h-5" />,
-    name: "FUORI ORARIO",
-    price: "GH₵500",
-    tag: null,
-    features: ["Raffaello Chocolates", "Jewelry", "Wallet", "Wine", "Custom Slippers", "Custom Handwritten Letter"],
-    featured: false,
-  },
-  {
-    id: "il-devoto",
-    icon: <Star className="w-5 h-5" />,
-    name: "IL DEVOTO",
-    price: "GH₵700",
-    tag: "Most Popular",
-    features: ["Raffaello Chocolates", "Jewelry", "Wallet", "Wine", "Custom Slippers", "Nike Slides", "Custom Handwritten Letter"],
-    featured: true,
-  },
-  {
-    id: "re-del-mio",
-    icon: <Crown className="w-5 h-5" />,
-    name: "RE DEL MIO",
-    price: "GH₵830",
-    tag: null,
-    features: ["Raffaello Chocolates", "Jewelry", "Wallet", "Wine", "Custom Slippers", "Nike Slides", "Shirt", "Custom Handwritten Letter"],
-    featured: false,
-  },
-  {
-    id: "perche-sei-mio",
-    icon: <Gem className="w-5 h-5" />,
-    name: "PERCHÉ SEI MIO",
-    price: "GH₵1,400",
-    tag: null,
-    features: ["Ferrero Rocher Chocolates", "Jewelry", "Wallet", "Wine", "Custom Slippers", "David Beckham Designer Perfume", "Nike Slides", "Shirt", "Custom Handwritten Letter"],
-    featured: false,
-  },
-  {
-    id: "oltre-leternita",
-    icon: <Crown className="w-5 h-5" />,
-    name: "OLTRE L’ETERNITÀ",
-    price: "GH₵2,000",
-    tag: "Premium",
-    features: ["Ferrero Rocher Chocolates", "Jewelry", "Wallet", "Wine", "Custom Slippers", "Nike Slides", "David Beckham Designer Perfume", "Shirt", "Food Basket", "Oxford Shoes", "Custom Handwritten Letter"],
-    featured: false,
-  },
-];
-
 function Packages() {
+  const [activeGender, setActiveGender] = useState("All");
+
+  const filteredPackages = activeGender === "All"
+    ? predefinedPackages
+    : predefinedPackages.filter(p => p.gender === activeGender.toLowerCase());
+
   return (
-    <section id="packages" className="py-24 px-6">
+    <section id="packages" className="py-24 px-6 relative">
       <div className="max-w-7xl mx-auto">
-        <motion.div {...fadeUp()} className="text-center mb-14">
-          <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Package Pricing" />
+        <motion.div {...fadeUp()} className="text-center mb-10">
+          <SectionBadge icon={<Gift className="w-3 h-3" />} label="Package Pricing" />
           <h2 className="text-4xl md:text-5xl font-bold text-white">Select Your Gift</h2>
           <p className="mt-3 text-white/40 text-sm max-w-md mx-auto leading-relaxed">
             Thoughtfully curated packages designed to deliver pure joy, no matter the day
           </p>
         </motion.div>
 
+        {/* Gender Filter */}
+        <div className="flex justify-center mb-10">
+          <div className="flex gap-2 glass p-1.5 rounded-full border border-white/10">
+            {["All", "Ladies", "Guys"].map(tab => (
+              <button
+                key={tab}
+                onClick={() => setActiveGender(tab)}
+                className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
+                  activeGender === tab
+                    ? "bg-[#E91E8C] text-white shadow-[0_0_15px_rgba(233,30,140,0.3)]"
+                    : "text-white/50 hover:text-white"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Packages Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {packages.map((pkg, i) => (
-            <motion.div
-              key={pkg.id}
-              {...fadeUp(i * 0.07)}
-              whileHover={{ y: -6 }}
-              transition={{ type: "spring", stiffness: 280, damping: 22 }}
-              className={`relative rounded-2xl border overflow-hidden flex flex-col ${
-                pkg.featured
-                  ? "border-[#E91E8C]/40 bg-gradient-to-b from-[#1A0E1A] to-[#0F0C1A] shadow-[0_0_40px_rgba(233,30,140,0.15)]"
-                  : "border-white/5 bg-[#12101F]/80"
-              }`}
-            >
-              {/* Top tag */}
-              {pkg.tag && (
-                <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-bold ${
-                  pkg.tag === "Most Popular"
-                    ? "btn-pink-gradient text-white"
-                    : "bg-[#D4AF37]/20 border border-[#D4AF37]/40 text-[#D4AF37]"
-                }`}>
-                  {pkg.tag}
-                </div>
-              )}
+          <AnimatePresence mode="popLayout">
+            {filteredPackages.map((pkg, i) => (
+              <motion.div
+                key={pkg.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                whileHover={{ y: -6 }}
+                transition={{ type: "spring", stiffness: 280, damping: 22 }}
+                className={`relative rounded-2xl border overflow-hidden flex flex-col ${
+                  i === 3 || pkg.price > 1000
+                    ? "border-[#E91E8C]/40 bg-gradient-to-b from-[#1A0E1A] to-[#0F0C1A] shadow-[0_0_40px_rgba(233,30,140,0.15)]"
+                    : "border-white/5 bg-[#12101F]/80"
+                }`}
+              >
+                <div className="p-7 flex flex-col h-full">
+                  {/* Icon */}
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
+                    i === 3 || pkg.price > 1000 ? "bg-[#E91E8C]/20 text-[#E91E8C]" : "bg-white/5 text-white/60"
+                  }`}>
+                    <Crown className="w-5 h-5" />
+                  </div>
 
-              <div className="p-7 flex flex-col h-full">
-                {/* Icon */}
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
-                  pkg.featured ? "bg-[#E91E8C]/20 text-[#E91E8C]" : "bg-white/5 text-white/60"
-                }`}>
-                  {pkg.icon}
-                </div>
+                  {/* Name & Price */}
+                  <h3 className="text-xl font-bold text-white uppercase tracking-wider">{pkg.name}</h3>
+                  <div className="mt-1 mb-5 flex items-baseline gap-1">
+                    <span className="text-3xl font-bold text-[#D4AF37]">GH₵{pkg.price.toLocaleString()}</span>
+                    <span className="text-white/40 text-sm">/ pkg</span>
+                  </div>
 
-                {/* Name & Price */}
-                <h3 className="text-xl font-bold text-white">{pkg.name}</h3>
-                <div className="mt-1 mb-5">
-                  <span className="text-3xl font-bold text-white">{pkg.price}</span>
-                  <span className="text-white/40 text-sm ml-1">/ event</span>
-                </div>
+                  {/* Features */}
+                  <ul className="space-y-2.5 mb-8 flex-1">
+                    {pkg.items.map((itemId) => (
+                      <li key={itemId} className="flex items-start gap-2 text-sm text-white/60 capitalize">
+                        <Check className={`w-4 h-4 mt-0.5 flex-shrink-0 text-[#E91E8C]`} />
+                        {itemId.replace(/-/g, ' ')}
+                      </li>
+                    ))}
+                  </ul>
 
-                {/* Features */}
-                <ul className="space-y-2.5 mb-8 flex-1">
-                  {pkg.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-white/60">
-                      <Check className={`w-4 h-4 mt-0.5 flex-shrink-0 ${pkg.featured ? "text-[#E91E8C]" : "text-white/30"}`} />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA */}
-                <Link href={`/builder?package=${encodeURIComponent(pkg.name)}`}>
-                  {pkg.featured ? (
-                    <div className="btn-pink-gradient text-center py-3 rounded-xl text-white text-sm font-semibold cursor-pointer hover:scale-[1.02] hover:opacity-90 transition-all">
+                  {/* CTA */}
+                  <Link href={`/builder?package=${encodeURIComponent(pkg.name)}`}>
+                    <div className={`text-center py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
+                      i === 3 || pkg.price > 1000
+                        ? "btn-pink-gradient text-white hover:scale-[1.02] hover:opacity-90"
+                        : "border border-white/10 text-white/60 hover:border-white/20 hover:text-white"
+                    }`}>
                       Book This Package
                     </div>
-                  ) : (
-                    <div className="text-center py-3 rounded-xl border border-white/10 text-white/60 text-sm font-medium hover:border-white/20 hover:text-white transition-all cursor-pointer">
-                      Book This Package
-                    </div>
-                  )}
-                </Link>
-              </div>
-            </motion.div>
-          ))}
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </section>
@@ -336,12 +274,12 @@ function Packages() {
 
 // ── Gallery ──────────────────────────────────────────
 const galleryItems = [
-  { src: "/gallery-room.png", label: "Romantic Candlelit Setup", tag: "Anniversary" },
-  { src: "/gallery-birthday.png", label: "Luxury Bedroom Design", tag: "Celebration" },
-  { src: "/gallery-elegant.png", label: "Elegant Interior", tag: "Romance" },
-  { src: null, emoji: "🌹", label: "Rose Petal Trail", tag: "Proposal" },
-  { src: null, emoji: "🥂", label: "Champagne Setup", tag: "VIP" },
-  { src: null, emoji: "✨", label: "LED Light Display", tag: "Trending" },
+  { type: "image", src: "/gallery-room.png", label: "Romantic Candlelit Setup", tag: "Anniversary" },
+  { type: "image", src: "/gallery-birthday.png", label: "Luxury Bedroom Design", tag: "Celebration" },
+  { type: "image", src: "/gallery-elegant.png", label: "Elegant Interior", tag: "Romance" },
+  { type: "video", src: null, emoji: "🎥", label: "Event Highlight", tag: "Proposal" },
+  { type: "image", src: null, emoji: "🥂", label: "Champagne Setup", tag: "VIP" },
+  { type: "video", src: null, emoji: "✨", label: "LED Light Display", tag: "Trending" },
 ];
 
 function Gallery() {
@@ -366,10 +304,23 @@ function Gallery() {
               className="group relative overflow-hidden rounded-2xl aspect-[4/3] border border-white/5 bg-[#12101F] cursor-pointer"
             >
               {item.src ? (
-                <Image src={item.src} alt={item.label} fill className="object-cover opacity-75 group-hover:opacity-95 group-hover:scale-105 transition-all duration-500" />
+                <>
+                  {item.type === "video" ? (
+                    <video src={item.src} className="w-full h-full object-cover opacity-75 group-hover:opacity-100 transition-all duration-500" loop muted autoPlay playsInline />
+                  ) : (
+                    <Image src={item.src} alt={item.label} fill className="object-cover opacity-75 group-hover:opacity-95 group-hover:scale-105 transition-all duration-500" />
+                  )}
+                </>
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-5xl bg-gradient-to-br from-[#E91E8C]/8 to-purple-900/20">
+                <div className="w-full h-full flex items-center justify-center text-5xl bg-gradient-to-br from-[#E91E8C]/8 to-purple-900/20 group-hover:scale-105 transition-transform duration-500">
                   {item.emoji}
+                </div>
+              )}
+              {item.type === "video" && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:bg-[#E91E8C]/80 transition-colors">
+                    <Play className="w-5 h-5 text-white ml-1" />
+                  </div>
                 </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-[#0A0914]/95 via-[#0A0914]/20 to-transparent" />
@@ -382,12 +333,51 @@ function Gallery() {
             </motion.div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
 
-        <motion.div {...fadeUp(0.3)} className="text-center mt-12">
-          <Link href="/builder" className="inline-flex items-center gap-2 btn-pink-gradient px-8 py-3.5 rounded-full text-white font-semibold text-sm hover:scale-105 hover:-translate-y-0.5 transition-all">
-            Build Your Package <ArrowRight className="w-4 h-4" />
-          </Link>
+// ── Flower Orders ─────────────────────────────────────
+function FlowerOrders() {
+  return (
+    <section id="flowers" className="py-24 px-6 bg-[#E91E8C]/5 relative overflow-hidden">
+      <div className="max-w-6xl mx-auto">
+        <motion.div {...fadeUp()} className="text-center mb-14">
+          <SectionBadge icon={<Flower2 className="w-3 h-3" />} label="Premium Blooms" />
+          <h2 className="text-4xl md:text-5xl font-bold text-white">Exquisite Flower Orders</h2>
+          <p className="mt-3 text-white/40 text-sm max-w-md mx-auto leading-relaxed">
+            Beautiful arrangements for any occasion. Order fresh, premium blooms delivered right to your door.
+          </p>
         </motion.div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {flowerItems.map((flower, i) => (
+            <motion.div
+              key={flower.id}
+              {...fadeUp(i * 0.05)}
+              className="glass border border-white/10 rounded-2xl p-4 flex flex-col hover:border-[#E91E8C]/30 transition-colors"
+            >
+              <div className="w-full aspect-square rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-5xl mb-4 overflow-hidden relative">
+                {flower.image ? (
+                  <Image src={flower.image} alt={flower.name} fill className="object-cover" />
+                ) : (
+                  flower.emoji
+                )}
+              </div>
+              <h3 className="text-white font-bold text-sm leading-tight mb-1">{flower.name}</h3>
+              <p className="text-white/40 text-xs line-clamp-2 mb-3 flex-1">{flower.description}</p>
+              <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/10">
+                <span className="text-[#D4AF37] font-black text-sm">GH₵{flower.price}</span>
+                <Link href={`/builder`}>
+                  <button className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-[#E91E8C] hover:text-white transition-colors">
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </Link>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -404,7 +394,6 @@ const reasons = [
 function WhyUs() {
   return (
     <section id="about" className="py-24 px-6 relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-purple-950/40 blur-[100px] pointer-events-none" />
       <div className="max-w-6xl mx-auto relative">
         <motion.div {...fadeUp()} className="text-center mb-14">
           <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Why Curated Cupid" />
@@ -435,6 +424,160 @@ function WhyUs() {
   );
 }
 
+// ── Reviews ──────────────────────────────────────────
+function Reviews() {
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [newReview, setNewReview] = useState({ name: "", rating: 5, comment: "" });
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    async function fetchReviews() {
+      const { data } = await supabase.from('reviews').select('*').order('created_at', { ascending: false }).limit(6);
+      if (data && data.length > 0) {
+        setReviews(data);
+      } else {
+        // Fallback static reviews if db is empty or table not created yet
+        setReviews([
+          { name: "Sarah K.", role: "Anniversary Surprise", comment: "The attention to detail was incredible. My husband was speechless! They made our regular Tuesday feel like a fairy tale.", rating: 5 },
+          { name: "Michael O.", role: "Birthday Setup", comment: "Fast, professional, and absolutely stunning. The room vibe was exactly what I wanted. Highly recommended!", rating: 5 },
+          { name: "Emily B.", role: "Just Because", comment: "I wanted to surprise my bestie for no reason, and Curated Cupid delivered! The gift box was so thoughtful.", rating: 5 },
+        ]);
+      }
+    }
+    fetchReviews();
+  }, []);
+
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await supabase.from('reviews').insert([{
+        name: newReview.name,
+        rating: newReview.rating,
+        comment: newReview.comment,
+        role: "Client"
+      }]);
+      setShowModal(false);
+      alert("Thank you for sharing your experience!");
+      setNewReview({ name: "", rating: 5, comment: "" });
+    } catch (err) {
+      console.error(err);
+      alert("Failed to submit review. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <section id="reviews" className="py-24 px-6 relative">
+      <div className="max-w-6xl mx-auto">
+        <motion.div {...fadeUp()} className="text-center mb-14">
+          <SectionBadge icon={<MessageSquare className="w-3 h-3" />} label="Testimonials" />
+          <h2 className="text-4xl md:text-5xl font-bold text-white">Loved by Our Clients</h2>
+          <p className="mt-3 text-white/40 text-sm max-w-md mx-auto">
+            Real stories from people who experienced the magic of Curated Cupid
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {reviews.slice(0,3).map((rev, i) => (
+            <motion.div
+              key={i}
+              {...fadeUp(i * 0.1)}
+              className="glass border border-white/5 p-8 rounded-3xl relative flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex gap-1 mb-4">
+                  {[...Array(rev.rating || 5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />)}
+                </div>
+                <p className="text-white/70 text-sm italic mb-6 leading-relaxed line-clamp-4">"{rev.comment || rev.text}"</p>
+              </div>
+              <div>
+                <p className="text-white font-bold text-sm">{rev.name}</p>
+                <p className="text-[#E91E8C] text-[10px] font-bold uppercase tracking-widest">{rev.role || 'Client'}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div {...fadeUp(0.4)} className="mt-12 text-center">
+          <button onClick={() => setShowModal(true)} className="glass border border-white/10 px-6 py-3 rounded-full text-white/60 hover:text-white hover:border-white/20 hover:bg-white/5 text-xs font-bold transition-all">
+            Share Your Experience
+          </button>
+        </motion.div>
+      </div>
+
+      {/* Submit Review Modal */}
+      <AnimatePresence>
+        {showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-[#12101F] border border-white/10 rounded-3xl p-6 w-full max-w-md relative"
+            >
+              <button onClick={() => setShowModal(false)} className="absolute top-4 right-4 text-white/40 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+              <h3 className="text-2xl font-bold text-white mb-2">Share Your Experience</h3>
+              <p className="text-white/40 text-sm mb-6">Tell us about your Curated Cupid moment.</p>
+              
+              <form onSubmit={handleSubmitReview} className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-white/60 text-xs">Your Name</label>
+                  <input
+                    required
+                    type="text"
+                    value={newReview.name}
+                    onChange={e => setNewReview({...newReview, name: e.target.value})}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-[#E91E8C] focus:outline-none transition-colors"
+                    placeholder="Enter your name"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-white/60 text-xs">Rating</label>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setNewReview({...newReview, rating: star})}
+                        className={`text-2xl transition-transform hover:scale-110 ${newReview.rating >= star ? 'text-[#D4AF37]' : 'text-white/10'}`}
+                      >
+                        ★
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-white/60 text-xs">Your Comment</label>
+                  <textarea
+                    required
+                    rows={4}
+                    value={newReview.comment}
+                    onChange={e => setNewReview({...newReview, comment: e.target.value})}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-[#E91E8C] focus:outline-none transition-colors resize-none"
+                    placeholder="Tell us what you loved..."
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={submitting || !newReview.name || !newReview.comment}
+                  className="w-full btn-pink-gradient py-3.5 rounded-xl font-bold text-sm text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {submitting ? "Submitting..." : "Submit Review"}
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}
+
 // ── Contact ───────────────────────────────────────────
 function Contact() {
   return (
@@ -454,7 +597,7 @@ function Contact() {
             <div className="bg-[#12101F]/80 border border-white/5 rounded-2xl p-6 space-y-5">
               <h3 className="text-white font-semibold text-lg">Contact Details</h3>
               {[
-                { icon: <Phone className="w-4 h-4" />, label: "Phone", value: "+234 901 000 0000" },
+                { icon: <Phone className="w-4 h-4" />, label: "Phone", value: "+233 24 123 4567" },
                 { icon: <Mail className="w-4 h-4" />, label: "Email", value: "hello@curatedcupid.com" },
                 { icon: <MapPin className="w-4 h-4" />, label: "Location", value: "Ayeduase - Kumasi, Ghana" },
                 { icon: <Clock className="w-4 h-4" />, label: "Hours", value: "Mon–Sun, 8am – 9pm" },
@@ -476,7 +619,7 @@ function Contact() {
               <h3 className="text-white font-semibold text-sm">Follow Our Magic</h3>
               <div className="flex flex-wrap gap-3">
                 {[
-                  { name: "WhatsApp", emoji: "💬", color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/2349010000000" },
+                  { name: "WhatsApp", emoji: "💬", color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/233241234567" },
                   { name: "TikTok", emoji: "🎵", color: "bg-white/5 text-white border-white/10", link: "https://tiktok.com/@curatedcupid" },
                   { name: "Snapchat", emoji: "👻", color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", link: "https://snapchat.com/add/curatedcupid" },
                   { name: "Instagram", emoji: "📸", color: "bg-pink-500/10 text-pink-400 border-pink-500/20", link: "https://instagram.com/curatedcupid" },
@@ -507,7 +650,7 @@ function Contact() {
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-white/40 text-xs">Phone / WhatsApp</label>
-                    <input type="tel" placeholder="e.g. 08012345678" className="w-full bg-white/4 border border-white/8 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                    <input type="tel" placeholder="e.g. 0241234567" className="w-full bg-white/4 border border-white/8 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                   </div>
                 </div>
                 <div className="space-y-1.5">
@@ -529,54 +672,6 @@ function Contact() {
             </div>
           </motion.div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-// ── Reviews ──────────────────────────────────────────
-const reviews = [
-  { name: "Sarah K.", role: "Anniversary Surprise", text: "The attention to detail was incredible. My husband was speechless! They made our regular Tuesday feel like a fairy tale.", rating: 5 },
-  { name: "Michael O.", role: "Birthday Setup", text: "Fast, professional, and absolutely stunning. The room vibe was exactly what I wanted. Highly recommended!", rating: 5 },
-  { name: "Emily B.", role: "Just Because", text: "I wanted to surprise my bestie for no reason, and Curated Cupid delivered! The gift box was so thoughtful.", rating: 5 },
-];
-
-function Reviews() {
-  return (
-    <section id="reviews" className="py-24 px-6 bg-gradient-to-b from-transparent to-[#E91E8C]/5">
-      <div className="max-w-6xl mx-auto">
-        <motion.div {...fadeUp()} className="text-center mb-14">
-          <SectionBadge icon={<MessageSquare className="w-3 h-3" />} label="Testimonials" />
-          <h2 className="text-4xl md:text-5xl font-bold text-white">Loved by Our Clients</h2>
-          <p className="mt-3 text-white/40 text-sm max-w-md mx-auto">
-            Real stories from people who experienced the magic of Curated Cupid
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {reviews.map((rev, i) => (
-            <motion.div
-              key={rev.name}
-              {...fadeUp(i * 0.1)}
-              className="glass border border-white/5 p-8 rounded-3xl relative"
-            >
-              <div className="flex gap-1 mb-4">
-                {[...Array(rev.rating)].map((_, i) => <Star key={i} className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />)}
-              </div>
-              <p className="text-white/70 text-sm italic mb-6 leading-relaxed">"{rev.text}"</p>
-              <div>
-                <p className="text-white font-bold text-sm">{rev.name}</p>
-                <p className="text-[#E91E8C] text-[10px] font-bold uppercase tracking-widest">{rev.role}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div {...fadeUp(0.4)} className="mt-12 text-center">
-          <button className="glass border border-white/10 px-6 py-3 rounded-full text-white/60 hover:text-white hover:border-white/20 text-xs font-bold transition-all">
-            Share Your Experience
-          </button>
-        </motion.div>
       </div>
     </section>
   );
@@ -634,7 +729,7 @@ function Footer() {
           <div>
             <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-4">Contact</p>
             <div className="space-y-2 text-white/30 text-sm">
-              <p>+234 901 000 0000</p>
+              <p>+233 24 123 4567</p>
               <p>hello@curatedcupid.com</p>
               <p>Ayeduase - Kumasi, Ghana</p>
             </div>
@@ -659,8 +754,9 @@ export default function HomePage() {
         <Services />
         <Packages />
         <Gallery />
-        <Reviews />
+        <FlowerOrders />
         <WhyUs />
+        <Reviews />
         <Contact />
         <CTABanner />
       </main>
