@@ -36,9 +36,8 @@ function Hero() {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-16 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full bg-[#E91E8C]/5 blur-[150px]" />
-        <div className="absolute top-1/3 left-1/5 w-80 h-80 rounded-full bg-purple-900/20 blur-[100px]" />
-        <div className="absolute bottom-1/4 right-1/5 w-64 h-64 rounded-full bg-[#E91E8C]/8 blur-[80px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full bg-[var(--primary)] opacity-[0.05] blur-[150px]" />
+        <div className="absolute top-1/3 left-1/5 w-80 h-80 rounded-full bg-[var(--secondary)] opacity-[0.1] blur-[100px]" />
       </div>
 
       <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
@@ -50,7 +49,7 @@ function Hero() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.1 }}
-        className="text-6xl md:text-8xl font-bold leading-[1.0] max-w-4xl"
+        className="text-6xl md:text-8xl font-bold leading-[1.0] max-w-4xl font-serif text-[var(--text-main)]"
       >
         <span className="text-gradient-pink">Curated Cupid</span>
       </motion.h1>
@@ -59,9 +58,9 @@ function Hero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.25 }}
-        className="mt-6 text-white/50 text-base md:text-lg max-w-lg leading-relaxed"
+        className="mt-6 text-[var(--text-muted)] text-base md:text-lg max-w-lg leading-relaxed"
       >
-        For every chapter, every person, every reason. We transform any day into a dream experience, from grand events to quiet surprises.
+        For every chapter, <span className="font-accent text-[var(--primary)] text-2xl">every person</span>, every reason. We transform any day into a dream experience.
       </motion.p>
 
       {/* CTA Buttons */}
@@ -134,9 +133,9 @@ function Services() {
       <div className="max-w-6xl mx-auto">
         <motion.div {...fadeUp()} className="text-center mb-14">
           <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Our Services" />
-          <h2 className="text-4xl md:text-5xl font-bold text-white">Making Every Day Extraordinary</h2>
-          <p className="mt-3 text-white/40 text-sm max-w-md mx-auto leading-relaxed">
-            From special milestones to "just because" moments, we transform any day into a dream experience
+          <h2 className="text-4xl md:text-5xl font-bold text-[var(--text-main)] font-serif">Making Every Day Extraordinary</h2>
+          <p className="mt-3 text-[var(--text-muted)] text-sm max-w-md mx-auto leading-relaxed">
+            From special milestones to <span className="font-accent text-[var(--primary)] text-xl">"just because"</span> moments, we transform any day into a dream experience
           </p>
         </motion.div>
 
@@ -183,9 +182,9 @@ function Packages() {
       <div className="max-w-7xl mx-auto">
         <motion.div {...fadeUp()} className="text-center mb-10">
           <SectionBadge icon={<Gift className="w-3 h-3" />} label="Package Pricing" />
-          <h2 className="text-4xl md:text-5xl font-bold text-white">Select Your Gift</h2>
-          <p className="mt-3 text-white/40 text-sm max-w-md mx-auto leading-relaxed">
-            Thoughtfully curated packages designed to deliver pure joy, no matter the day
+          <h2 className="text-4xl md:text-5xl font-bold text-[var(--text-main)] font-serif">Select Your Gift</h2>
+          <p className="mt-3 text-[var(--text-muted)] text-sm max-w-md mx-auto leading-relaxed">
+            Thoughtfully curated packages designed to deliver <span className="font-accent text-[var(--primary)] text-xl">pure joy</span>, no matter the day
           </p>
         </motion.div>
 
@@ -222,8 +221,8 @@ function Packages() {
                 transition={{ type: "spring", stiffness: 280, damping: 22 }}
                 className={`relative rounded-2xl border overflow-hidden flex flex-col ${
                   (pkg as any).tag === "Most Popular"
-                    ? "border-[#E91E8C]/40 bg-gradient-to-b from-[#1A0E1A] to-[#0F0C1A] shadow-[0_0_40px_rgba(233,30,140,0.15)]"
-                    : "border-white/5 bg-[#12101F]/80"
+                    ? "border-[var(--primary)] bg-[var(--surface)] shadow-xl"
+                    : "border-[var(--border)] bg-[var(--surface)]"
                 }`}
               >
                 {/* Top tag */}
@@ -236,23 +235,23 @@ function Packages() {
                 <div className="p-7 flex flex-col h-full">
                   {/* Icon */}
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
-                    (pkg as any).tag === "Most Popular" ? "bg-[#E91E8C]/20 text-[#E91E8C]" : "bg-white/5 text-white/60"
+                    (pkg as any).tag === "Most Popular" ? "bg-[var(--primary-glow)] text-[var(--primary)]" : "bg-[var(--primary-glow)] text-[var(--primary)]"
                   }`}>
                     <Crown className="w-5 h-5" />
                   </div>
 
                   {/* Name & Price */}
-                  <h3 className="text-xl font-bold text-white uppercase tracking-wider">{pkg.name}</h3>
+                  <h3 className="text-xl font-bold text-[var(--text-main)] uppercase tracking-wider font-serif">{pkg.name}</h3>
                   <div className="mt-1 mb-5 flex items-baseline gap-1">
-                    <span className="text-3xl font-bold text-[#D4AF37]">GH₵{pkg.price.toLocaleString()}</span>
-                    <span className="text-white/40 text-sm">/ pkg</span>
+                    <span className="text-3xl font-bold text-[var(--secondary)]">GH₵{pkg.price.toLocaleString()}</span>
+                    <span className="text-[var(--text-muted)] text-sm">/ pkg</span>
                   </div>
 
                   {/* Features */}
                   <ul className="space-y-2.5 mb-8 flex-1">
                     {pkg.items.map((itemId) => (
-                      <li key={itemId} className="flex items-start gap-2 text-sm text-white/60 capitalize">
-                        <Check className={`w-4 h-4 mt-0.5 flex-shrink-0 text-[#E91E8C]`} />
+                      <li key={itemId} className="flex items-start gap-2 text-sm text-[var(--text-muted)] capitalize">
+                        <Check className={`w-4 h-4 mt-0.5 flex-shrink-0 text-[var(--primary)]`} />
                         {itemId.replace(/-/g, ' ')}
                       </li>
                     ))}
@@ -453,9 +452,9 @@ function Reviews() {
       <div className="max-w-6xl mx-auto">
         <motion.div {...fadeUp()} className="text-center mb-14">
           <SectionBadge icon={<MessageSquare className="w-3 h-3" />} label="Testimonials" />
-          <h2 className="text-4xl md:text-5xl font-bold text-white">Loved by Our Clients</h2>
-          <p className="mt-3 text-white/40 text-sm max-w-md mx-auto">
-            Real stories from people who experienced the magic of Curated Cupid
+          <h2 className="text-4xl md:text-5xl font-bold text-[var(--text-main)] font-serif">Loved by Our Clients</h2>
+          <p className="mt-3 text-[var(--text-muted)] text-sm max-w-md mx-auto">
+            Real stories from people who experienced the <span className="font-accent text-[var(--primary)] text-xl">magic</span> of Curated Cupid
           </p>
         </motion.div>
 
@@ -703,10 +702,13 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-7 h-7 rounded-full btn-pink-gradient flex items-center justify-center">
-                <Heart className="w-3.5 h-3.5 text-white fill-white" />
+              <div className="w-8 h-8 rounded-full btn-pink-gradient flex items-center justify-center">
+                <Heart className="w-4 h-4 text-white fill-white" />
               </div>
-              <span className="font-bold text-white">Curated<span className="text-gradient-pink">Cupid</span></span>
+              <div className="flex flex-col -space-y-1">
+                <span className="font-accent text-2xl text-[var(--primary)] leading-none">Curated Cupid</span>
+                <span className="text-[7px] uppercase tracking-[0.2em] text-[var(--text-muted)] font-bold pl-1">of gifting</span>
+              </div>
             </div>
             <p className="text-white/30 text-sm leading-relaxed max-w-xs">
               Luxury celebration experiences crafted with care for every special chapter in your story.

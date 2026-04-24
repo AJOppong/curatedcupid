@@ -29,18 +29,23 @@ export default function Navbar() {
         <nav className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#E91E8C] to-[#7C3AED] flex items-center justify-center shadow-[0_0_12px_rgba(233,30,140,0.5)]">
-              <Heart className="w-3.5 h-3.5 text-white fill-white" />
+            <div className="w-8 h-8 rounded-full btn-pink-gradient flex items-center justify-center shadow-sm">
+              <Heart className="w-4 h-4 text-white fill-white" />
             </div>
-            <span className="font-semibold text-base tracking-tight text-white">
-              Curated<span className="text-[#E91E8C]">Cupid</span>
-            </span>
+            <div className="flex flex-col -space-y-1">
+              <span className="font-accent text-2xl text-[var(--primary)] leading-none">
+                Curated Cupid
+              </span>
+              <span className="text-[8px] uppercase tracking-[0.2em] text-[var(--text-muted)] font-bold pl-1">
+                of gifting
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Nav links */}
-          <div className="hidden md:flex items-center gap-8 text-sm text-white/60">
+          <div className="hidden md:flex items-center gap-8 text-sm text-[var(--text-muted)]">
             {NAV_LINKS.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-white transition-colors">
+              <Link key={link.href} href={link.href} className="hover:text-[var(--primary)] transition-colors">
                 {link.label}
               </Link>
             ))}
@@ -71,7 +76,7 @@ export default function Navbar() {
             {/* Book Now — desktop only */}
             <Link
               href="/builder"
-              className="hidden md:flex items-center gap-1.5 px-5 py-2 rounded-full bg-[#E91E8C] text-white text-sm font-semibold shadow-[0_0_20px_rgba(233,30,140,0.4)] hover:shadow-[0_0_30px_rgba(233,30,140,0.6)] hover:-translate-y-0.5 transition-all"
+              className="hidden md:flex items-center gap-1.5 px-5 py-2 rounded-full btn-pink-gradient text-white text-sm font-semibold transition-all"
             >
               Book Now
             </Link>

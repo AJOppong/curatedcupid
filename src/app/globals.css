@@ -1,54 +1,103 @@
 @import "tailwindcss";
 
 :root {
+  /* Default Theme (Light - Inspired by Logo) */
+  --background: #FFFFFF;
+  --foreground: #4A4A4A;
+  --surface: #FFF5F6;
+  --primary: #E5989B; /* Dusty Blush Pink from Logo */
+  --primary-light: #F2C4C6;
+  --primary-glow: rgba(229, 152, 155, 0.15);
+  --secondary: #B5838D; /* Muted Rose Accent */
+  --text-main: #4A4A4A;
+  --text-muted: #8E8E8E;
+  --border: rgba(229, 152, 155, 0.2);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(229, 152, 155, 0.1);
+  
+  --font-heading: var(--font-playfair);
+  --font-body: var(--font-montserrat);
+  --font-accent: var(--font-great-vibes);
+}
+
+[data-theme='dark'] {
   --background: #0A0914;
   --foreground: #FAFAFA;
+  --surface: #12101F;
+  --primary: #E91E8C;
+  --primary-light: #FF6BB5;
+  --primary-glow: rgba(233, 30, 140, 0.2);
+  --secondary: #D4AF37;
+  --text-main: #FAFAFA;
+  --text-muted: rgba(250, 250, 250, 0.4);
+  --border: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(18, 16, 31, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='valentine'] {
+  --background: #FFF5F7;
+  --primary: #D10000;
+  --primary-light: #FF4D4D;
+  --primary-glow: rgba(209, 0, 0, 0.1);
+  --surface: #FFFFFF;
+  --secondary: #D4AF37;
+}
+
+[data-theme='fathers-day'] {
+  --background: #F4F7F9;
+  --primary: #0F172A;
+  --primary-light: #334155;
+  --primary-glow: rgba(15, 23, 42, 0.1);
+  --surface: #FFFFFF;
+  --secondary: #166534; /* Forest Green */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-brand-bg: #0A0914;
-  --color-brand-surface: #12101F;
-  --color-brand-pink: #E91E8C;
-  --color-brand-pink-light: #FF6BB5;
-  --color-brand-gold: #D4AF37;
-  --color-brand-purple: #4C1D95;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand-bg: var(--background);
+  --color-brand-surface: var(--surface);
+  --color-brand-pink: var(--primary);
+  --color-brand-pink-light: var(--primary-light);
+  --color-brand-gold: var(--secondary);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
 }
 
 body {
-  background-color: #0A0914;
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background-color: var(--background);
+  color: var(--text-main);
+  font-family: var(--font-body), sans-serif;
   overflow-x: hidden;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-heading), serif;
+}
+
+.font-accent {
+  font-family: var(--font-accent), cursive;
 }
 
 /* Glassmorphism */
 .glass {
-  background: rgba(18, 16, 31, 0.65);
+  background: var(--glass-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
 }
 
-/* Pink glow */
+/* Glow effects */
 .glow-effect {
-  box-shadow: 0 0 20px rgba(233, 30, 140, 0.25), 0 0 40px rgba(124, 58, 237, 0.1);
+  box-shadow: 0 0 20px var(--primary-glow);
   transition: box-shadow 0.3s ease-in-out;
 }
-.glow-effect:hover {
-  box-shadow: 0 0 35px rgba(233, 30, 140, 0.5), 0 0 60px rgba(124, 58, 237, 0.25);
-}
-
-/* Scrollbar hide */
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* Pink gradient text */
 .text-gradient-pink {
-  background: linear-gradient(135deg, #FFFFFF 0%, #FFB3D9 40%, #E91E8C 100%);
+  background: linear-gradient(135deg, var(--text-main) 0%, var(--primary-light) 40%, var(--primary) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -56,39 +105,22 @@ body {
 
 /* Pink gradient button */
 .btn-pink-gradient {
-  background: linear-gradient(135deg, #E91E8C 0%, #FF6BB5 100%);
-  box-shadow: 0 4px 24px rgba(233, 30, 140, 0.4);
-}
-.btn-pink-gradient:hover {
-  box-shadow: 0 4px 40px rgba(233, 30, 140, 0.65);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  box-shadow: 0 4px 24px var(--primary-glow);
 }
 
 /* Section badge */
 .section-badge {
-  background: rgba(88, 28, 135, 0.35);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  color: rgba(216, 180, 254, 0.9);
+  background: var(--primary-glow);
+  border: 1px solid var(--border);
+  color: var(--primary);
 }
 
-/* Mobile touch improvements */
-* {
-  -webkit-tap-highlight-color: transparent;
-}
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-html {
-  -webkit-text-size-adjust: 100%;
-  scroll-behavior: smooth;
-}
-
-/* Safe area for notched phones */
-.safe-bottom {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* Custom scrollbar for desktop */
 @media (min-width: 768px) {
   .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-  .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); border-radius: 4px; }
-  .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(233,30,140,0.3); border-radius: 4px; }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(233,30,140,0.5); }
+  .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.03); border-radius: 4px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
 }

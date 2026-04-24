@@ -71,6 +71,16 @@ CREATE TABLE IF NOT EXISTS bookings (
   created_at timestamptz DEFAULT now()
 );
 
+-- 5. Settings Table
+CREATE TABLE IF NOT EXISTS settings (
+  key text PRIMARY KEY,
+  value text NOT NULL,
+  updated_at timestamptz DEFAULT now()
+);
+
+INSERT INTO settings (key, value) VALUES ('active_theme', 'light')
+ON CONFLICT (key) DO NOTHING;
+
 -- Ensure newer columns exist if the table was already created
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS delivery_method text;
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS room_transport text;
