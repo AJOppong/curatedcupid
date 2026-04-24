@@ -173,11 +173,9 @@ function Services() {
 
 // ── Packages ──────────────────────────────────────────
 function Packages() {
-  const [activeGender, setActiveGender] = useState("All");
+  const [activeGender, setActiveGender] = useState("Ladies");
 
-  const filteredPackages = activeGender === "All"
-    ? predefinedPackages
-    : predefinedPackages.filter(p => p.gender === activeGender.toLowerCase());
+  const filteredPackages = predefinedPackages.filter(p => p.gender === activeGender.toLowerCase());
 
   return (
     <section id="packages" className="py-24 px-6 relative">
@@ -193,7 +191,7 @@ function Packages() {
         {/* Gender Filter */}
         <div className="flex justify-center mb-10">
           <div className="flex gap-2 glass p-1.5 rounded-full border border-white/10">
-            {["All", "Ladies", "Guys"].map(tab => (
+            {["Ladies", "Guys"].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveGender(tab)}
@@ -222,15 +220,22 @@ function Packages() {
                 whileHover={{ y: -6 }}
                 transition={{ type: "spring", stiffness: 280, damping: 22 }}
                 className={`relative rounded-2xl border overflow-hidden flex flex-col ${
-                  i === 3 || pkg.price > 1000
+                  (pkg as any).tag === "Most Popular"
                     ? "border-[#E91E8C]/40 bg-gradient-to-b from-[#1A0E1A] to-[#0F0C1A] shadow-[0_0_40px_rgba(233,30,140,0.15)]"
                     : "border-white/5 bg-[#12101F]/80"
                 }`}
               >
+                {/* Top tag */}
+                {(pkg as any).tag && (
+                  <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-bold btn-pink-gradient text-white">
+                    {(pkg as any).tag}
+                  </div>
+                )}
+                
                 <div className="p-7 flex flex-col h-full">
                   {/* Icon */}
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
-                    i === 3 || pkg.price > 1000 ? "bg-[#E91E8C]/20 text-[#E91E8C]" : "bg-white/5 text-white/60"
+                    (pkg as any).tag === "Most Popular" ? "bg-[#E91E8C]/20 text-[#E91E8C]" : "bg-white/5 text-white/60"
                   }`}>
                     <Crown className="w-5 h-5" />
                   </div>
@@ -255,7 +260,7 @@ function Packages() {
                   {/* CTA */}
                   <Link href={`/builder?package=${encodeURIComponent(pkg.name)}`}>
                     <div className={`text-center py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-                      i === 3 || pkg.price > 1000
+                      (pkg as any).tag === "Most Popular"
                         ? "btn-pink-gradient text-white hover:scale-[1.02] hover:opacity-90"
                         : "border border-white/10 text-white/60 hover:border-white/20 hover:text-white"
                     }`}>

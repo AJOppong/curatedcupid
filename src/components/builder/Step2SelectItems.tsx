@@ -9,7 +9,7 @@ import { useState, useMemo } from "react";
 import Image from "next/image";
 
 const CATEGORIES = ["All", "Selected", "Decor", "Lighting", "Flowers", "Treats", "Gifts", "Personal", "Drinks", "Experience"];
-const GENDER_TABS = ["All", "Ladies", "Guys"];
+const GENDER_TABS = ["Ladies", "Guys"];
 
 export default function Step2SelectItems() {
   const {
@@ -18,7 +18,7 @@ export default function Step2SelectItems() {
   } = useBuilder();
 
   const [activeCategory, setActiveCategory] = useState("All");
-  const [activeGender, setActiveGender] = useState("All");
+  const [activeGender, setActiveGender] = useState("Ladies");
   const [addedIds, setAddedIds] = useState<string[]>([]);
   const [roomChoice, setRoomChoice] = useState<"none" | "with-package" | "without">("none");
 

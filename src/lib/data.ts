@@ -111,13 +111,13 @@ export const predefinedPackages = [
   { id: "el-capo", name: "EL CAPO", price: 250, gender: "guys", items: ["raffaello", "jewelry", "wine", "vals-card"] },
   { id: "non-anchora", name: "NON ANCHORA", price: 350, gender: "guys", items: ["raffaello", "jewelry", "wallet", "wine", "vals-card"] },
   { id: "fuori-orario", name: "FUORI ORARIO", price: 500, gender: "guys", items: ["raffaello", "jewelry", "wallet", "wine", "custom-slippers", "handwritten-letter"] },
-  { id: "il-devoto", name: "IL DEVOTO", price: 700, gender: "guys", items: ["raffaello", "jewelry", "wallet", "wine", "custom-slippers", "nike-slides", "handwritten-letter"] },
+  { id: "il-devoto", name: "IL DEVOTO", price: 700, gender: "guys", tag: "Most Popular", items: ["raffaello", "jewelry", "wallet", "wine", "custom-slippers", "nike-slides", "handwritten-letter"] },
   { id: "re-del-mio", name: "RE DEL MIO", price: 830, gender: "guys", items: ["raffaello", "jewelry", "wallet", "wine", "custom-slippers", "nike-slides", "shirt", "handwritten-letter"] },
   { id: "perche-sei-mio", name: "PERCHÉ SEI MIO", price: 1400, gender: "guys", items: ["ferrero", "premium-jewelry", "wallet", "wine", "custom-slippers", "db-perfume", "nike-slides", "shirt", "handwritten-letter"] },
   { id: "oltre-leternita", name: "OLTRE L'ETERNITÀ", price: 2000, gender: "guys", items: ["ferrero", "premium-jewelry", "wallet", "wine", "custom-slippers", "nike-slides", "db-perfume", "shirt", "food-basket", "oxford-shoes", "handwritten-letter"] },
   // ── Ladies ────────────────────────────────────────────────────────────────────
   { id: "bella", name: "BELLA", price: 250, gender: "ladies", items: ["raffaello", "jewelry", "vals-card", "handwritten-letter"] },
-  { id: "dolce-vita", name: "DOLCE VITA", price: 450, gender: "ladies", items: ["raffaello", "premium-jewelry", "wine", "body-products", "handwritten-letter"] },
+  { id: "dolce-vita", name: "DOLCE VITA", price: 450, gender: "ladies", tag: "Most Popular", items: ["raffaello", "premium-jewelry", "wine", "body-products", "handwritten-letter"] },
   { id: "la-principessa", name: "LA PRINCIPESSA", price: 700, gender: "ladies", items: ["ferrero", "premium-jewelry", "wine", "body-products", "handwritten-letter", "room-diffuser"] },
   { id: "la-regina", name: "LA REGINA", price: 1200, gender: "ladies", items: ["ferrero", "premium-jewelry", "wine", "body-products", "handwritten-letter", "room-diffuser", "birkenstocks", "grooming-products"] },
 ];
