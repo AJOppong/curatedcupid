@@ -137,7 +137,7 @@ export default function Step4EventDetails() {
         <div className="space-y-4">
           <h3 className="text-sm font-bold text-white/80 border-l-2 border-white/20 pl-3">Logistics</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Field label="Delivery / Event Date" icon={<Calendar className="w-3 h-3" />}>
+            <Field label="Delivery Date" icon={<Calendar className="w-3 h-3" />}>
               <input
                 type="date"
                 className={inputClass}
@@ -146,7 +146,7 @@ export default function Step4EventDetails() {
                 required
               />
             </Field>
-            <Field label="Delivery / Event Time" icon={<Clock className="w-3 h-3" />}>
+            <Field label="Delivery Time" icon={<Clock className="w-3 h-3" />}>
               <div className="relative">
                 <input
                   type="text"

@@ -132,7 +132,7 @@ export default function Step5Checkout() {
               <p className="flex items-center gap-2 text-white text-sm"><Gift className="w-3 h-3 text-[#7C3AED]" />{eventDetails.recipientName} ({eventDetails.recipientPhone})</p>
             </div>
             <div className="space-y-1">
-              <p className="text-[10px] text-white/20 uppercase font-bold">Delivery / Event</p>
+              <p className="text-[10px] text-white/20 uppercase font-bold">Delivery</p>
               <p className="flex items-center gap-2 text-white text-sm"><Calendar className="w-3 h-3 text-white/40" />{eventDetails.date}</p>
               <p className="flex items-center gap-2 text-white text-sm"><Clock className="w-3 h-3 text-white/40" />{eventDetails.time}</p>
               <p className="flex items-center gap-2 text-white text-sm"><MapPin className="w-3 h-3 text-white/40" />{eventDetails.location}</p>
