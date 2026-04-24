@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShoppingCart, Heart, Menu, X, Sun, Moon, Palette } from "lucide-react";
+import { ShoppingCart, Heart, Menu, X, Sun, Moon, Palette, Flower2, Sparkles, Gift, Star } from "lucide-react";
 import { useBuilder } from "@/context/BuilderContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useState } from "react";
@@ -25,7 +25,11 @@ export default function Navbar() {
     { id: "light", label: "Light", icon: <Sun className="w-3.5 h-3.5" /> },
     { id: "dark", label: "Dark", icon: <Moon className="w-3.5 h-3.5" /> },
     { id: "valentine", label: "Valentine", icon: <Heart className="w-3.5 h-3.5" /> },
+    { id: "mothers-day", label: "Mother's Day", icon: <Flower2 className="w-3.5 h-3.5" /> },
     { id: "fathers-day", label: "Father's Day", icon: <Palette className="w-3.5 h-3.5" /> },
+    { id: "eid", label: "Eid", icon: <Sparkles className="w-3.5 h-3.5" /> },
+    { id: "christmas", label: "Christmas", icon: <Gift className="w-3.5 h-3.5" /> },
+    { id: "new-year", label: "New Year", icon: <Star className="w-3.5 h-3.5" /> },
   ] as const;
 
   return (
