@@ -64,6 +64,10 @@ CREATE TABLE IF NOT EXISTS bookings (
   created_at timestamptz DEFAULT now()
 );
 
+-- Ensure newer columns exist if the table was already created
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS delivery_method text;
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS room_transport text;
+
 -- Admin Management Policies
 ALTER TABLE shop_items ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public can view active items" ON shop_items FOR SELECT TO anon, authenticated USING (active = true);
