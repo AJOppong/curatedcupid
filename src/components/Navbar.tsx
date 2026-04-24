@@ -82,7 +82,7 @@ export default function Navbar() {
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute right-0 mt-2 w-40 glass border border-[var(--border)] rounded-2xl p-2 shadow-xl z-50"
+                    className="absolute right-0 mt-2 w-48 glass border border-[var(--border)] rounded-2xl p-2 shadow-2xl z-50 max-h-[70vh] overflow-y-auto custom-scrollbar"
                   >
                     {themes.map((t) => (
                       <button
