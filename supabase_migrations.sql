@@ -13,8 +13,14 @@ CREATE TABLE IF NOT EXISTS reviews (
 
 -- Enable RLS for reviews
 ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public can insert reviews" ON reviews;
 CREATE POLICY "Public can insert reviews" ON reviews FOR INSERT TO anon, authenticated WITH CHECK (true);
-CREATE POLICY "Public can view approved reviews" ON reviews FOR SELECT TO anon, authenticated USING (true); -- or (approved = true)
+
+DROP POLICY IF EXISTS "Public can view approved reviews" ON reviews;
+CREATE POLICY "Public can view approved reviews" ON reviews FOR SELECT TO anon, authenticated USING (true);
+
+DROP POLICY IF EXISTS "Admin can manage reviews" ON reviews;
 CREATE POLICY "Admin can manage reviews" ON reviews FOR ALL TO authenticated USING (true);
 
 -- 2. Shop Items Table
@@ -70,15 +76,21 @@ ALTER TABLE bookings ADD COLUMN IF NOT EXISTS room_transport text;
 
 -- Admin Management Policies
 ALTER TABLE shop_items ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public can view active items" ON shop_items;
 CREATE POLICY "Public can view active items" ON shop_items FOR SELECT TO anon, authenticated USING (active = true);
+DROP POLICY IF EXISTS "Admin can manage items" ON shop_items;
 CREATE POLICY "Admin can manage items" ON shop_items FOR ALL TO anon, authenticated USING (true);
 
 ALTER TABLE packages ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public can view active packages" ON packages;
 CREATE POLICY "Public can view active packages" ON packages FOR SELECT TO anon, authenticated USING (active = true);
+DROP POLICY IF EXISTS "Admin can manage packages" ON packages;
 CREATE POLICY "Admin can manage packages" ON packages FOR ALL TO anon, authenticated USING (true);
 
 ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public can insert bookings" ON bookings;
 CREATE POLICY "Public can insert bookings" ON bookings FOR INSERT TO anon, authenticated WITH CHECK (true);
+DROP POLICY IF EXISTS "Admin can manage bookings" ON bookings;
 CREATE POLICY "Admin can manage bookings" ON bookings FOR ALL TO anon, authenticated USING (true);
 
 -- ============================================================================
