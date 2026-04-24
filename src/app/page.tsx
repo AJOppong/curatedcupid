@@ -62,7 +62,7 @@ function Hero() {
         transition={{ duration: 0.7, delay: 0.1 }}
         className="text-6xl md:text-8xl font-bold leading-[1.0] max-w-4xl font-serif text-[var(--text-main)]"
       >
-        <span className="text-gradient-pink">{content.title}</span>
+        <span className="text-gradient-pink">Curated Cupid</span>
       </motion.h1>
 
       <motion.p
