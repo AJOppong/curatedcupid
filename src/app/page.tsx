@@ -133,7 +133,7 @@ function Hero() {
         </Link>
         <Link
           href="#packages"
-          className="flex items-center gap-2 px-8 py-3.5 rounded-full glass border border-white/10 text-white/70 text-sm hover:border-white/20 hover:text-white transition-all"
+          className="flex items-center gap-2 px-8 py-3.5 rounded-full glass border border-[var(--border)] text-[var(--text-muted)] text-sm hover:border-[var(--border)] hover:text-[var(--text-main)] transition-all"
         >
           <Gift className="w-4 h-4" />
           View Packages
@@ -156,16 +156,16 @@ function Hero() {
             key={item.label}
             whileHover={{ scale: 1.03, y: -4 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="relative overflow-hidden rounded-2xl aspect-[3/4] border border-white/6"
+            className="relative overflow-hidden rounded-2xl aspect-[3/4] border border-[var(--border)]"
           >
             <Image src={item.src} alt={item.label} fill className="object-cover opacity-80" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0A0914] via-transparent to-transparent" />
-            <p className="absolute bottom-3 left-3 right-3 text-white text-xs font-medium">{item.label}</p>
+            <p className="absolute bottom-3 left-3 right-3 text-[var(--text-main)] text-xs font-medium">{item.label}</p>
           </motion.div>
         ))}
       </motion.div>
 
-      <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute bottom-8 text-white/15">
+      <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute bottom-8 text-[var(--text-main)]/15">
         <ChevronDown className="w-5 h-5" />
       </motion.div>
     </section>
@@ -244,7 +244,7 @@ function Packages() {
 
         {/* Gender Filter */}
         <div className="flex justify-center mb-10">
-          <div className="flex gap-2 glass p-1.5 rounded-full border border-white/10">
+          <div className="flex gap-2 glass p-1.5 rounded-full border border-[var(--border)]">
             {["Ladies", "Guys"].map(tab => (
               <button
                 key={tab}
@@ -316,7 +316,7 @@ function Packages() {
                     <div className={`text-center py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
                       (pkg as any).tag === "Most Popular"
                         ? "btn-pink-gradient text-white hover:scale-[1.02] hover:opacity-90"
-                        : "border border-white/10 text-white/60 hover:border-white/20 hover:text-white"
+                        : "border border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border)] hover:text-[var(--text-main)]"
                     }`}>
                       Book This Package
                     </div>
@@ -347,8 +347,8 @@ function Gallery() {
       <div className="max-w-6xl mx-auto">
         <motion.div {...fadeUp()} className="text-center mb-14">
           <SectionBadge icon={<Camera className="w-3 h-3" />} label="Our Work" />
-          <h2 className="text-4xl md:text-5xl font-bold text-white">Magical Moments</h2>
-          <p className="mt-3 text-white/40 text-sm max-w-md mx-auto leading-relaxed">
+          <h2 className="text-4xl md:text-5xl font-bold text-[var(--text-main)]">Magical Moments</h2>
+          <p className="mt-3 text-[var(--text-muted)] text-sm max-w-md mx-auto leading-relaxed">
             Explore our portfolio of unforgettable experiences we&apos;ve created for couples and loved ones
           </p>
         </motion.div>
@@ -360,7 +360,7 @@ function Gallery() {
               {...fadeUp(i * 0.07)}
               whileHover={{ scale: 1.02, y: -4 }}
               transition={{ type: "spring", stiffness: 280, damping: 22 }}
-              className="group relative overflow-hidden rounded-2xl aspect-[4/3] border border-white/5 bg-[#12101F] cursor-pointer"
+              className="group relative overflow-hidden rounded-2xl aspect-[4/3] border border-[var(--border)] bg-[#12101F] cursor-pointer"
             >
               {item.src ? (
                 <>
@@ -377,8 +377,8 @@ function Gallery() {
               )}
               {item.type === "video" && (
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center group-hover:bg-[#E91E8C]/80 transition-colors">
-                    <Play className="w-5 h-5 text-white ml-1" />
+                  <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-[var(--border)] flex items-center justify-center group-hover:bg-[#E91E8C]/80 transition-colors">
+                    <Play className="w-5 h-5 text-[var(--text-main)] ml-1" />
                   </div>
                 </div>
               )}
@@ -387,7 +387,7 @@ function Gallery() {
                 <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#E91E8C]/20 border border-[#E91E8C]/30 text-[#FF6BB5] text-[10px] font-medium mb-1.5">
                   {item.tag}
                 </span>
-                <p className="text-white text-sm font-medium">{item.label}</p>
+                <p className="text-[var(--text-main)] text-sm font-medium">{item.label}</p>
               </div>
             </motion.div>
           ))}
@@ -411,7 +411,7 @@ function WhyUs() {
       <div className="max-w-6xl mx-auto relative">
         <motion.div {...fadeUp()} className="text-center mb-14">
           <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Why Curated Cupid" />
-          <h2 className="text-4xl md:text-5xl font-bold text-white">
+          <h2 className="text-4xl md:text-5xl font-bold text-[var(--text-main)]">
             Passionate about making <span className="text-gradient-pink">every moment count</span>
           </h2>
         </motion.div>
@@ -541,7 +541,7 @@ function Reviews() {
           {hasMore && (
             <button 
               onClick={loadMore} 
-              className="glass border border-white/10 px-8 py-3 rounded-full text-white font-bold text-xs hover:bg-[#E91E8C]/10 hover:border-[#E91E8C]/30 transition-all flex items-center gap-2"
+              className="glass border border-[var(--border)] px-8 py-3 rounded-full text-[var(--text-main)] font-bold text-xs hover:bg-[#E91E8C]/10 hover:border-[#E91E8C]/30 transition-all flex items-center gap-2"
             >
               See More Reviews <ChevronDown className="w-4 h-4" />
             </button>
@@ -563,35 +563,35 @@ function Reviews() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-[#12101F] border border-white/10 rounded-3xl p-6 w-full max-w-md relative"
+              className="bg-[#12101F] border border-[var(--border)] rounded-3xl p-6 w-full max-w-md relative"
             >
-              <button onClick={() => setShowModal(false)} className="absolute top-4 right-4 text-white/40 hover:text-white">
+              <button onClick={() => setShowModal(false)} className="absolute top-4 right-4 text-[var(--text-muted)] hover:text-[var(--text-main)]">
                 <X className="w-5 h-5" />
               </button>
-              <h3 className="text-2xl font-bold text-white mb-2">Share Your Experience</h3>
-              <p className="text-white/40 text-sm mb-6">Tell us about your Curated Cupid moment.</p>
+              <h3 className="text-2xl font-bold text-[var(--text-main)] mb-2">Share Your Experience</h3>
+              <p className="text-[var(--text-muted)] text-sm mb-6">Tell us about your Curated Cupid moment.</p>
               
               <form onSubmit={handleSubmitReview} className="space-y-4">
                 <div className="space-y-1.5">
-                  <label className="text-white/60 text-xs">Your Name</label>
+                  <label className="text-[var(--text-muted)] text-xs">Your Name</label>
                   <input
                     required
                     type="text"
                     value={newReview.name}
                     onChange={e => setNewReview({...newReview, name: e.target.value})}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-[#E91E8C] focus:outline-none transition-colors"
+                    className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm focus:border-[#E91E8C] focus:outline-none transition-colors"
                     placeholder="Enter your name"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-white/60 text-xs">Rating</label>
+                  <label className="text-[var(--text-muted)] text-xs">Rating</label>
                   <div className="flex gap-2">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
                         key={star}
                         type="button"
                         onClick={() => setNewReview({...newReview, rating: star})}
-                        className={`text-2xl transition-transform hover:scale-110 ${newReview.rating >= star ? 'text-[#D4AF37]' : 'text-white/10'}`}
+                        className={`text-2xl transition-transform hover:scale-110 ${newReview.rating >= star ? 'text-[#D4AF37]' : 'text-[var(--text-main)]/10'}`}
                       >
                         ★
                       </button>
@@ -599,13 +599,13 @@ function Reviews() {
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-white/60 text-xs">Your Comment</label>
+                  <label className="text-[var(--text-muted)] text-xs">Your Comment</label>
                   <textarea
                     required
                     rows={4}
                     value={newReview.comment}
                     onChange={e => setNewReview({...newReview, comment: e.target.value})}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:border-[#E91E8C] focus:outline-none transition-colors resize-none"
+                    className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm focus:border-[#E91E8C] focus:outline-none transition-colors resize-none"
                     placeholder="Tell us what you loved..."
                   />
                 </div>
@@ -632,8 +632,8 @@ function Contact() {
       <div className="max-w-5xl mx-auto">
         <motion.div {...fadeUp()} className="text-center mb-14">
           <SectionBadge icon={<MessageCircle className="w-3 h-3" />} label="Get In Touch" />
-          <h2 className="text-4xl md:text-5xl font-bold text-white">Let&apos;s Create Your Moment</h2>
-          <p className="mt-3 text-white/40 text-sm max-w-md mx-auto leading-relaxed">
+          <h2 className="text-4xl md:text-5xl font-bold text-[var(--text-main)]">Let&apos;s Create Your Moment</h2>
+          <p className="mt-3 text-[var(--text-muted)] text-sm max-w-md mx-auto leading-relaxed">
             Ready to create something magical? Reach out and we&apos;ll make it happen
           </p>
         </motion.div>
@@ -641,8 +641,8 @@ function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* Contact Info */}
           <motion.div {...fadeUp(0.1)} className="lg:col-span-2 space-y-6">
-            <div className="bg-[#12101F]/80 border border-white/5 rounded-2xl p-6 space-y-5">
-              <h3 className="text-white font-semibold text-lg">Contact Details</h3>
+            <div className="bg-[#12101F]/80 border border-[var(--border)] rounded-2xl p-6 space-y-5">
+              <h3 className="text-[var(--text-main)] font-semibold text-lg">Contact Details</h3>
               {[
                 { icon: <Phone className="w-4 h-4" />, label: "Phone", value: "+233 24 123 4567" },
                 { icon: <Mail className="w-4 h-4" />, label: "Email", value: "hello@curatedcupid.com" },
@@ -654,20 +654,20 @@ function Contact() {
                     {item.icon}
                   </div>
                   <div>
-                    <p className="text-white/30 text-xs mb-0.5">{item.label}</p>
-                    <p className="text-white text-sm">{item.value}</p>
+                    <p className="text-[var(--text-muted)] text-xs mb-0.5">{item.label}</p>
+                    <p className="text-[var(--text-main)] text-sm">{item.value}</p>
                   </div>
                 </div>
               ))}
             </div>
 
             {/* Social handles */}
-            <div className="bg-[#12101F]/80 border border-white/5 rounded-2xl p-6 space-y-4">
-              <h3 className="text-white font-semibold text-sm">Follow Our Magic</h3>
+            <div className="bg-[#12101F]/80 border border-[var(--border)] rounded-2xl p-6 space-y-4">
+              <h3 className="text-[var(--text-main)] font-semibold text-sm">Follow Our Magic</h3>
               <div className="flex flex-wrap gap-3">
                 {[
                   { name: "WhatsApp", emoji: "💬", color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/233241234567" },
-                  { name: "TikTok", emoji: "🎵", color: "bg-white/5 text-white border-white/10", link: "https://tiktok.com/@curatedcupid" },
+                  { name: "TikTok", emoji: "🎵", color: "bg-white/5 text-[var(--text-main)] border-[var(--border)]", link: "https://tiktok.com/@curatedcupid" },
                   { name: "Snapchat", emoji: "👻", color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", link: "https://snapchat.com/add/curatedcupid" },
                   { name: "Instagram", emoji: "📸", color: "bg-pink-500/10 text-pink-400 border-pink-500/20", link: "https://instagram.com/curatedcupid" },
                 ].map((social) => (
@@ -688,29 +688,29 @@ function Contact() {
 
           {/* Contact Form */}
           <motion.div {...fadeUp(0.15)} className="lg:col-span-3">
-            <div className="bg-[#12101F]/80 border border-white/5 rounded-2xl p-7">
+            <div className="bg-[#12101F]/80 border border-[var(--border)] rounded-2xl p-7">
               <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-white/40 text-xs">Your Name</label>
-                    <input type="text" placeholder="e.g. Amara Johnson" className="w-full bg-white/4 border border-white/8 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                    <label className="text-[var(--text-muted)] text-xs">Your Name</label>
+                    <input type="text" placeholder="e.g. Amara Johnson" className="w-full bg-white/4 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-white/40 text-xs">Phone / WhatsApp</label>
-                    <input type="tel" placeholder="e.g. 0241234567" className="w-full bg-white/4 border border-white/8 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                    <label className="text-[var(--text-muted)] text-xs">Phone / WhatsApp</label>
+                    <input type="tel" placeholder="e.g. 0241234567" className="w-full bg-white/4 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-white/40 text-xs">Email Address</label>
-                  <input type="email" placeholder="your@email.com" className="w-full bg-white/4 border border-white/8 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                  <label className="text-[var(--text-muted)] text-xs">Email Address</label>
+                  <input type="email" placeholder="your@email.com" className="w-full bg-white/4 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-white/40 text-xs">Event Date (Approx.)</label>
-                  <input type="date" className="w-full bg-white/4 border border-white/8 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#E91E8C]/50 transition-all" />
+                  <label className="text-[var(--text-muted)] text-xs">Event Date (Approx.)</label>
+                  <input type="date" className="w-full bg-white/4 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm focus:outline-none focus:border-[#E91E8C]/50 transition-all" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-white/40 text-xs">Message</label>
-                  <textarea rows={4} placeholder="Tell us about your dream setup..." className="w-full bg-white/4 border border-white/8 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all resize-none" />
+                  <label className="text-[var(--text-muted)] text-xs">Message</label>
+                  <textarea rows={4} placeholder="Tell us about your dream setup..." className="w-full bg-white/4 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all resize-none" />
                 </div>
                 <button type="submit" className="w-full btn-pink-gradient text-white font-semibold py-3.5 rounded-xl text-sm hover:scale-[1.01] transition-transform">
                   Send Message
@@ -734,8 +734,8 @@ function CTABanner() {
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(233,30,140,0.12), transparent 60%), #12101F" }}
       >
         <div className="text-5xl mb-4">💝</div>
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Make someone smile today</h2>
-        <p className="text-white/40 text-sm mb-8 max-w-md mx-auto leading-relaxed">
+        <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-main)] mb-4">Make someone smile today</h2>
+        <p className="text-[var(--text-muted)] text-sm mb-8 max-w-md mx-auto leading-relaxed">
           Start building your personalized surprise experience. Transparent pricing, handcrafted details — just pure joy.
         </p>
         <Link href="/builder" className="inline-flex items-center gap-2 btn-pink-gradient px-10 py-4 rounded-full text-white font-bold text-sm hover:scale-105 hover:-translate-y-1 transition-all">
@@ -751,41 +751,41 @@ function CTABanner() {
 // ── Footer ────────────────────────────────────────────
 function Footer() {
   return (
-    <footer className="border-t border-white/5 py-12 px-6">
+    <footer className="border-t border-[var(--border)] py-12 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 rounded-full btn-pink-gradient flex items-center justify-center">
-                <Heart className="w-4 h-4 text-white fill-white" />
+                <Heart className="w-4 h-4 text-[var(--text-main)] fill-white" />
               </div>
               <div className="flex flex-col -space-y-1">
                 <span className="font-accent text-2xl text-[var(--primary)] leading-none">Curated Cupid</span>
                 <span className="text-[7px] uppercase tracking-[0.2em] text-[var(--text-muted)] font-bold pl-1">of gifting</span>
               </div>
             </div>
-            <p className="text-white/30 text-sm leading-relaxed max-w-xs">
+            <p className="text-[var(--text-muted)] text-sm leading-relaxed max-w-xs">
               Luxury celebration experiences crafted with care for every special chapter in your story.
             </p>
           </div>
           <div>
-            <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-4">Quick Links</p>
+            <p className="text-[var(--text-muted)] text-xs font-semibold uppercase tracking-widest mb-4">Quick Links</p>
             <div className="space-y-2">
               {["Services", "Packages", "Gallery", "Contact"].map((l) => (
-                <Link key={l} href={`#${l.toLowerCase()}`} className="block text-white/30 text-sm hover:text-[#E91E8C] transition-colors">{l}</Link>
+                <Link key={l} href={`#${l.toLowerCase()}`} className="block text-[var(--text-muted)] text-sm hover:text-[#E91E8C] transition-colors">{l}</Link>
               ))}
             </div>
           </div>
           <div>
-            <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-4">Contact</p>
-            <div className="space-y-2 text-white/30 text-sm">
+            <p className="text-[var(--text-muted)] text-xs font-semibold uppercase tracking-widest mb-4">Contact</p>
+            <div className="space-y-2 text-[var(--text-muted)] text-sm">
               <p>+233 24 123 4567</p>
               <p>hello@curatedcupid.com</p>
               <p>Ayeduase - Kumasi, Ghana</p>
             </div>
           </div>
         </div>
-        <div className="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-white/20 text-xs">
+        <div className="border-t border-[var(--border)] pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-[var(--text-main)]/20 text-xs">
           <p>© {new Date().getFullYear()} Curated Cupid. All rights reserved.</p>
           <p>Made with 💕 in Kumasi</p>
         </div>

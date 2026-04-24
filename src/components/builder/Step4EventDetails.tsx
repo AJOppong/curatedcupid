@@ -8,7 +8,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const inputClass =
-  "w-full glass border border-white/8 rounded-xl px-4 py-3 text-white text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_15px_rgba(233,30,140,0.1)] transition-all bg-transparent";
+  "w-full glass border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_15px_rgba(233,30,140,0.1)] transition-all bg-transparent";
 
 interface FieldProps {
   label: string;
@@ -20,12 +20,12 @@ interface FieldProps {
 function Field({ label, icon, children, optional }: FieldProps) {
   return (
     <div className="space-y-1.5">
-      <label className="flex items-center justify-between text-white/50 text-xs font-medium">
+      <label className="flex items-center justify-between text-[var(--text-muted)] text-xs font-medium">
         <div className="flex items-center gap-2">
           <span className="text-[#E91E8C]">{icon}</span>
           {label}
         </div>
-        {optional && <span className="text-white/20 font-normal">Optional</span>}
+        {optional && <span className="text-[var(--text-muted)] font-normal">Optional</span>}
       </label>
       {children}
     </div>
@@ -72,16 +72,16 @@ export default function Step4EventDetails() {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+        <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-main)] mb-2">
           Event <span className="text-[#E91E8C]">Details</span>
         </h2>
-        <p className="text-white/40 text-sm">Tell us everything we need to make it perfect</p>
+        <p className="text-[var(--text-muted)] text-sm">Tell us everything we need to make it perfect</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Your Details */}
         <div className="space-y-4">
-          <h3 className="text-sm font-bold text-white/80 border-l-2 border-[#E91E8C] pl-3">Your Details</h3>
+          <h3 className="text-sm font-bold text-[var(--text-muted)] border-l-2 border-[#E91E8C] pl-3">Your Details</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Your Name" icon={<User className="w-3 h-3" />}>
               <input
@@ -108,7 +108,7 @@ export default function Step4EventDetails() {
 
         {/* Recipient Details */}
         <div className="space-y-4">
-          <h3 className="text-sm font-bold text-white/80 border-l-2 border-[#7C3AED] pl-3">Recipient Details</h3>
+          <h3 className="text-sm font-bold text-[var(--text-muted)] border-l-2 border-[#7C3AED] pl-3">Recipient Details</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Recipient Name" icon={<Gift className="w-3 h-3" />}>
               <input
@@ -135,7 +135,7 @@ export default function Step4EventDetails() {
 
         {/* Event Logistics */}
         <div className="space-y-4">
-          <h3 className="text-sm font-bold text-white/80 border-l-2 border-white/20 pl-3">Logistics</h3>
+          <h3 className="text-sm font-bold text-[var(--text-muted)] border-l-2 border-[var(--border)] pl-3">Logistics</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Delivery Date" icon={<Calendar className="w-3 h-3" />}>
               <input
@@ -158,9 +158,9 @@ export default function Step4EventDetails() {
                   required
                 />
                 {showTimePicker && (
-                  <div className="absolute top-full left-0 right-0 mt-2 p-4 glass border border-white/10 rounded-2xl z-50 shadow-2xl">
+                  <div className="absolute top-full left-0 right-0 mt-2 p-4 glass border border-[var(--border)] rounded-2xl z-50 shadow-2xl">
                     <div className="flex justify-between items-center mb-3">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-white/40">Select Time</span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Select Time</span>
                       <button type="button" onClick={() => setShowTimePicker(false)} className="text-[#E91E8C] text-[10px] font-bold">Close</button>
                     </div>
                     <div className="grid grid-cols-4 gap-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
@@ -175,8 +175,8 @@ export default function Step4EventDetails() {
                             }}
                             className={`py-1.5 rounded-lg text-[11px] font-medium transition-all ${
                               eventDetails.time === `${h}:${m}`
-                                ? "bg-[#E91E8C] text-white"
-                                : "hover:bg-white/5 text-white/60"
+                                ? "bg-[#E91E8C] text-[var(--text-main)]"
+                                : "hover:bg-[var(--glass-bg)] text-[var(--text-muted)]"
                             }`}
                           >
                             {h}:{m}
@@ -197,7 +197,7 @@ export default function Step4EventDetails() {
                   type="button"
                   onClick={() => setShowDeliveryPicker(!showDeliveryPicker)}
                   className={`w-full text-left glass border rounded-xl px-4 py-3 text-sm transition-all flex justify-between items-center ${
-                    eventDetails.deliveryMethod ? "border-[#E91E8C]/50 text-white shadow-[0_0_15px_rgba(233,30,140,0.1)]" : "border-white/8 text-white/20"
+                    eventDetails.deliveryMethod ? "border-[#E91E8C]/50 text-[var(--text-main)] shadow-[0_0_15px_rgba(233,30,140,0.1)]" : "border-[var(--border)] text-[var(--text-muted)]"
                   }`}
                 >
                   <span>
@@ -214,7 +214,7 @@ export default function Step4EventDetails() {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="absolute top-full left-0 right-0 mt-2 p-2 glass border border-white/10 rounded-2xl z-50 shadow-2xl flex flex-col gap-1"
+                      className="absolute top-full left-0 right-0 mt-2 p-2 glass border border-[var(--border)] rounded-2xl z-50 shadow-2xl flex flex-col gap-1"
                     >
                       {deliveryMethods.map((method) => (
                         <button
@@ -225,13 +225,13 @@ export default function Step4EventDetails() {
                             setShowDeliveryPicker(false);
                           }}
                           className={`flex items-start gap-3 p-3 rounded-xl transition-all text-left ${
-                            eventDetails.deliveryMethod === method.id ? "bg-[#E91E8C]/15 border border-[#E91E8C]/30" : "hover:bg-white/5 border border-transparent"
+                            eventDetails.deliveryMethod === method.id ? "bg-[#E91E8C]/15 border border-[#E91E8C]/30" : "hover:bg-[var(--glass-bg)] border border-transparent"
                           }`}
                         >
                           <span className="text-xl">{method.icon}</span>
                           <div>
-                            <p className="text-sm font-bold text-white mb-0.5">{method.label}</p>
-                            <p className="text-xs text-white/40">{method.desc}</p>
+                            <p className="text-sm font-bold text-[var(--text-main)] mb-0.5">{method.label}</p>
+                            <p className="text-xs text-[var(--text-muted)]">{method.desc}</p>
                           </div>
                         </button>
                       ))}
@@ -274,7 +274,7 @@ export default function Step4EventDetails() {
         {/* Room Description (Conditional) */}
         {useBuilder().baseService === "Room Aesthetics" && (
           <div className="space-y-4">
-            <h3 className="text-sm font-bold text-white/80 border-l-2 border-[#E91E8C] pl-3">Room Setup Description</h3>
+            <h3 className="text-sm font-bold text-[var(--text-muted)] border-l-2 border-[#E91E8C] pl-3">Room Setup Description</h3>
             <Field label="Describe your dream setup" icon={<MessageSquare className="w-3 h-3" />}>
               <textarea
                 rows={3}
@@ -289,7 +289,7 @@ export default function Step4EventDetails() {
 
         {/* Optional Customization */}
         <div className="space-y-4">
-          <h3 className="text-sm font-bold text-white/80 border-l-2 border-white/10 pl-3">Additional (Optional)</h3>
+          <h3 className="text-sm font-bold text-[var(--text-muted)] border-l-2 border-[var(--border)] pl-3">Additional (Optional)</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Theme / Aesthetic Colors" icon={<Palette className="w-3 h-3" />} optional>
               <input
@@ -312,7 +312,7 @@ export default function Step4EventDetails() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-white/5">
+        <div className="flex items-center justify-between pt-4 border-t border-[var(--border)]">
           <Button type="button" variant="secondary" onClick={() => setStep(3)}>
             <ArrowLeft className="w-4 h-4" /> Back
           </Button>

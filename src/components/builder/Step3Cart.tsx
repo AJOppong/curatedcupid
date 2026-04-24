@@ -22,12 +22,12 @@ export default function Step3Cart() {
         animate={{ opacity: 1, scale: 1 }}
         className="py-20 flex flex-col items-center gap-6 text-center"
       >
-        <div className="w-24 h-24 rounded-3xl bg-white/4 border border-white/8 flex items-center justify-center text-5xl">
+        <div className="w-24 h-24 rounded-3xl bg-[var(--glass-bg)] border border-[var(--border)] flex items-center justify-center text-5xl">
           🛒
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">Your cart is empty</h2>
-          <p className="text-white/40 text-sm">Go back and pick some items to build your experience</p>
+          <h2 className="text-2xl font-bold text-[var(--text-main)] mb-2">Your cart is empty</h2>
+          <p className="text-[var(--text-muted)] text-sm">Go back and pick some items to build your experience</p>
         </div>
         <Button variant="secondary" onClick={() => setStep(2)} className="px-8">
           <ArrowLeft className="w-4 h-4" /> Browse Items
@@ -40,10 +40,10 @@ export default function Step3Cart() {
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">
+        <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-main)] mb-1">
           Review Your <span className="text-[#E91E8C]">Order</span>
         </h2>
-        <p className="text-white/40 text-sm">
+        <p className="text-[var(--text-muted)] text-sm">
           {itemCount} item{itemCount !== 1 ? "s" : ""} in your cart
         </p>
       </div>
@@ -61,7 +61,7 @@ export default function Step3Cart() {
               className="flex items-center gap-2.5 px-4 py-2.5 glass border border-[#E91E8C]/25 bg-[#E91E8C]/5 rounded-2xl w-fit"
             >
               <Package className="w-3.5 h-3.5 text-[#E91E8C]" />
-              <span className="text-white/80 text-xs font-bold">{selectedPackageName}</span>
+              <span className="text-[var(--text-muted)] text-xs font-bold">{selectedPackageName}</span>
               <Sparkles className="w-3 h-3 text-[#D4AF37]" />
             </motion.div>
           )}
@@ -76,35 +76,35 @@ export default function Step3Cart() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, x: 40, height: 0, marginBottom: 0, padding: 0 }}
                 transition={{ type: "spring", stiffness: 350, damping: 30, delay: idx * 0.04 }}
-                className="glass border border-white/8 rounded-2xl p-4 flex items-center gap-4 group hover:border-white/15 transition-all"
+                className="glass border border-[var(--border)] rounded-2xl p-4 flex items-center gap-4 group hover:border-[var(--border)] transition-all"
               >
                 {/* Icon */}
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#E91E8C]/10 to-[#7C3AED]/10 border border-white/5 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-105 transition-transform">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#E91E8C]/10 to-[#7C3AED]/10 border border-[var(--border)] flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-105 transition-transform">
                   {item.image}
                 </div>
 
                 {/* Name & unit price */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-semibold text-sm truncate">{item.name}</p>
-                  <p className="text-white/35 text-xs mt-0.5">
+                  <p className="text-[var(--text-main)] font-semibold text-sm truncate">{item.name}</p>
+                  <p className="text-[var(--text-muted)] text-xs mt-0.5">
                     GH₵{item.price.toLocaleString()} × {item.quantity}
                   </p>
                 </div>
 
                 {/* Qty controls */}
-                <div className="flex items-center gap-1.5 bg-white/4 border border-white/8 rounded-full p-1 flex-shrink-0">
+                <div className="flex items-center gap-1.5 bg-[var(--glass-bg)] border border-[var(--border)] rounded-full p-1 flex-shrink-0">
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    className="w-7 h-7 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/8 transition-all"
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--glass-bg)] transition-all"
                   >
                     <Minus className="w-3 h-3" />
                   </button>
-                  <span className="text-white text-sm font-black w-5 text-center select-none">
+                  <span className="text-[var(--text-main)] text-sm font-black w-5 text-center select-none">
                     {item.quantity}
                   </span>
                   <button
                     onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    className="w-7 h-7 rounded-full flex items-center justify-center text-white/50 hover:text-white hover:bg-white/8 transition-all"
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--glass-bg)] transition-all"
                   >
                     <Plus className="w-3 h-3" />
                   </button>
@@ -116,7 +116,7 @@ export default function Step3Cart() {
                   initial={{ scale: 1.15, color: "#E91E8C" }}
                   animate={{ scale: 1, color: "#ffffff" }}
                   transition={{ duration: 0.25 }}
-                  className="text-white font-bold text-sm w-20 text-right flex-shrink-0 tabular-nums"
+                  className="text-[var(--text-main)] font-bold text-sm w-20 text-right flex-shrink-0 tabular-nums"
                 >
                   GH₵{(item.price * item.quantity).toLocaleString()}
                 </motion.p>
@@ -124,7 +124,7 @@ export default function Step3Cart() {
                 {/* Delete */}
                 <button
                   onClick={() => removeFromCart(item.id)}
-                  className="w-8 h-8 rounded-xl flex items-center justify-center text-white/15 hover:text-red-400 hover:bg-red-500/10 transition-all flex-shrink-0 ml-1"
+                  className="w-8 h-8 rounded-xl flex items-center justify-center text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 transition-all flex-shrink-0 ml-1"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -135,7 +135,7 @@ export default function Step3Cart() {
           {/* Add more link */}
           <button
             onClick={() => setStep(2)}
-            className="w-full py-3.5 rounded-2xl border border-dashed border-white/10 text-white/30 hover:border-[#E91E8C]/30 hover:text-[#E91E8C] transition-all text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 group"
+            className="w-full py-3.5 rounded-2xl border border-dashed border-[var(--border)] text-[var(--text-muted)] hover:border-[#E91E8C]/30 hover:text-[#E91E8C] transition-all text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 group"
           >
             <Plus className="w-3.5 h-3.5 group-hover:rotate-90 transition-transform" />
             Add More Items
@@ -148,12 +148,12 @@ export default function Step3Cart() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
-            className="glass border border-white/10 rounded-3xl p-6 sticky top-24 space-y-5 shadow-[0_0_60px_rgba(0,0,0,0.4)]"
+            className="glass border border-[var(--border)] rounded-3xl p-6 sticky top-24 space-y-5 shadow-[0_0_60px_rgba(0,0,0,0.4)]"
           >
             {/* Summary header */}
-            <div className="flex items-center gap-2 pb-4 border-b border-white/8">
+            <div className="flex items-center gap-2 pb-4 border-b border-[var(--border)]">
               <Gift className="w-4 h-4 text-[#E91E8C]" />
-              <h3 className="text-white font-black text-sm uppercase tracking-widest">Order Summary</h3>
+              <h3 className="text-[var(--text-main)] font-black text-sm uppercase tracking-widest">Order Summary</h3>
             </div>
 
             {/* Line items summary */}
@@ -162,12 +162,12 @@ export default function Step3Cart() {
                 <div key={item.id} className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-base flex-shrink-0">{item.image}</span>
-                    <span className="text-white/60 text-xs truncate">{item.name}</span>
+                    <span className="text-[var(--text-muted)] text-xs truncate">{item.name}</span>
                     {item.quantity > 1 && (
-                      <span className="text-[10px] font-bold text-white/30 flex-shrink-0">×{item.quantity}</span>
+                      <span className="text-[10px] font-bold text-[var(--text-muted)] flex-shrink-0">×{item.quantity}</span>
                     )}
                   </div>
-                  <span className="text-white/80 text-xs font-bold flex-shrink-0 tabular-nums">
+                  <span className="text-[var(--text-muted)] text-xs font-bold flex-shrink-0 tabular-nums">
                     GH₵{(item.price * item.quantity).toLocaleString()}
                   </span>
                 </div>
@@ -175,26 +175,26 @@ export default function Step3Cart() {
             </div>
 
             {/* Totals */}
-            <div className="space-y-2 pt-4 border-t border-white/8">
+            <div className="space-y-2 pt-4 border-t border-[var(--border)]">
               <div className="flex items-center justify-between text-xs">
-                <span className="text-white/40">Subtotal ({itemCount} item{itemCount !== 1 ? "s" : ""})</span>
+                <span className="text-[var(--text-muted)]">Subtotal ({itemCount} item{itemCount !== 1 ? "s" : ""})</span>
                 <motion.span
                   key={cartTotal}
                   initial={{ opacity: 0.5, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-white font-bold tabular-nums"
+                  className="text-[var(--text-main)] font-bold tabular-nums"
                 >
                   GH₵{cartTotal.toLocaleString()}
                 </motion.span>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-white/40">Service & Packaging</span>
-                <span className="text-white/60 font-bold">GH₵{SERVICE_FEE}</span>
+                <span className="text-[var(--text-muted)]">Service & Packaging</span>
+                <span className="text-[var(--text-muted)] font-bold">GH₵{SERVICE_FEE}</span>
               </div>
             </div>
 
             <div className="bg-gradient-to-r from-[#E91E8C]/10 to-[#7C3AED]/10 border border-[#E91E8C]/20 rounded-2xl p-4 flex items-center justify-between">
-              <span className="text-white font-bold text-sm">Total</span>
+              <span className="text-[var(--text-main)] font-bold text-sm">Total</span>
               <motion.span
                 key={totalWithFee}
                 initial={{ scale: 1.1, color: "#E91E8C" }}
@@ -218,7 +218,7 @@ export default function Step3Cart() {
 
             <button
               onClick={() => setStep(2)}
-              className="w-full flex items-center justify-center gap-1.5 text-white/25 hover:text-white/60 text-xs font-bold transition-colors"
+              className="w-full flex items-center justify-center gap-1.5 text-[var(--text-muted)] hover:text-[var(--text-muted)] text-xs font-bold transition-colors"
             >
               <ChevronLeft className="w-3 h-3" /> Edit Package
             </button>

@@ -48,13 +48,13 @@ function StepIndicator() {
                 className="w-7 h-7 md:w-8 md:h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold transition-all duration-300"
               >
                 {isDone ? (
-                  <Check className="w-3 h-3 text-white" />
+                  <Check className="w-3 h-3 text-[var(--text-main)]" />
                 ) : (
-                  <span className={isActive ? "text-white" : "text-white/25"} style={{ fontSize: "10px" }}>{s.num}</span>
+                  <span className={isActive ? "text-[var(--text-main)]" : "text-[var(--text-muted)]"} style={{ fontSize: "10px" }}>{s.num}</span>
                 )}
               </motion.div>
               <span className={`text-[9px] font-medium hidden sm:block transition-colors ${
-                isActive ? "text-[#E91E8C]" : isDone ? "text-white/40" : "text-white/15"
+                isActive ? "text-[#E91E8C]" : isDone ? "text-[var(--text-muted)]" : "text-[var(--text-muted)]"
               }`}>
                 {s.label}
               </span>
@@ -120,7 +120,7 @@ function BuilderContent() {
       <div className="max-w-5xl mx-auto">
         <StepIndicator />
 
-        <div className="glass border border-white/6 rounded-2xl md:rounded-3xl p-4 md:p-10 shadow-[0_0_80px_rgba(0,0,0,0.6)]">
+        <div className="glass border border-[var(--border)] rounded-2xl md:rounded-3xl p-4 md:p-10 shadow-[0_0_80px_rgba(0,0,0,0.6)]">
           <AnimatePresence mode="wait">
             <motion.div
               key={step}
@@ -142,7 +142,7 @@ export default function BuilderPage() {
   return (
     <BuilderProvider>
       <Navbar />
-      <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-white">Loading...</div>}>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-[var(--text-main)]">Loading...</div>}>
         <BuilderContent />
       </Suspense>
     </BuilderProvider>
