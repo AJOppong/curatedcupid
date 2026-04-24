@@ -123,8 +123,11 @@ export const predefinedPackages = [
   { id: "perche-sei-mio", name: "PERCHÉ SEI MIO", price: 1400, gender: "guys", items: ["ferrero", "premium-jewelry", "wallet", "wine", "custom-slippers", "db-perfume", "nike-slides", "shirt", "handwritten-letter"] },
   { id: "oltre-leternita", name: "OLTRE L'ETERNITÀ", price: 2000, gender: "guys", items: ["ferrero", "premium-jewelry", "wallet", "wine", "custom-slippers", "nike-slides", "db-perfume", "shirt", "food-basket", "oxford-shoes", "handwritten-letter"] },
   // ── Ladies ────────────────────────────────────────────────────────────────────
-  { id: "bella", name: "BELLA", price: 250, gender: "ladies", items: ["raffaello", "jewelry", "vals-card", "handwritten-letter"] },
-  { id: "dolce-vita", name: "DOLCE VITA", price: 450, gender: "ladies", tag: "Most Popular", items: ["raffaello", "premium-jewelry", "wine", "body-products", "handwritten-letter"] },
-  { id: "la-principessa", name: "LA PRINCIPESSA", price: 700, gender: "ladies", items: ["ferrero", "premium-jewelry", "wine", "body-products", "handwritten-letter", "room-diffuser"] },
-  { id: "la-regina", name: "LA REGINA", price: 1200, gender: "ladies", items: ["ferrero", "premium-jewelry", "wine", "body-products", "handwritten-letter", "room-diffuser", "birkenstocks", "grooming-products"] },
+  { id: "bella", name: "BELLA", price: 250, gender: "ladies", items: ["raffaello", "jewelry", "vals-card"] },
+  { id: "cara-mia", name: "CARA MIA", price: 350, gender: "ladies", items: ["raffaello", "jewelry", "wine", "vals-card"] },
+  { id: "dolce-vita", name: "DOLCE VITA", price: 500, gender: "ladies", items: ["raffaello", "premium-jewelry", "wine", "body-products", "handwritten-letter"] },
+  { id: "la-principessa", name: "LA PRINCIPESSA", price: 700, gender: "ladies", tag: "Most Popular", items: ["ferrero", "premium-jewelry", "wine", "body-products", "handwritten-letter", "room-diffuser"] },
+  { id: "il-tesoro", name: "IL TESORO", price: 850, gender: "ladies", items: ["ferrero", "premium-jewelry", "wine", "body-products", "handwritten-letter", "room-diffuser", "vals-card"] },
+  { id: "la-regina", name: "LA REGINA", price: 1400, gender: "ladies", items: ["ferrero", "premium-jewelry", "wine", "body-products", "handwritten-letter", "room-diffuser", "birkenstocks"] },
+  { id: "lamore-eterno", name: "L'AMORE ETERNO", price: 2000, gender: "ladies", items: ["ferrero", "premium-jewelry", "wine", "body-products", "handwritten-letter", "room-diffuser", "birkenstocks", "food-basket"] },
 ];
