@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS packages (
   price int NOT NULL,
   items text[], -- array of shop_item ids
   gender text DEFAULT 'all', -- 'ladies', 'guys', 'all'
+  tag text,
   active boolean DEFAULT true,
   created_at timestamptz DEFAULT now()
 );
@@ -73,6 +74,7 @@ CREATE TABLE IF NOT EXISTS bookings (
 -- Ensure newer columns exist if the table was already created
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS delivery_method text;
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS room_transport text;
+ALTER TABLE packages ADD COLUMN IF NOT EXISTS tag text;
 
 -- Admin Management Policies
 ALTER TABLE shop_items ENABLE ROW LEVEL SECURITY;
@@ -145,26 +147,27 @@ ON CONFLICT (id) DO UPDATE SET
   active = EXCLUDED.active;
 
 -- Seed Packages
-INSERT INTO packages (id, name, price, items, gender, active) VALUES
-('el-capo', 'EL CAPO', 250, ARRAY['raffaello', 'jewelry', 'wine', 'vals-card'], 'guys', true),
-('non-anchora', 'NON ANCHORA', 350, ARRAY['raffaello', 'jewelry', 'wallet', 'wine', 'vals-card'], 'guys', true),
-('fuori-orario', 'FUORI ORARIO', 500, ARRAY['raffaello', 'jewelry', 'wallet', 'wine', 'custom-slippers', 'handwritten-letter'], 'guys', true),
-('il-devoto', 'IL DEVOTO', 700, ARRAY['raffaello', 'jewelry', 'wallet', 'wine', 'custom-slippers', 'nike-slides', 'handwritten-letter'], 'guys', true),
-('re-del-mio', 'RE DEL MIO', 830, ARRAY['raffaello', 'jewelry', 'wallet', 'wine', 'custom-slippers', 'nike-slides', 'shirt', 'handwritten-letter'], 'guys', true),
-('perche-sei-mio', 'PERCHÉ SEI MIO', 1400, ARRAY['ferrero', 'premium-jewelry', 'wallet', 'wine', 'custom-slippers', 'db-perfume', 'nike-slides', 'shirt', 'handwritten-letter'], 'guys', true),
-('oltre-leternita', 'OLTRE L''ETERNITÀ', 2000, ARRAY['ferrero', 'premium-jewelry', 'wallet', 'wine', 'custom-slippers', 'nike-slides', 'db-perfume', 'shirt', 'food-basket', 'oxford-shoes', 'handwritten-letter'], 'guys', true),
-('bella', 'BELLA', 250, ARRAY['raffaello', 'jewelry', 'vals-card'], 'ladies', true),
-('cara-mia', 'CARA MIA', 350, ARRAY['raffaello', 'jewelry', 'wine', 'vals-card'], 'ladies', true),
-('dolce-vita', 'DOLCE VITA', 500, ARRAY['raffaello', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter'], 'ladies', true),
-('la-principessa', 'LA PRINCIPESSA', 700, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser'], 'ladies', true),
-('il-tesoro', 'IL TESORO', 850, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'vals-card'], 'ladies', true),
-('la-regina', 'LA REGINA', 1400, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'birkenstocks'], 'ladies', true),
-('lamore-eterno', 'L''AMORE ETERNO', 2000, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'birkenstocks', 'food-basket'], 'ladies', true)
+INSERT INTO packages (id, name, price, items, gender, tag, active) VALUES
+('el-capo', 'EL CAPO', 250, ARRAY['raffaello', 'jewelry', 'wine', 'vals-card'], 'guys', null, true),
+('non-anchora', 'NON ANCHORA', 350, ARRAY['raffaello', 'jewelry', 'wallet', 'wine', 'vals-card'], 'guys', null, true),
+('fuori-orario', 'FUORI ORARIO', 500, ARRAY['raffaello', 'jewelry', 'wallet', 'wine', 'custom-slippers', 'handwritten-letter'], 'guys', null, true),
+('il-devoto', 'IL DEVOTO', 700, ARRAY['raffaello', 'jewelry', 'wallet', 'wine', 'custom-slippers', 'nike-slides', 'handwritten-letter'], 'guys', 'Most Popular', true),
+('re-del-mio', 'RE DEL MIO', 830, ARRAY['raffaello', 'jewelry', 'wallet', 'wine', 'custom-slippers', 'nike-slides', 'shirt', 'handwritten-letter'], 'guys', null, true),
+('perche-sei-mio', 'PERCHÉ SEI MIO', 1400, ARRAY['ferrero', 'premium-jewelry', 'wallet', 'wine', 'custom-slippers', 'db-perfume', 'nike-slides', 'shirt', 'handwritten-letter'], 'guys', null, true),
+('oltre-leternita', 'OLTRE L''ETERNITÀ', 2000, ARRAY['ferrero', 'premium-jewelry', 'wallet', 'wine', 'custom-slippers', 'nike-slides', 'db-perfume', 'shirt', 'food-basket', 'oxford-shoes', 'handwritten-letter'], 'guys', null, true),
+('bella', 'BELLA', 250, ARRAY['raffaello', 'jewelry', 'vals-card'], 'ladies', null, true),
+('cara-mia', 'CARA MIA', 350, ARRAY['raffaello', 'jewelry', 'wine', 'vals-card'], 'ladies', null, true),
+('dolce-vita', 'DOLCE VITA', 500, ARRAY['raffaello', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter'], 'ladies', null, true),
+('la-principessa', 'LA PRINCIPESSA', 700, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser'], 'ladies', 'Most Popular', true),
+('il-tesoro', 'IL TESORO', 850, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'vals-card'], 'ladies', null, true),
+('la-regina', 'LA REGINA', 1400, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'birkenstocks'], 'ladies', null, true),
+('lamore-eterno', 'L''AMORE ETERNO', 2000, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'birkenstocks', 'food-basket'], 'ladies', null, true)
 ON CONFLICT (id) DO UPDATE SET
   name = EXCLUDED.name,
   price = EXCLUDED.price,
   items = EXCLUDED.items,
   gender = EXCLUDED.gender,
+  tag = EXCLUDED.tag,
   active = EXCLUDED.active;
 
 -- Seed Bookings (Orders)
