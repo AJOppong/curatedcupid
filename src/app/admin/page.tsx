@@ -7,12 +7,12 @@ import {
   Package, Calendar, CheckCircle2, Clock, 
   Search, Filter, ChevronRight, User, Phone, 
   MapPin, Gift, Eye, Trash2, ShieldCheck, LogOut,
-  ShoppingBag, Plus, Save, X
+  ShoppingBag, Plus, Save, X, Palette, Star
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { BuilderProvider } from "@/context/BuilderContext";
-import { ThemeProvider } from "@/context/ThemeContext";
+import { ThemeProvider, useTheme, ThemeRecord } from "@/context/ThemeContext";
 
 // Types
 interface Booking {
@@ -66,7 +66,8 @@ export default function AdminDashboard() {
 function AdminContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
-  const [activeTab, setActiveTab] = useState<"bookings" | "items" | "packages">("bookings");
+  const [activeTab, setActiveTab] = useState<"bookings" | "items" | "packages" | "themes">("bookings");
+  const { allThemes, refreshThemes } = useTheme();
 
   // Bookings state
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -254,6 +255,7 @@ function AdminContent() {
             { id: "bookings", label: "Bookings", icon: <Calendar className="w-4 h-4" /> },
             { id: "items", label: "Shop Items", icon: <ShoppingBag className="w-4 h-4" /> },
             { id: "packages", label: "Packages", icon: <Package className="w-4 h-4" /> },
+            { id: "themes", label: "Themes", icon: <Palette className="w-4 h-4" /> },
           ].map(tab => (
             <button
               key={tab.id}
@@ -531,6 +533,77 @@ function AdminContent() {
                 {packages.length === 0 && <div className="col-span-3 py-20 text-center text-white/30">No packages found. Create one!</div>}
               </div>
             )}
+          </div>
+        )}
+
+        {/* ─── THEMES TAB ─────────────────────────────────────────── */}
+        {activeTab === "themes" && (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-bold text-white">Manage Themes</h2>
+              <Button onClick={() => refreshThemes()} className="gap-2 py-2 text-sm text-[#E91E8C] bg-[#E91E8C]/10 border border-[#E91E8C]/20 hover:bg-[#E91E8C]/20">Refresh Themes</Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {allThemes.map(t => (
+                <div key={t.id} className="glass border border-white/10 p-5 rounded-2xl flex flex-col gap-3 relative overflow-hidden">
+                  <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ background: t.colors.heroBg || t.colors.background }}></div>
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-white font-bold text-lg uppercase flex items-center gap-2">
+                        {t.name}
+                        {t.is_default && <span className="px-2 py-0.5 rounded text-[9px] bg-white/10 text-white/70">Default</span>}
+                      </h3>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${t.is_active ? 'bg-green-500/20 text-green-400' : 'bg-white/5 text-white/40'}`}>
+                        {t.is_active ? 'Active' : 'Inactive'}
+                      </span>
+                    </div>
+                    
+                    <p className="text-white/60 text-xs italic mb-4">"{t.hero_text?.title}"</p>
+                    
+                    <div className="flex gap-2 mb-4">
+                      <div className="w-6 h-6 rounded-full border border-white/20" style={{ background: t.colors.background }}></div>
+                      <div className="w-6 h-6 rounded-full border border-white/20" style={{ background: t.colors.primary }}></div>
+                      <div className="w-6 h-6 rounded-full border border-white/20" style={{ background: t.colors.secondary }}></div>
+                    </div>
+
+                    <div className="mt-auto pt-4 border-t border-white/10 grid grid-cols-2 gap-2">
+                      <button 
+                        onClick={async () => {
+                          for (const theme of allThemes) {
+                            if (theme.id !== t.id && theme.is_active) {
+                              await supabase.from('themes').update({ is_active: false }).eq('id', theme.id);
+                            }
+                          }
+                          await supabase.from('themes').update({ is_active: true }).eq('id', t.id);
+                          refreshThemes();
+                        }} 
+                        disabled={t.is_active}
+                        className={`py-2 text-xs font-bold rounded-lg transition-all ${t.is_active ? 'bg-white/5 text-white/20 cursor-not-allowed' : 'bg-[#E91E8C] text-white hover:bg-[#E91E8C]/80'}`}
+                      >
+                        {t.is_active ? 'Currently Active' : 'Set Active'}
+                      </button>
+                      <button 
+                        onClick={async () => {
+                          for (const theme of allThemes) {
+                            if (theme.id !== t.id && theme.is_default) {
+                              await supabase.from('themes').update({ is_default: false }).eq('id', theme.id);
+                            }
+                          }
+                          await supabase.from('themes').update({ is_default: true }).eq('id', t.id);
+                          refreshThemes();
+                        }}
+                        disabled={t.is_default}
+                        className={`py-2 text-xs font-bold rounded-lg transition-all ${t.is_default ? 'bg-white/5 text-white/20 cursor-not-allowed' : 'glass border border-white/10 text-white hover:bg-white/10'}`}
+                      >
+                        Make Default
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {allThemes.length === 0 && <div className="col-span-3 py-20 text-center text-white/30">No themes found in database.</div>}
+            </div>
           </div>
         )}
       </div>

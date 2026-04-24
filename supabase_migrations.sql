@@ -185,3 +185,28 @@ INSERT INTO bookings (name, phone, recipient_name, recipient_phone, event_date, 
 ('Kwame Mensah', '0241234567', 'Akosua Asare', '0549876543', '2026-05-14', '14:00', 'KNUST Campus, Republic Hall', 'Red and Gold', 'Please call before arriving, it is a surprise.', 'Surprise Package', null, '[{"id": "bella", "name": "BELLA", "price": 250, "image": "👑", "quantity": 1}]', 300, 'Bike Delivery', null, 'completed'),
 ('Ama Serwaa', '0205556666', 'Yaw Boakye', '0244445555', '2026-06-20', '18:30', 'Tech Junction, Apartment 4B', 'Dark Academic', 'Leave the package at the front desk if he is not in.', 'Room Aesthetics', 'Romantic', '[{"id": "el-capo", "name": "EL CAPO", "price": 250, "image": "👑", "quantity": 1}]', 550, 'Car Delivery', 'Car Transport', 'confirmed'),
 ('David Osei', '0551112222', 'Efua Osei', '0263334444', '2026-07-01', '10:00', 'Ahodwo Roundabout, House 12', 'Pastel Pink', 'Call my sister when you get there.', 'Custom Setup', null, '[{"id": "ferrero", "name": "Ferrero Rocher", "price": 120, "image": "🍫", "quantity": 2}, {"id": "jewelry", "name": "Jewelry", "price": 50, "image": "💍", "quantity": 1}]', 340, 'Pickup', null, 'pending');
+
+-- 6. Themes Table
+CREATE TABLE IF NOT EXISTS themes (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  name text NOT NULL UNIQUE,
+  type text NOT NULL DEFAULT 'default', -- 'default' | 'occasion'
+  colors jsonb NOT NULL,
+  fonts jsonb NOT NULL,
+  background_image text,
+  default_items jsonb,
+  hero_text jsonb,
+  is_active boolean DEFAULT false,
+  is_default boolean DEFAULT false,
+  priority int DEFAULT 0,
+  start_date timestamptz,
+  end_date timestamptz,
+  created_at timestamptz DEFAULT now()
+);
+
+-- Themes Policies
+ALTER TABLE themes ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public can view themes" ON themes;
+CREATE POLICY "Public can view themes" ON themes FOR SELECT TO anon, authenticated USING (true);
+DROP POLICY IF EXISTS "Admin can manage themes" ON themes;
+CREATE POLICY "Admin can manage themes" ON themes FOR ALL TO anon, authenticated USING (true);

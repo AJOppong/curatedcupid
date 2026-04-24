@@ -16,48 +16,7 @@ import {
   MessageSquare, Play, Flower2, Plus, X
 } from "lucide-react";
 
-const THEME_CONTENT: Record<string, { title: string; desc: string; accent: string }> = {
-  light: {
-    title: "Curated Cupid",
-    desc: "For every chapter, every person, every reason. We transform any day into a dream experience.",
-    accent: "every person"
-  },
-  dark: {
-    title: "Curated Cupid",
-    desc: "For every chapter, every person, every reason. We transform any day into a dream experience.",
-    accent: "every person"
-  },
-  valentine: {
-    title: "Celebrate Your Love",
-    desc: "Make this Valentine's Day unforgettable with our bespoke romantic setups and surprise packages.",
-    accent: "love is in the air"
-  },
-  "mothers-day": {
-    title: "Honor Her Magic",
-    desc: "Show Mom how much she means to you with a gentle, floral celebration crafted just for her.",
-    accent: "for the world's best mom"
-  },
-  "fathers-day": {
-    title: "The King of the Day",
-    desc: "Bold, clean, and classic setups to celebrate the man who does it all. A tribute to strength and love.",
-    accent: "celebrating dad"
-  },
-  eid: {
-    title: "Eid Mubarak",
-    desc: "Luxury setups for a blessed celebration with family and friends. Cultural elegance in every detail.",
-    accent: "blessed moments"
-  },
-  christmas: {
-    title: "A Festive Dream",
-    desc: "Transform your home into a winter wonderland of joy and celebration. Festive magic handcrafted for you.",
-    accent: "merry & bright"
-  },
-  "new-year": {
-    title: "A Fresh Chapter",
-    desc: "Minimalist and fresh setups to welcome the new year with elegance, silver accents, and pure joy.",
-    accent: "new beginnings"
-  }
-};
+
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 30 },
@@ -77,8 +36,8 @@ function SectionBadge({ icon, label }: { icon: React.ReactNode; label: string })
 
 // ── Hero ──────────────────────────────────────────────
 function Hero() {
-  const { theme } = useTheme();
-  const content = THEME_CONTENT[theme] || THEME_CONTENT.light;
+  const { activeTheme } = useTheme();
+  const content = activeTheme?.hero_text || { title: "Curated Cupid", desc: "For every chapter, every person, every reason. We transform any day into a dream experience.", accent: "every person" };
 
   return (
     <section

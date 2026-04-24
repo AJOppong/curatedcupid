@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, Heart, Menu, X, Sun, Moon, Palette, Flower2, Sparkles, Gift, Star } from "lucide-react";
 import { useBuilder } from "@/context/BuilderContext";
-import { useTheme } from "@/context/ThemeContext";
 import { useState } from "react";
 
 const NAV_LINKS = [
@@ -17,23 +16,10 @@ const NAV_LINKS = [
 
 export default function Navbar() {
   const { cart } = useBuilder();
-  const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
   const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
-
-  const themes = [
-    { id: "light", label: "Light", icon: <Sun className="w-3.5 h-3.5" /> },
-    { id: "dark", label: "Dark", icon: <Moon className="w-3.5 h-3.5" /> },
-    { id: "valentine", label: "Valentine", icon: <Heart className="w-3.5 h-3.5" /> },
-    { id: "mothers-day", label: "Mother's Day", icon: <Flower2 className="w-3.5 h-3.5" /> },
-    { id: "fathers-day", label: "Father's Day", icon: <Palette className="w-3.5 h-3.5" /> },
-    { id: "eid", label: "Eid", icon: <Sparkles className="w-3.5 h-3.5" /> },
-    { id: "christmas", label: "Christmas", icon: <Gift className="w-3.5 h-3.5" /> },
-    { id: "new-year", label: "New Year", icon: <Star className="w-3.5 h-3.5" /> },
-  ] as const;
 
   return (
     <>
@@ -70,43 +56,6 @@ export default function Navbar() {
 
           {/* Right side: Theme + Cart + CTA + Hamburger */}
           <div className="flex items-center gap-2 md:gap-3">
-            {/* Theme Switcher — hidden on admin */}
-            {!isAdmin && (
-              <div className="relative">
-                <button
-                  onClick={() => setThemeMenuOpen(!themeMenuOpen)}
-                  className="w-9 h-9 rounded-full glass border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors"
-                >
-                  {theme === "light" ? <Sun className="w-4 h-4" /> : theme === "dark" ? <Moon className="w-4 h-4" /> : <Palette className="w-4 h-4" />}
-                </button>
-
-                <AnimatePresence>
-                  {themeMenuOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      className="absolute right-0 mt-2 w-48 glass border border-[var(--border)] rounded-2xl p-2 shadow-2xl z-50 max-h-[70vh] overflow-y-auto custom-scrollbar"
-                    >
-                      {themes.map((t) => (
-                        <button
-                          key={t.id}
-                          onClick={() => {
-                            setTheme(t.id);
-                            setThemeMenuOpen(false);
-                          }}
-                          className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
-                            theme === t.id ? "bg-[var(--primary)] text-white" : "text-[var(--text-muted)] hover:bg-[var(--primary-glow)] hover:text-[var(--primary)]"
-                          }`}
-                        >
-                          {t.icon} {t.label}
-                        </button>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            )}
 
             {/* Cart */}
             <Link href="/builder" className="relative">
