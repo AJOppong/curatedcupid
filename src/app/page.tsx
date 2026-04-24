@@ -146,10 +146,10 @@ function Services() {
               {...fadeUp(i * 0.08)}
               whileHover={{ y: -6, scale: 1.01 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className={`relative rounded-2xl p-6 border border-white/5 overflow-hidden group transition-all ${
+              className={`relative rounded-2xl p-6 border border-[var(--border)] overflow-hidden group transition-all ${
                 s.cardGlow
-                  ? "bg-gradient-to-br from-pink-950/40 to-purple-950/20"
-                  : "bg-[#12101F]/80"
+                  ? "bg-gradient-to-br from-[var(--primary)]/10 to-[var(--surface)]"
+                  : "bg-[var(--surface)]"
               }`}
             >
               {/* Corner dot */}
@@ -160,8 +160,8 @@ function Services() {
               <div className={`w-10 h-10 rounded-xl ${s.iconBg} ${s.iconColor} flex items-center justify-center mb-5 relative z-10`}>
                 {s.icon}
               </div>
-              <h3 className="text-white font-semibold mb-2 relative z-10">{s.title}</h3>
-              <p className="text-white/40 text-sm leading-relaxed relative z-10">{s.desc}</p>
+              <h3 className="text-[var(--text-main)] font-semibold mb-2 relative z-10 font-serif">{s.title}</h3>
+              <p className="text-[var(--text-muted)] text-sm leading-relaxed relative z-10">{s.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -197,8 +197,8 @@ function Packages() {
                 onClick={() => setActiveGender(tab)}
                 className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
                   activeGender === tab
-                    ? "bg-[#E91E8C] text-white shadow-[0_0_15px_rgba(233,30,140,0.3)]"
-                    : "text-white/50 hover:text-white"
+                    ? "btn-pink-gradient text-white shadow-lg"
+                    : "text-[var(--text-muted)] hover:text-[var(--primary)]"
                 }`}
               >
                 {tab}
@@ -368,14 +368,14 @@ function WhyUs() {
               {...fadeUp(i * 0.1)}
               whileHover={{ y: -6 }}
               transition={{ type: "spring", stiffness: 280, damping: 22 }}
-              className="bg-[#12101F]/80 border border-white/5 rounded-2xl p-6 text-center group hover:border-white/10 transition-all"
+              className="bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-6 text-center group hover:border-[var(--primary)]/30 transition-all"
             >
               <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 transition-all group-hover:scale-110"
                 style={{ background: `${r.color}18`, color: r.color, boxShadow: `0 0 0 0 ${r.color}00` }}>
                 {r.icon}
               </div>
-              <h3 className="text-white font-semibold mb-2">{r.title}</h3>
-              <p className="text-white/40 text-sm leading-relaxed">{r.desc}</p>
+              <h3 className="text-[var(--text-main)] font-semibold mb-2">{r.title}</h3>
+              <p className="text-[var(--text-muted)] text-sm leading-relaxed">{r.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -466,17 +466,17 @@ function Reviews() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: (i % 3) * 0.1 }}
-                className="glass border border-white/5 p-8 rounded-3xl relative flex flex-col justify-between h-full"
+                className="glass border border-[var(--border)] p-8 rounded-3xl relative flex flex-col justify-between h-full"
               >
                 <div>
                   <div className="flex gap-1 mb-4">
-                    {[...Array(rev.rating || 5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />)}
+                    {[...Array(rev.rating || 5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-[var(--secondary)] text-[var(--secondary)]" />)}
                   </div>
-                  <p className="text-white/70 text-sm italic mb-6 leading-relaxed">"{rev.comment || rev.text}"</p>
+                  <p className="text-[var(--text-main)] text-sm italic mb-6 leading-relaxed">"{rev.comment || rev.text}"</p>
                 </div>
                 <div>
-                  <p className="text-white font-bold text-sm">{rev.name}</p>
-                  <p className="text-[#E91E8C] text-[10px] font-bold uppercase tracking-widest">{rev.role || 'Client'}</p>
+                  <p className="text-[var(--text-main)] font-bold text-sm">{rev.name}</p>
+                  <p className="text-[var(--primary)] text-[10px] font-bold uppercase tracking-widest">{rev.role || 'Client'}</p>
                 </div>
               </motion.div>
             ))}

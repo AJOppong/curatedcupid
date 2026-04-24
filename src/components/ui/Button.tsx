@@ -15,11 +15,11 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    "bg-gradient-to-r from-[#E91E8C] to-[#c4186f] text-white font-semibold shadow-[0_0_24px_rgba(233,30,140,0.4)] hover:shadow-[0_0_40px_rgba(233,30,140,0.65)]",
+    "btn-pink-gradient text-white font-semibold",
   secondary:
-    "glass border border-white/10 text-white hover:border-[#E91E8C]/40 hover:shadow-[0_0_20px_rgba(233,30,140,0.15)]",
-  gold: "bg-gradient-to-r from-[#D4AF37] to-[#b8962e] text-[#0D0D12] font-semibold shadow-[0_0_20px_rgba(212,175,55,0.35)] hover:shadow-[0_0_35px_rgba(212,175,55,0.6)]",
-  ghost: "text-[#E91E8C] hover:bg-[#E91E8C]/8 border border-transparent hover:border-[#E91E8C]/20",
+    "glass border border-[var(--border)] text-[var(--text-main)] hover:border-[var(--primary)]/40 hover:shadow-lg",
+  gold: "bg-gradient-to-r from-[var(--secondary)] to-[var(--secondary)]/80 text-white font-semibold shadow-lg",
+  ghost: "text-[var(--primary)] hover:bg-[var(--primary-glow)] border border-transparent hover:border-[var(--primary)]/20",
 };
 
 export default function Button({
