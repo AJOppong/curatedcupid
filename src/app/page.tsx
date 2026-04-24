@@ -4,6 +4,7 @@ import { motion, type Transition, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { BuilderProvider, useBuilder } from "@/context/BuilderContext";
+import { useTheme } from "@/context/ThemeContext";
 import Navbar from "@/components/Navbar";
 import { flowerItems, predefinedPackages } from "@/lib/data";
 import { supabase } from "@/lib/supabase";
