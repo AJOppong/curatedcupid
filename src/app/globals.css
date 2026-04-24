@@ -40,20 +40,20 @@
 }
 
 /* ── VALENTINE'S ──────────────────────────────────────────────── */
-/* Deep crimson roses, hearts, pink ribbons — romantic glow */
+/* Bright romantic crimson, hearts, pink ribbons — romantic glow */
 [data-theme='valentine'] {
-  --background: #1A0707;
-  --surface: #2D0F0F;
-  --primary: #C0153A;         /* deep red */
-  --primary-light: #E8526A;
-  --primary-glow: rgba(192, 21, 58, 0.15);
+  --background: #3B0008;
+  --surface: #5C0014;
+  --primary: #FF1447;         /* bright vibrant red/pink */
+  --primary-light: #FF5E82;
+  --primary-glow: rgba(255, 20, 71, 0.25);
   --secondary: #D4AF37;       /* gold */
-  --text-main: #FAF0E6;
-  --text-muted: #C4A882;
-  --border: rgba(192, 21, 58, 0.15);
-  --glass-bg: rgba(45, 15, 15, 0.7);
-  --glass-border: rgba(192, 21, 58, 0.12);
-  --hero-bg: radial-gradient(ellipse at center, #5c0e0e 0%, #2d0f0f 50%, #1a0707 100%);
+  --text-main: #FFFFFF;
+  --text-muted: #FFB3C6;
+  --border: rgba(255, 20, 71, 0.25);
+  --glass-bg: rgba(92, 0, 20, 0.6);
+  --glass-border: rgba(255, 20, 71, 0.2);
+  --hero-bg: radial-gradient(ellipse at center, #8A0022 0%, #5C0014 50%, #3B0008 100%);
 }
 
 /* ── MOTHER'S DAY ─────────────────────────────────────────────── */
