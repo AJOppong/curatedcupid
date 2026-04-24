@@ -133,7 +133,16 @@ INSERT INTO shop_items (id, name, price, category, description, emoji, image, ge
 ('sunflowers', 'Sunflower Bouquet', 100, 'Flowers', 'Bright and cheerful sunflowers to lift any mood', '🌻', '/flower_sunflowers.png', 'all', true),
 ('lilies', 'White Lilies', 120, 'Flowers', 'Elegant pure white lilies in a classic wrap', '🌷', '/flower_lilies.png', 'all', true),
 ('custom-arrangement', 'Custom Arrangement', 350, 'Flowers', 'Bespoke floral design crafted for your unique occasion', '✨', '/flower_custom.png', 'all', true),
-('condolence-wreath', 'Condolence Wreath', 250, 'Flowers', 'A dignified white flower wreath for funerals and tributes', '⚪', '/flower_wreath.png', 'all', true);
+('condolence-wreath', 'Condolence Wreath', 250, 'Flowers', 'A dignified white flower wreath for funerals and tributes', '⚪', '/flower_wreath.png', 'all', true)
+ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  price = EXCLUDED.price,
+  category = EXCLUDED.category,
+  description = EXCLUDED.description,
+  emoji = EXCLUDED.emoji,
+  image = EXCLUDED.image,
+  gender = EXCLUDED.gender,
+  active = EXCLUDED.active;
 
 -- Seed Packages
 INSERT INTO packages (id, name, price, items, gender, active) VALUES
@@ -150,7 +159,13 @@ INSERT INTO packages (id, name, price, items, gender, active) VALUES
 ('la-principessa', 'LA PRINCIPESSA', 700, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser'], 'ladies', true),
 ('il-tesoro', 'IL TESORO', 850, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'vals-card'], 'ladies', true),
 ('la-regina', 'LA REGINA', 1400, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'birkenstocks'], 'ladies', true),
-('lamore-eterno', 'L''AMORE ETERNO', 2000, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'birkenstocks', 'food-basket'], 'ladies', true);
+('lamore-eterno', 'L''AMORE ETERNO', 2000, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'birkenstocks', 'food-basket'], 'ladies', true)
+ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  price = EXCLUDED.price,
+  items = EXCLUDED.items,
+  gender = EXCLUDED.gender,
+  active = EXCLUDED.active;
 
 -- Seed Bookings (Orders)
 INSERT INTO bookings (name, phone, recipient_name, recipient_phone, event_date, event_time, location, theme, instructions, base_service, room_vibe, items, total_amount, delivery_method, room_transport, status) VALUES
