@@ -1,6 +1,7 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { supabase } from "@/lib/supabase";
 
 export type BaseService = "Room Aesthetics" | "Surprise Package" | "Custom Setup" | string | null;
 
@@ -27,6 +28,28 @@ export interface EventDetails {
   deliveryMethodDetails: string;
 }
 
+export interface ShopItem {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  description: string;
+  emoji: string;
+  image: string;
+  gender: string;
+  active: boolean;
+}
+
+export interface PackageItem {
+  id: string;
+  name: string;
+  price: number;
+  items: string[];
+  gender: string;
+  active: boolean;
+  tag?: string;
+}
+
 interface BuilderContextType {
   step: number;
   cart: CartItem[];
@@ -39,6 +62,8 @@ interface BuilderContextType {
   roomTransportPrice: number;
   selectedPackageName: string;
   eventDetails: EventDetails;
+  dbItems: ShopItem[];
+  dbPackages: PackageItem[];
   setStep: (step: number) => void;
   setBaseService: (service: string) => void;
   setRoomVibe: (vibe: string, image: string) => void;
@@ -64,6 +89,8 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
   const [roomTransport, setRoomTransportId] = useState("self");
   const [roomTransportPrice, setRoomTransportPrice] = useState(0);
   const [selectedPackageName, setSelectedPackageName] = useState("");
+  const [dbItems, setDbItems] = useState<ShopItem[]>([]);
+  const [dbPackages, setDbPackages] = useState<PackageItem[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [eventDetails, setEventDetailsState] = useState<EventDetails>({
     name: "",
@@ -79,6 +106,18 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
     deliveryMethod: "",
     deliveryMethodDetails: "",
   });
+
+  useEffect(() => {
+    async function fetchData() {
+      const [itemsRes, pkgsRes] = await Promise.all([
+        supabase.from("shop_items").select("*").eq("active", true),
+        supabase.from("packages").select("*").eq("active", true)
+      ]);
+      if (itemsRes.data) setDbItems(itemsRes.data as ShopItem[]);
+      if (pkgsRes.data) setDbPackages(pkgsRes.data as PackageItem[]);
+    }
+    fetchData();
+  }, []);
 
   const addToCart = (item: CartItem) => {
     setCart((prev) => {
@@ -124,7 +163,7 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
       value={{
         step, cart, cartTotal, baseService, roomVibe, vibeImage,
         customVibe, roomTransport, roomTransportPrice,
-        selectedPackageName, eventDetails,
+        selectedPackageName, eventDetails, dbItems, dbPackages,
         setStep, setBaseService, setRoomVibe: setRoomVibeWithImage,
         setCustomVibe, setRoomTransport,
         setSelectedPackageName, addToCart, removeFromCart,

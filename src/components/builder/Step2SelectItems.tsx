@@ -5,7 +5,7 @@ import { useBuilder } from "@/context/BuilderContext";
 import { shopItems, predefinedPackages, ROOM_DESIGN_PRICE } from "@/lib/data";
 import Button from "@/components/ui/Button";
 import { ArrowRight, ArrowLeft, Plus, Minus, Check, Package, Sparkles, Trash2, PlusCircle, ShoppingCart, Home, Gift } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 
 const CATEGORIES = ["All", "Selected", "Decor", "Lighting", "Flowers", "Treats", "Gifts", "Personal", "Drinks", "Experience"];
@@ -14,44 +14,48 @@ const GENDER_TABS = ["Ladies", "Guys"];
 export default function Step2SelectItems() {
   const {
     addToCart, removeFromCart, updateQuantity, clearCart, preloadItems,
-    cart, setStep, baseService, selectedPackageName
+    cart, setStep, baseService, selectedPackageName, dbItems, dbPackages
   } = useBuilder();
 
-  const [activeCategory, setActiveCategory] = useState("All");
+  const [activeCategory, setActiveCategory] = useState(baseService === "Flower Delivery" ? "Flowers" : "All");
   const [activeGender, setActiveGender] = useState("Ladies");
   const [addedIds, setAddedIds] = useState<string[]>([]);
   const [roomChoice, setRoomChoice] = useState<"none" | "with-package" | "without">("none");
 
+  useEffect(() => {
+    if (baseService === "Flower Delivery") setActiveCategory("Flowers");
+  }, [baseService]);
+
   const filteredItems = activeCategory === "All"
-    ? shopItems
+    ? dbItems
     : activeCategory === "Selected"
-    ? shopItems.filter(item => cart.some(c => c.id === item.id))
-    : shopItems.filter((i) => i.category === activeCategory);
+    ? dbItems.filter(item => cart.some(c => c.id === item.id))
+    : dbItems.filter((i) => i.category === activeCategory);
 
   const filteredPackages = useMemo(() => {
-    if (activeGender === "All") return predefinedPackages;
-    return predefinedPackages.filter(p => p.gender === activeGender.toLowerCase());
-  }, [activeGender]);
+    if (activeGender === "All") return dbPackages;
+    return dbPackages.filter(p => p.gender === activeGender.toLowerCase());
+  }, [activeGender, dbPackages]);
 
   const getCartItem = (id: string) => cart.find((c) => c.id === id);
   const cartItemCount = cart.reduce((s, i) => s + i.quantity, 0);
   const cartSubtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
 
-  const handleAdd = (item: typeof shopItems[0]) => {
+  const handleAdd = (item: typeof dbItems[0]) => {
     addToCart({ id: item.id, name: item.name, price: item.price, image: item.image || item.emoji, quantity: 1 });
     setAddedIds((prev) => [...prev, item.id]);
     setTimeout(() => setAddedIds((prev) => prev.filter((id) => id !== item.id)), 1500);
   };
 
-  const handlePackageSelect = (pkg: typeof predefinedPackages[0]) => {
+  const handlePackageSelect = (pkg: typeof dbPackages[0]) => {
     const itemsToLoad = pkg.items.map(itemId => {
-      const item = shopItems.find(si => si.id === itemId);
+      const item = dbItems.find(si => si.id === itemId);
       return item ? { id: item.id, name: item.name, price: item.price, image: item.image || item.emoji, quantity: 1 } : null;
     }).filter(Boolean) as any;
     preloadItems(itemsToLoad, pkg.name);
   };
 
-  const ItemIcon = ({ item, className }: { item: typeof shopItems[0] | any, className?: string }) => {
+  const ItemIcon = ({ item, className }: { item: typeof dbItems[0] | any, className?: string }) => {
     // If it's a cart item it has .image, if it's a shop item it has .image or .emoji
     const imgSrc = item.image && item.image.startsWith('/') ? item.image : null;
     const emojiStr = imgSrc ? null : (item.emoji || item.image);
@@ -441,13 +445,22 @@ export default function Step2SelectItems() {
     <div className="space-y-8">
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
-          Choose Your <span className="text-[#E91E8C]">Experience</span>
+          {baseService === "Flower Delivery" ? (
+            <>Select Your <span className="text-[#E91E8C]">Blooms</span></>
+          ) : (
+            <>Choose Your <span className="text-[#E91E8C]">Experience</span></>
+          )}
         </h2>
-        <p className="text-white/40 text-sm">Pick a curated package to start, or build your own from scratch</p>
+        <p className="text-white/40 text-sm">
+          {baseService === "Flower Delivery" 
+            ? "Pick your favorite fresh flowers from our premium collection"
+            : "Pick a curated package to start, or build your own from scratch"}
+        </p>
       </div>
 
       {/* Package Picker */}
-      <div className="space-y-4">
+      {baseService !== "Flower Delivery" && (
+        <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs font-bold text-white/30 uppercase tracking-widest">
             <Sparkles className="w-3 h-3 text-[#E91E8C]" /> Curated Packages
@@ -496,12 +509,15 @@ export default function Step2SelectItems() {
           )}
         </div>
       </div>
+      )}
 
-      <div className="relative flex items-center gap-4">
-        <div className="flex-1 h-px bg-white/5" />
-        <span className="text-white/20 text-[10px] font-bold uppercase tracking-widest">or</span>
-        <div className="flex-1 h-px bg-white/5" />
-      </div>
+      {baseService !== "Flower Delivery" && (
+        <div className="relative flex items-center gap-4">
+          <div className="flex-1 h-px bg-white/5" />
+          <span className="text-white/20 text-[10px] font-bold uppercase tracking-widest">or</span>
+          <div className="flex-1 h-px bg-white/5" />
+        </div>
+      )}
 
       {/* Build from scratch */}
       <div className="space-y-4">

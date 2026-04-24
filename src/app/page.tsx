@@ -173,9 +173,10 @@ function Services() {
 
 // ── Packages ──────────────────────────────────────────
 function Packages() {
+  const { dbPackages } = useBuilder();
   const [activeGender, setActiveGender] = useState("Ladies");
 
-  const filteredPackages = predefinedPackages.filter(p => p.gender === activeGender.toLowerCase());
+  const filteredPackages = dbPackages.filter(p => p.gender === activeGender.toLowerCase());
 
   return (
     <section id="packages" className="py-24 px-6 relative">
@@ -343,51 +344,6 @@ function Gallery() {
   );
 }
 
-// ── Flower Orders ─────────────────────────────────────
-function FlowerOrders() {
-  return (
-    <section id="flowers" className="py-24 px-6 bg-[#E91E8C]/5 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto">
-        <motion.div {...fadeUp()} className="text-center mb-14">
-          <SectionBadge icon={<Flower2 className="w-3 h-3" />} label="Premium Blooms" />
-          <h2 className="text-4xl md:text-5xl font-bold text-white">Exquisite Flower Orders</h2>
-          <p className="mt-3 text-white/40 text-sm max-w-md mx-auto leading-relaxed">
-            Beautiful arrangements for any occasion. Order fresh, premium blooms delivered right to your door.
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {flowerItems.map((flower, i) => (
-            <motion.div
-              key={flower.id}
-              {...fadeUp(i * 0.05)}
-              className="glass border border-white/10 rounded-2xl p-4 flex flex-col hover:border-[#E91E8C]/30 transition-colors"
-            >
-              <div className="w-full aspect-square rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-5xl mb-4 overflow-hidden relative">
-                {flower.image ? (
-                  <Image src={flower.image} alt={flower.name} fill className="object-cover" />
-                ) : (
-                  flower.emoji
-                )}
-              </div>
-              <h3 className="text-white font-bold text-sm leading-tight mb-1">{flower.name}</h3>
-              <p className="text-white/40 text-xs line-clamp-2 mb-3 flex-1">{flower.description}</p>
-              <div className="flex items-center justify-between mt-auto pt-3 border-t border-white/10">
-                <span className="text-[#D4AF37] font-black text-sm">GH₵{flower.price}</span>
-                <Link href={`/builder`}>
-                  <button className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-[#E91E8C] hover:text-white transition-colors">
-                    <Plus className="w-4 h-4" />
-                  </button>
-                </Link>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 // ── Why Us ────────────────────────────────────────────
 const reasons = [
   { icon: <Heart className="w-5 h-5" />, title: "Fresh & Premium", desc: "Only the finest flowers, chocolates, and decor selected for every setup.", color: "#E91E8C" },
@@ -457,14 +413,16 @@ function Reviews() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      await supabase.from('reviews').insert([{
+      const newReviewData = {
         name: newReview.name,
         rating: newReview.rating,
         comment: newReview.comment,
         role: "Client"
-      }]);
+      };
+      await supabase.from('reviews').insert([newReviewData]);
       setShowModal(false);
       alert("Thank you for sharing your experience!");
+      setReviews(prev => [newReviewData, ...prev].slice(0, 6));
       setNewReview({ name: "", rating: 5, comment: "" });
     } catch (err) {
       console.error(err);
@@ -759,7 +717,6 @@ export default function HomePage() {
         <Services />
         <Packages />
         <Gallery />
-        <FlowerOrders />
         <WhyUs />
         <Reviews />
         <Contact />

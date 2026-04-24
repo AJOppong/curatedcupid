@@ -104,6 +104,13 @@ export const baseServices = [
     emoji: "✨",
     color: "from-[#9b87f5]/20 to-[#F2B8C6]/10",
   },
+  {
+    id: "flower-delivery",
+    name: "Flower Delivery",
+    description: "Send beautiful, fresh premium blooms directly to your loved one for any occasion.",
+    emoji: "💐",
+    color: "from-[#E91E8C]/20 to-[#9b87f5]/10",
+  },
 ];
 
 export const predefinedPackages = [

@@ -96,7 +96,15 @@ INSERT INTO shop_items (id, name, price, category, description, emoji, image, ge
 ('wine', 'Wine', 90, 'Drinks', 'Carefully selected vintage for romantic evenings', '🍷', '/item_wine.png', 'all', true),
 ('wallet', 'Wallet', 80, 'Gifts', 'Genuine leather wallet in a sleek design', '👛', '/item_wallet.png', 'guys', true),
 ('custom-slippers', 'Custom Slippers', 100, 'Gifts', 'Comfortable plush slippers with custom embroidery', '🩴', '/item_shoes.png', 'guys', true),
-('handwritten-letter', 'Custom Handwritten Letter', 30, 'Personal', 'Calligraphy letter on premium parchment paper', '✉️', null, 'all', true);
+('handwritten-letter', 'Custom Handwritten Letter', 30, 'Personal', 'Calligraphy letter on premium parchment paper', '✉️', null, 'all', true),
+('single-rose', 'Single Rose', 20, 'Flowers', 'A timeless symbol of love and affection', '🌹', null, 'all', true),
+('rose-bouquet-12', 'Rose Bouquet (12)', 150, 'Flowers', 'A dozen premium long-stem red roses', '💐', null, 'all', true),
+('rose-bouquet-24', 'Rose Bouquet (24)', 280, 'Flowers', 'Two dozen premium roses, beautifully wrapped', '🌹', null, 'all', true),
+('mixed-bouquet', 'Mixed Floral Bouquet', 200, 'Flowers', 'Seasonal mixed flowers in a stunning arrangement', '🌸', null, 'all', true),
+('sunflowers', 'Sunflower Bouquet', 100, 'Flowers', 'Bright and cheerful sunflowers to lift any mood', '🌻', null, 'all', true),
+('lilies', 'White Lilies', 120, 'Flowers', 'Elegant pure white lilies in a classic wrap', '🌷', null, 'all', true),
+('custom-arrangement', 'Custom Arrangement', 350, 'Flowers', 'Bespoke floral design crafted for your unique occasion', '✨', null, 'all', true),
+('condolence-wreath', 'Condolence Wreath', 250, 'Flowers', 'A dignified white flower wreath for funerals and tributes', '⚪', null, 'all', true);
 
 -- Seed Packages
 INSERT INTO packages (id, name, price, items, gender, active) VALUES
