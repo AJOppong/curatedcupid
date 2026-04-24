@@ -1,25 +1,28 @@
 @import "tailwindcss";
 
+/* ── PRIMARY (Default Light) ─────────────────────────────────── */
 :root {
-  /* Default Theme (Light - Inspired by Logo) */
-  --background: #FFFFFF;
-  --foreground: #4A4A4A;
-  --surface: #FFF5F6;
-  --primary: #E5989B; /* Dusty Blush Pink from Logo */
-  --primary-light: #F2C4C6;
-  --primary-glow: rgba(229, 152, 155, 0.15);
-  --secondary: #B5838D; /* Muted Rose Accent */
-  --text-main: #4A4A4A;
-  --text-muted: #8E8E8E;
-  --border: rgba(229, 152, 155, 0.2);
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(229, 152, 155, 0.1);
-  
+  /* Soft blush pink with roses & ribbons — elegant, romantic, clean */
+  --background: #FDF6F7;
+  --foreground: #4A2030;
+  --surface: rgba(255, 255, 255, 0.85);
+  --primary: #C9748A;         /* dusty rose from logo */
+  --primary-light: #E8AABB;
+  --primary-glow: rgba(201, 116, 138, 0.15);
+  --secondary: #B5838D;       /* muted mauve */
+  --text-main: #4A2030;
+  --text-muted: #9E7382;
+  --border: rgba(201, 116, 138, 0.15);
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(201, 116, 138, 0.12);
+  --hero-bg: radial-gradient(ellipse at top left, #FCE8ED 0%, #FDF6F7 45%, #FEF0F3 100%);
+
   --font-heading: var(--font-playfair);
   --font-body: var(--font-montserrat);
   --font-accent: var(--font-great-vibes);
 }
 
+/* ── DARK ─────────────────────────────────────────────────────── */
 [data-theme='dark'] {
   --background: #0A0914;
   --foreground: #FAFAFA;
@@ -33,77 +36,111 @@
   --border: rgba(255, 255, 255, 0.05);
   --glass-bg: rgba(18, 16, 31, 0.65);
   --glass-border: rgba(255, 255, 255, 0.05);
+  --hero-bg: radial-gradient(ellipse at top, #1a0d1f 0%, #0A0914 60%);
 }
 
+/* ── VALENTINE'S ──────────────────────────────────────────────── */
+/* Deep crimson roses, hearts, pink ribbons — romantic glow */
 [data-theme='valentine'] {
-  --background: radial-gradient(circle at top, #FFF5F7 0%, #FFE4E8 100%);
-  --surface: #FFFFFF;
-  --primary: #D10000;
-  --primary-light: #FF4D4D;
-  --primary-glow: rgba(209, 0, 0, 0.1);
-  --secondary: #D4AF37;
-  --text-main: #3D0000;
-  --text-muted: #8B5A5A;
+  --background: #FFF0F2;
+  --surface: rgba(255, 255, 255, 0.9);
+  --primary: #C0153A;         /* deep red */
+  --primary-light: #E8526A;
+  --primary-glow: rgba(192, 21, 58, 0.15);
+  --secondary: #D4AF37;       /* gold */
+  --text-main: #4A0010;
+  --text-muted: #9B4A5A;
+  --border: rgba(192, 21, 58, 0.15);
+  --glass-bg: rgba(255, 240, 242, 0.8);
+  --glass-border: rgba(192, 21, 58, 0.12);
+  --hero-bg: radial-gradient(ellipse at center top, #ffe0e5 0%, #ffd6dc 30%, #ffeef0 70%, #fff0f2 100%);
 }
 
+/* ── MOTHER'S DAY ─────────────────────────────────────────────── */
+/* Soft pink, purple & lavender florals — gentle, sentimental */
 [data-theme='mothers-day'] {
-  --background: linear-gradient(135deg, #FFF9FB 0%, #F5E6FF 100%);
-  --surface: rgba(255, 255, 255, 0.8);
-  --primary: #D946EF; /* Fuchsia */
-  --primary-light: #F0ABFC;
-  --primary-glow: rgba(217, 70, 239, 0.1);
-  --secondary: #8B5CF6; /* Lavender */
-  --text-main: #4A044E;
-  --text-muted: #701A75;
-  --font-heading: var(--font-playfair);
+  --background: #FDF6FF;
+  --surface: rgba(255, 255, 255, 0.88);
+  --primary: #B05CB0;         /* fuchsia/purple */
+  --primary-light: #D4A0D4;
+  --primary-glow: rgba(176, 92, 176, 0.15);
+  --secondary: #8B6BB1;       /* lavender */
+  --text-main: #3B0764;
+  --text-muted: #7E4B9E;
+  --border: rgba(176, 92, 176, 0.15);
+  --glass-bg: rgba(253, 246, 255, 0.8);
+  --glass-border: rgba(176, 92, 176, 0.12);
+  --hero-bg: linear-gradient(135deg, #fce7ff 0%, #f5d7f5 25%, #ecdeff 60%, #fdf6ff 100%);
 }
 
+/* ── FATHER'S DAY ─────────────────────────────────────────────── */
+/* Deep navy with gold, ties, watches — masculine luxury */
 [data-theme='fathers-day'] {
-  --background: linear-gradient(to bottom, #0F172A 0%, #1E293B 100%);
-  --surface: #334155;
-  --primary: #38BDF8; /* Sky Blue */
-  --primary-light: #7DD3FC;
-  --primary-glow: rgba(56, 189, 248, 0.15);
-  --secondary: #10B981; /* Emerald */
-  --text-main: #F1F5F9;
-  --text-muted: #94A3B8;
-  --border: rgba(255, 255, 255, 0.1);
+  --background: #0D1B2A;
+  --surface: #162337;
+  --primary: #D4AF37;         /* gold accent */
+  --primary-light: #EDD56A;
+  --primary-glow: rgba(212, 175, 55, 0.2);
+  --secondary: #2D6A4F;       /* deep forest green */
+  --text-main: #F0EAD6;
+  --text-muted: #8DA9C4;
+  --border: rgba(212, 175, 55, 0.2);
+  --glass-bg: rgba(22, 35, 55, 0.75);
+  --glass-border: rgba(212, 175, 55, 0.15);
+  --hero-bg: linear-gradient(160deg, #0d1b2a 0%, #1a2e45 40%, #0f2233 70%, #0d1b2a 100%);
 }
 
+/* ── EID ──────────────────────────────────────────────────────── */
+/* Warm cream/marble, gold lanterns, crescent — cultural luxury */
 [data-theme='eid'] {
-  --background: radial-gradient(circle at center, #FDFCF0 0%, #F5F1D5 100%);
-  --surface: #FFFFFF;
-  --primary: #065F46; /* Deep Green */
-  --primary-light: #059669;
-  --primary-glow: rgba(6, 95, 70, 0.1);
-  --secondary: #D4AF37; /* Gold */
-  --text-main: #064E3B;
-  --text-muted: #065F46;
+  --background: #FDFBF2;
+  --surface: rgba(255, 255, 255, 0.9);
+  --primary: #1B6B45;         /* deep emerald green */
+  --primary-light: #2E9E6A;
+  --primary-glow: rgba(27, 107, 69, 0.15);
+  --secondary: #C9962A;       /* antique gold */
+  --text-main: #1A3A28;
+  --text-muted: #6B7C6B;
+  --border: rgba(201, 150, 42, 0.2);
+  --glass-bg: rgba(253, 251, 242, 0.85);
+  --glass-border: rgba(201, 150, 42, 0.15);
+  --hero-bg: radial-gradient(ellipse at top right, #f5f0dc 0%, #fdfbf2 40%, #eef5ec 80%, #fdfbf2 100%);
 }
 
+/* ── CHRISTMAS ────────────────────────────────────────────────── */
+/* Deep red velvet, gold ornaments, pine green — warm & festive */
 [data-theme='christmas'] {
-  --background: linear-gradient(135deg, #064E3B 0%, #022C22 100%);
-  --surface: #065F46;
-  --primary: #DC2626; /* Festive Red */
-  --primary-light: #F87171;
-  --primary-glow: rgba(220, 38, 38, 0.2);
-  --secondary: #FFFFFF;
-  --text-main: #F1F5F9;
-  --text-muted: #A7F3D0;
-  --border: rgba(255, 255, 255, 0.1);
+  --background: #1A0707;
+  --surface: #2D0F0F;
+  --primary: #E63030;         /* festive red */
+  --primary-light: #F07070;
+  --primary-glow: rgba(230, 48, 48, 0.25);
+  --secondary: #D4AF37;       /* gold ornament */
+  --text-main: #FAF0E6;
+  --text-muted: #C4A882;
+  --border: rgba(212, 175, 55, 0.2);
+  --glass-bg: rgba(45, 15, 15, 0.7);
+  --glass-border: rgba(212, 175, 55, 0.15);
+  --hero-bg: radial-gradient(ellipse at center, #5c0e0e 0%, #2d0f0f 50%, #1a0707 100%);
 }
 
+/* ── NEW YEAR ─────────────────────────────────────────────────── */
+/* Silver, champagne, fireworks, midnight black — fresh minimalist */
 [data-theme='new-year'] {
-  --background: linear-gradient(to bottom right, #000000 0%, #1A1A1A 100%);
-  --surface: #262626;
-  --primary: #FFFFFF;
-  --primary-light: #E5E5E5;
-  --primary-glow: rgba(255, 255, 255, 0.1);
-  --secondary: #9CA3AF; /* Silver */
-  --text-main: #FFFFFF;
-  --text-muted: #A3A3A3;
-  --border: rgba(255, 255, 255, 0.1);
+  --background: #F8F9FA;
+  --surface: rgba(255, 255, 255, 0.9);
+  --primary: #1A1A2E;         /* deep midnight */
+  --primary-light: #444466;
+  --primary-glow: rgba(26, 26, 46, 0.12);
+  --secondary: #B8BCC4;       /* silver */
+  --text-main: #1A1A2E;
+  --text-muted: #6B7280;
+  --border: rgba(184, 188, 196, 0.3);
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(184, 188, 196, 0.2);
+  --hero-bg: linear-gradient(to bottom right, #ffffff 0%, #f0f2f5 40%, #e8eaed 70%, #f8f9fa 100%);
 }
+
 
 @theme inline {
   --color-background: var(--background);

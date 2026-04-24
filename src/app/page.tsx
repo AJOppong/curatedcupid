@@ -81,10 +81,15 @@ function Hero() {
   const content = THEME_CONTENT[theme] || THEME_CONTENT.light;
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-16 overflow-hidden">
+    <section
+      className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-24 pb-16 overflow-hidden"
+      style={{ background: "var(--hero-bg, var(--background))" }}
+    >
+      {/* Decorative blurs */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full bg-[var(--primary)] opacity-[0.05] blur-[150px]" />
-        <div className="absolute top-1/3 left-1/5 w-80 h-80 rounded-full bg-[var(--secondary)] opacity-[0.1] blur-[100px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-[var(--primary)] opacity-[0.06] blur-[120px]" />
+        <div className="absolute top-1/4 right-1/5 w-64 h-64 rounded-full bg-[var(--secondary)] opacity-[0.08] blur-[90px]" />
+        <div className="absolute bottom-1/4 left-1/5 w-56 h-56 rounded-full bg-[var(--primary-light)] opacity-[0.06] blur-[80px]" />
       </div>
 
       <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
