@@ -391,23 +391,39 @@ function Reviews() {
   const [showModal, setShowModal] = useState(false);
   const [newReview, setNewReview] = useState({ name: "", rating: 5, comment: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(3);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
     async function fetchReviews() {
-      const { data } = await supabase.from('reviews').select('*').order('created_at', { ascending: false }).limit(6);
+      // Fetch more than 6 to allow "See More" to work
+      const { data } = await supabase.from('reviews').select('*').order('created_at', { ascending: false }).limit(20);
       if (data && data.length > 0) {
         setReviews(data);
+        if (data.length <= 3) setHasMore(false);
       } else {
         // Fallback static reviews if db is empty or table not created yet
-        setReviews([
+        const fallback = [
           { name: "Sarah K.", role: "Anniversary Surprise", comment: "The attention to detail was incredible. My husband was speechless! They made our regular Tuesday feel like a fairy tale.", rating: 5 },
           { name: "Michael O.", role: "Birthday Setup", comment: "Fast, professional, and absolutely stunning. The room vibe was exactly what I wanted. Highly recommended!", rating: 5 },
           { name: "Emily B.", role: "Just Because", comment: "I wanted to surprise my bestie for no reason, and Curated Cupid delivered! The gift box was so thoughtful.", rating: 5 },
-        ]);
+          { name: "Joshua A.", role: "Birthday", comment: "The best surprise ever. My girlfriend loved it!", rating: 5 },
+          { name: "Linda M.", role: "Anniversary", comment: "Professional and neat. Will definitely use again.", rating: 4 },
+          { name: "Kofi B.", role: "Just Because", comment: "Great service and timely delivery.", rating: 5 },
+        ];
+        setReviews(fallback);
       }
     }
     fetchReviews();
   }, []);
+
+  useEffect(() => {
+    setHasMore(visibleCount < reviews.length);
+  }, [visibleCount, reviews]);
+
+  const loadMore = () => {
+    setVisibleCount(prev => prev + 3);
+  };
 
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -444,28 +460,43 @@ function Reviews() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {reviews.slice(0,3).map((rev, i) => (
-            <motion.div
-              key={i}
-              {...fadeUp(i * 0.1)}
-              className="glass border border-white/5 p-8 rounded-3xl relative flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex gap-1 mb-4">
-                  {[...Array(rev.rating || 5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />)}
+          <AnimatePresence>
+            {reviews.slice(0, visibleCount).map((rev, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: (i % 3) * 0.1 }}
+                className="glass border border-white/5 p-8 rounded-3xl relative flex flex-col justify-between h-full"
+              >
+                <div>
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(rev.rating || 5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-[#D4AF37] text-[#D4AF37]" />)}
+                  </div>
+                  <p className="text-white/70 text-sm italic mb-6 leading-relaxed">"{rev.comment || rev.text}"</p>
                 </div>
-                <p className="text-white/70 text-sm italic mb-6 leading-relaxed line-clamp-4">"{rev.comment || rev.text}"</p>
-              </div>
-              <div>
-                <p className="text-white font-bold text-sm">{rev.name}</p>
-                <p className="text-[#E91E8C] text-[10px] font-bold uppercase tracking-widest">{rev.role || 'Client'}</p>
-              </div>
-            </motion.div>
-          ))}
+                <div>
+                  <p className="text-white font-bold text-sm">{rev.name}</p>
+                  <p className="text-[#E91E8C] text-[10px] font-bold uppercase tracking-widest">{rev.role || 'Client'}</p>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
 
-        <motion.div {...fadeUp(0.4)} className="mt-12 text-center">
-          <button onClick={() => setShowModal(true)} className="glass border border-white/10 px-6 py-3 rounded-full text-white/60 hover:text-white hover:border-white/20 hover:bg-white/5 text-xs font-bold transition-all">
+        <motion.div {...fadeUp(0.4)} className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+          {hasMore && (
+            <button 
+              onClick={loadMore} 
+              className="glass border border-white/10 px-8 py-3 rounded-full text-white font-bold text-xs hover:bg-[#E91E8C]/10 hover:border-[#E91E8C]/30 transition-all flex items-center gap-2"
+            >
+              See More Reviews <ChevronDown className="w-4 h-4" />
+            </button>
+          )}
+          <button 
+            onClick={() => setShowModal(true)} 
+            className="btn-pink-gradient px-8 py-3 rounded-full text-white font-bold text-xs hover:scale-105 transition-all shadow-[0_0_20px_rgba(233,30,140,0.2)]"
+          >
             Share Your Experience
           </button>
         </motion.div>
