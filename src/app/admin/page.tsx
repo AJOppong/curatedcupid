@@ -14,19 +14,6 @@ import Button from "@/components/ui/Button";
 import { BuilderProvider } from "@/context/BuilderContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 
-// Force dark theme for the admin page always
-function AdminDarkTheme() {
-  useEffect(() => {
-    const prev = document.documentElement.getAttribute("data-theme");
-    document.documentElement.setAttribute("data-theme", "dark");
-    return () => {
-      if (prev) document.documentElement.setAttribute("data-theme", prev);
-      else document.documentElement.removeAttribute("data-theme");
-    };
-  }, []);
-  return null;
-}
-
 // Types
 interface Booking {
   id: string;
@@ -70,9 +57,8 @@ interface PackageItem {
 
 export default function AdminDashboard() {
   return (
-    <ThemeProvider>
+    <ThemeProvider forcedTheme="dark">
       <BuilderProvider>
-        <AdminDarkTheme />
         <AdminContent />
       </BuilderProvider>
     </ThemeProvider>

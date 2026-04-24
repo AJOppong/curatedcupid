@@ -13,11 +13,23 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>("light");
-  const [isLoading, setIsLoading] = useState(true);
+export function ThemeProvider({
+  children,
+  forcedTheme,
+}: {
+  children: React.ReactNode;
+  forcedTheme?: Theme;
+}) {
+  const [theme, setThemeState] = useState<Theme>(forcedTheme ?? "light");
+  const [isLoading, setIsLoading] = useState(!forcedTheme);
 
   useEffect(() => {
+    // If a forcedTheme is passed (e.g. admin always dark), skip DB fetch
+    if (forcedTheme) {
+      document.documentElement.setAttribute("data-theme", forcedTheme);
+      return;
+    }
+
     async function loadTheme() {
       try {
         const { data, error } = await supabase
@@ -37,14 +49,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
 
     loadTheme();
-  }, []);
+  }, [forcedTheme]);
 
   useEffect(() => {
-    // Apply theme to document
-    document.documentElement.setAttribute("data-theme", theme);
-  }, [theme]);
+    // If forced, always keep that theme applied
+    const active = forcedTheme ?? theme;
+    document.documentElement.setAttribute("data-theme", active);
+  }, [theme, forcedTheme]);
 
   const setTheme = async (newTheme: Theme) => {
+    if (forcedTheme) return; // ignore changes when forced
     setThemeState(newTheme);
     try {
       await supabase
@@ -56,7 +70,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, isLoading }}>
+    <ThemeContext.Provider value={{ theme: forcedTheme ?? theme, setTheme, isLoading }}>
       {children}
     </ThemeContext.Provider>
   );
