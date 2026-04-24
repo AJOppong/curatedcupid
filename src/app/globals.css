@@ -42,18 +42,18 @@
 /* ── VALENTINE'S ──────────────────────────────────────────────── */
 /* Deep crimson roses, hearts, pink ribbons — romantic glow */
 [data-theme='valentine'] {
-  --background: #FFF0F2;
-  --surface: rgba(255, 255, 255, 0.9);
+  --background: #1A0707;
+  --surface: #2D0F0F;
   --primary: #C0153A;         /* deep red */
   --primary-light: #E8526A;
   --primary-glow: rgba(192, 21, 58, 0.15);
   --secondary: #D4AF37;       /* gold */
-  --text-main: #4A0010;
-  --text-muted: #9B4A5A;
+  --text-main: #FAF0E6;
+  --text-muted: #C4A882;
   --border: rgba(192, 21, 58, 0.15);
-  --glass-bg: rgba(255, 240, 242, 0.8);
+  --glass-bg: rgba(45, 15, 15, 0.7);
   --glass-border: rgba(192, 21, 58, 0.12);
-  --hero-bg: radial-gradient(ellipse at center top, #ffe0e5 0%, #ffd6dc 30%, #ffeef0 70%, #fff0f2 100%);
+  --hero-bg: radial-gradient(ellipse at center, #5c0e0e 0%, #2d0f0f 50%, #1a0707 100%);
 }
 
 /* ── MOTHER'S DAY ─────────────────────────────────────────────── */
@@ -110,18 +110,18 @@
 /* ── CHRISTMAS ────────────────────────────────────────────────── */
 /* Deep red velvet, gold ornaments, pine green — warm & festive */
 [data-theme='christmas'] {
-  --background: #1A0707;
-  --surface: #2D0F0F;
+  --background: #FFF0F2;
+  --surface: rgba(255, 255, 255, 0.9);
   --primary: #E63030;         /* festive red */
   --primary-light: #F07070;
   --primary-glow: rgba(230, 48, 48, 0.25);
   --secondary: #D4AF37;       /* gold ornament */
-  --text-main: #FAF0E6;
-  --text-muted: #C4A882;
+  --text-main: #4A0010;
+  --text-muted: #9B4A5A;
   --border: rgba(212, 175, 55, 0.2);
-  --glass-bg: rgba(45, 15, 15, 0.7);
+  --glass-bg: rgba(255, 240, 242, 0.8);
   --glass-border: rgba(212, 175, 55, 0.15);
-  --hero-bg: radial-gradient(ellipse at center, #5c0e0e 0%, #2d0f0f 50%, #1a0707 100%);
+  --hero-bg: radial-gradient(ellipse at center top, #ffe0e5 0%, #ffd6dc 30%, #ffeef0 70%, #fff0f2 100%);
 }
 
 /* ── NEW YEAR ─────────────────────────────────────────────────── */
