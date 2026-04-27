@@ -185,7 +185,7 @@ function Services() {
 
 // ── Packages ──────────────────────────────────────────
 function Packages() {
-  const { dbPackages } = useBuilder();
+  const { dbPackages, dbItems } = useBuilder();
   const { activeTheme } = useTheme();
 
   const isLadiesOnly = activeTheme?.name.toLowerCase().includes('mother') || activeTheme?.name.toLowerCase().includes('women');
@@ -275,12 +275,16 @@ function Packages() {
 
                   {/* Features */}
                   <ul className="space-y-2.5 mb-8 flex-1">
-                    {pkg.items.map((itemId) => (
-                      <li key={itemId} className="flex items-start gap-2 text-sm text-[var(--text-muted)] capitalize">
-                        <Check className={`w-4 h-4 mt-0.5 flex-shrink-0 text-[var(--primary)]`} />
-                        {itemId.replace(/-/g, ' ')}
-                      </li>
-                    ))}
+                    {pkg.items.map((itemId: string) => {
+                      const itemObj = dbItems.find(i => i.id === itemId);
+                      const itemName = itemObj ? itemObj.name : itemId.replace(/-/g, ' ');
+                      return (
+                        <li key={itemId} className="flex items-start gap-2 text-sm text-[var(--text-muted)] capitalize">
+                          <Check className={`w-4 h-4 mt-0.5 flex-shrink-0 text-[var(--primary)]`} />
+                          {itemName}
+                        </li>
+                      );
+                    })}
                   </ul>
 
                   {/* CTA */}

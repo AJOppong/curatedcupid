@@ -73,7 +73,7 @@ export default function Step4EventDetails() {
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-main)] mb-2">
-          Event <span className="text-[#E91E8C]">Details</span>
+          Booking <span className="text-[#E91E8C]">Details</span>
         </h2>
         <p className="text-[var(--text-muted)] text-sm">Tell us everything we need to make it perfect</p>
       </div>
@@ -96,11 +96,16 @@ export default function Step4EventDetails() {
             <Field label="Your Phone Number" icon={<Phone className="w-3 h-3" />}>
               <input
                 type="tel"
-                placeholder="e.g. 08012345678"
+                placeholder="e.g. 0241234567"
                 className={inputClass}
                 value={eventDetails.phone}
-                onChange={(e) => updateEventDetails({ phone: e.target.value })}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                  updateEventDetails({ phone: val });
+                }}
                 required
+                pattern="[0-9]{10}"
+                maxLength={10}
               />
             </Field>
           </div>
@@ -123,11 +128,16 @@ export default function Step4EventDetails() {
             <Field label="Recipient Phone" icon={<Phone className="w-3 h-3" />}>
               <input
                 type="tel"
-                placeholder="Their contact for delivery"
+                placeholder="e.g. 0241234567"
                 className={inputClass}
                 value={eventDetails.recipientPhone}
-                onChange={(e) => updateEventDetails({ recipientPhone: e.target.value })}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                  updateEventDetails({ recipientPhone: val });
+                }}
                 required
+                pattern="[0-9]{10}"
+                maxLength={10}
               />
             </Field>
           </div>

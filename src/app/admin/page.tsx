@@ -192,7 +192,7 @@ function AdminContent() {
       if (uploadError) throw uploadError;
 
       const { data } = supabase.storage.from('item_images').getPublicUrl(filePath);
-      setNewItem({ ...newItem, image: data.publicUrl });
+      setNewItem(prev => ({ ...prev, image: data.publicUrl }));
     } catch (error: any) {
       alert(`Error uploading image: ${error.message}`);
     } finally {
@@ -765,7 +765,14 @@ function AdminContent() {
                   </div>
                   <div className="max-h-32 overflow-y-auto mt-2 space-y-1 custom-scrollbar">
                     {items.filter(i => i.name.toLowerCase().includes(packageSearch.toLowerCase()) && !(newPackage.items || []).includes(i.id)).map(i => (
-                      <div key={i.id} onClick={() => setNewPackage({...newPackage, items: [...(newPackage.items || []), i.id]})} className="text-xs text-white/70 hover:text-white cursor-pointer px-2 py-1.5 bg-white/5 rounded hover:bg-white/10 flex justify-between items-center transition-colors">
+                      <div key={i.id} onClick={() => setNewPackage(prev => {
+                        const newItems = [...(prev.items || []), i.id];
+                        const newPrice = newItems.reduce((sum, itemId) => {
+                          const item = items.find(it => it.id === itemId);
+                          return sum + (item?.price || 0);
+                        }, 0);
+                        return {...prev, items: newItems, price: newPrice};
+                      })} className="text-xs text-white/70 hover:text-white cursor-pointer px-2 py-1.5 bg-white/5 rounded hover:bg-white/10 flex justify-between items-center transition-colors">
                         <span>{i.name}</span>
                         <span className="text-[#D4AF37] font-bold">GH₵{i.price}</span>
                       </div>
@@ -780,7 +787,14 @@ function AdminContent() {
                       return (
                         <span key={itemId} className="text-[10px] px-2 py-1 bg-[#E91E8C]/20 text-[#E91E8C] rounded flex items-center gap-1 font-bold">
                           {item?.name || itemId}
-                          <button type="button" onClick={() => setNewPackage({...newPackage, items: (newPackage.items || []).filter(id => id !== itemId)})} className="hover:text-white transition-colors"><X className="w-3 h-3"/></button>
+                          <button type="button" onClick={() => setNewPackage(prev => {
+                            const newItems = (prev.items || []).filter(id => id !== itemId);
+                            const newPrice = newItems.reduce((sum, itemId) => {
+                              const item = items.find(it => it.id === itemId);
+                              return sum + (item?.price || 0);
+                            }, 0);
+                            return {...prev, items: newItems, price: newPrice};
+                          })} className="hover:text-white transition-colors"><X className="w-3 h-3"/></button>
                         </span>
                       );
                     })}
