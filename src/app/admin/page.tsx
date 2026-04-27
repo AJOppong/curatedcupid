@@ -32,7 +32,7 @@ interface Booking {
   room_vibe: string;
   items: any[];
   total_amount: number;
-  status: "pending" | "confirmed" | "completed" | "cancelled";
+  status: "awaiting_payment" | "payment_verifying" | "pending" | "confirmed" | "completed" | "cancelled";
 }
 
 interface ShopItem {

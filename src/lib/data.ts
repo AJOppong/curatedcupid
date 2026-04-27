@@ -1,6 +1,6 @@
 import React from "react";
 import { 
-  Candy, Gift, Gem, Wine, MailHeart, Wallet, Footprints, Mail, 
+  Candy, Gift, Gem, Wine, Heart, Wallet, Footprints, Mail, 
   Shirt, Beaker, ShoppingBag, Fuel, Wind, TreePine, Droplet, 
   Scissors, Flower2, Flower, Sun, Sparkles, Circle, Store, 
   Bike, Car, Package, Bed
