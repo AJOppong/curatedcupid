@@ -35,7 +35,7 @@ const initialThemes = [
     },
     hero_text: {
       title: "Romantic Gestures",
-      desc: "Transform ordinary moments into unforgettable memories. Experience the art of gifting with Curated Cupid.",
+      desc: "Transform ordinary moments into unforgettable memories. Experience the art of celebration with Curated Cupid.",
       accent: "unforgettable"
     },
     is_active: false,
@@ -170,18 +170,18 @@ const initialThemes = [
     name: "eid",
     type: "occasion",
     colors: {
-      background: "#FDFBF2",
+      background: "#FFFCE0",
       surface: "rgba(255, 255, 255, 0.9)",
-      primary: "#1B6B45",
-      primaryLight: "#2E9E6A",
-      primaryGlow: "rgba(27, 107, 69, 0.15)",
-      secondary: "#C9962A",
+      primary: "#D4AF37",
+      primaryLight: "#F2D06B",
+      primaryGlow: "rgba(212, 175, 55, 0.25)",
+      secondary: "#1B6B45",
       textMain: "#1A3A28",
       textMuted: "#6B7C6B",
-      border: "rgba(201, 150, 42, 0.2)",
-      glassBg: "rgba(253, 251, 242, 0.85)",
-      glassBorder: "rgba(201, 150, 42, 0.15)",
-      heroBg: "radial-gradient(ellipse at top right, #f5f0dc 0%, #fdfbf2 40%, #eef5ec 80%, #fdfbf2 100%)"
+      border: "rgba(212, 175, 55, 0.2)",
+      glassBg: "rgba(255, 252, 224, 0.85)",
+      glassBorder: "rgba(212, 175, 55, 0.15)",
+      heroBg: "radial-gradient(ellipse at top right, #fff9c4 0%, #fffce0 40%, #eef5ec 80%, #fffce0 100%)"
     },
     fonts: {
       heading: "var(--font-playfair)",
@@ -201,18 +201,18 @@ const initialThemes = [
     name: "christmas",
     type: "occasion",
     colors: {
-      background: "#FFF0F2",
+      background: "#F4F7F5",
       surface: "rgba(255, 255, 255, 0.9)",
-      primary: "#E63030",
-      primaryLight: "#F07070",
-      primaryGlow: "rgba(230, 48, 48, 0.25)",
-      secondary: "#D4AF37",
-      textMain: "#4A0010",
-      textMuted: "#9B4A5A",
-      border: "rgba(212, 175, 55, 0.2)",
-      glassBg: "rgba(255, 240, 242, 0.8)",
-      glassBorder: "rgba(212, 175, 55, 0.15)",
-      heroBg: "radial-gradient(ellipse at center top, #ffe0e5 0%, #ffd6dc 30%, #ffeef0 70%, #fff0f2 100%)"
+      primary: "#D32F2F",
+      primaryLight: "#E57373",
+      primaryGlow: "rgba(211, 47, 47, 0.25)",
+      secondary: "#388E3C",
+      textMain: "#1C2826",
+      textMuted: "#4A5D5A",
+      border: "rgba(56, 142, 60, 0.2)",
+      glassBg: "rgba(255, 255, 255, 0.8)",
+      glassBorder: "rgba(211, 47, 47, 0.15)",
+      heroBg: "radial-gradient(ellipse at center top, #ffebec 0%, #f4f7f5 30%, #e8f5e9 70%, #f4f7f5 100%)"
     },
     fonts: {
       heading: "var(--font-playfair)",

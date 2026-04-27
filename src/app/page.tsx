@@ -13,7 +13,7 @@ import {
   Heart, Star, Sparkles, ArrowRight, Gift, Camera,
   Clock, Shield, ChevronDown, Crown, Gem, Cake,
   Check, Phone, Mail, MapPin, MessageCircle,
-  MessageSquare, Play, Flower2, Plus, X, Video, Wine, Sparkles, Music, Ghost
+  MessageSquare, Play, Flower2, Plus, X, Video, Wine, Music, Ghost
 } from "lucide-react";
 
 
@@ -186,7 +186,18 @@ function Services() {
 // ── Packages ──────────────────────────────────────────
 function Packages() {
   const { dbPackages } = useBuilder();
-  const [activeGender, setActiveGender] = useState("Ladies");
+  const { activeTheme } = useTheme();
+
+  const isLadiesOnly = activeTheme?.name.toLowerCase().includes('mother') || activeTheme?.name.toLowerCase().includes('women');
+  const isGuysOnly = activeTheme?.name.toLowerCase().includes('father') || activeTheme?.name.toLowerCase().includes('men');
+  
+  const defaultGender = isLadiesOnly ? 'Ladies' : (isGuysOnly ? 'Guys' : 'Ladies');
+  const [activeGender, setActiveGender] = useState(defaultGender);
+
+  useEffect(() => {
+    if (isLadiesOnly) setActiveGender('Ladies');
+    else if (isGuysOnly) setActiveGender('Guys');
+  }, [isLadiesOnly, isGuysOnly]);
 
   const filteredPackages = dbPackages.filter(p => p.gender === activeGender.toLowerCase());
 
@@ -202,23 +213,25 @@ function Packages() {
         </motion.div>
 
         {/* Gender Filter */}
-        <div className="flex justify-center mb-10">
-          <div className="flex gap-2 glass p-1.5 rounded-full border border-[var(--border)]">
-            {["Ladies", "Guys"].map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveGender(tab)}
-                className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
-                  activeGender === tab
-                    ? "btn-pink-gradient text-white shadow-lg"
-                    : "text-[var(--text-muted)] hover:text-[var(--primary)]"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+        {!isLadiesOnly && !isGuysOnly && (
+          <div className="flex justify-center mb-10">
+            <div className="flex gap-2 glass p-1.5 rounded-full border border-[var(--border)]">
+              {["Ladies", "Guys"].map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveGender(tab)}
+                  className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
+                    activeGender === tab
+                      ? "btn-pink-gradient text-white shadow-lg"
+                      : "text-[var(--text-muted)] hover:text-[var(--primary)]"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Packages Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -718,9 +731,8 @@ function Footer() {
               <div className="w-8 h-8 rounded-full btn-pink-gradient flex items-center justify-center">
                 <Heart className="w-4 h-4 text-[var(--text-main)] fill-white" />
               </div>
-              <div className="flex flex-col -space-y-1">
-                <span className="font-accent text-2xl text-[var(--primary)] leading-none">Curated Cupid</span>
-                <span className="text-[7px] uppercase tracking-[0.2em] text-[var(--text-muted)] font-bold pl-1">of gifting</span>
+              <div className="flex flex-col">
+                <span className="font-accent text-2xl text-[var(--primary)] leading-none mt-1">Curated Cupid</span>
               </div>
             </div>
             <p className="text-[var(--text-muted)] text-sm leading-relaxed max-w-xs">

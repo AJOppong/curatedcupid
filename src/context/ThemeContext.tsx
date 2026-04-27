@@ -58,7 +58,7 @@ const FALLBACK_THEME: ThemeRecord = {
   },
   hero_text: {
     title: "Romantic Gestures",
-    desc: "Transform ordinary moments into unforgettable memories. Experience the art of gifting with Curated Cupid.",
+    desc: "Transform ordinary moments into unforgettable memories. Experience the art of celebration with Curated Cupid.",
     accent: "unforgettable"
   },
   is_active: true,

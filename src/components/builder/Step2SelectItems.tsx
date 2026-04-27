@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useBuilder } from "@/context/BuilderContext";
+import { useTheme } from "@/context/ThemeContext";
 import { shopItems, predefinedPackages, ROOM_DESIGN_PRICE } from "@/lib/data";
 import Button from "@/components/ui/Button";
 import { ArrowRight, ArrowLeft, Plus, Minus, Check, Package, Sparkles, Trash2, PlusCircle, ShoppingCart, Home, Gift } from "lucide-react";
@@ -17,11 +18,22 @@ export default function Step2SelectItems() {
     addToCart, removeFromCart, updateQuantity, clearCart, preloadItems,
     cart, setStep, baseService, selectedPackageName, dbItems, dbPackages
   } = useBuilder();
+  const { activeTheme } = useTheme();
+
+  const isLadiesOnly = activeTheme?.name.toLowerCase().includes('mother') || activeTheme?.name.toLowerCase().includes('women');
+  const isGuysOnly = activeTheme?.name.toLowerCase().includes('father') || activeTheme?.name.toLowerCase().includes('men');
+  
+  const defaultGender = isLadiesOnly ? 'Ladies' : (isGuysOnly ? 'Guys' : 'Ladies');
 
   const [activeCategory, setActiveCategory] = useState(baseService === "Flower Delivery" ? "Flowers" : "All");
-  const [activeGender, setActiveGender] = useState("Ladies");
+  const [activeGender, setActiveGender] = useState(defaultGender);
   const [addedIds, setAddedIds] = useState<string[]>([]);
   const [roomChoice, setRoomChoice] = useState<"none" | "with-package" | "without">("none");
+
+  useEffect(() => {
+    if (isLadiesOnly) setActiveGender('Ladies');
+    else if (isGuysOnly) setActiveGender('Guys');
+  }, [isLadiesOnly, isGuysOnly]);
 
   useEffect(() => {
     if (baseService === "Flower Delivery") setActiveCategory("Flowers");
@@ -183,21 +195,23 @@ export default function Step2SelectItems() {
             <p className="text-[var(--text-muted)] text-sm">Select a gift package to pair with your room design</p>
           </div>
 
-          <div className="flex gap-2 justify-center mb-4">
-            {GENDER_TABS.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveGender(tab)}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase transition-all ${
-                  activeGender === tab
-                    ? "bg-[#E91E8C] text-[var(--text-main)] shadow-lg shadow-[#E91E8C]/20"
-                    : "glass border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
+          {!isLadiesOnly && !isGuysOnly && (
+            <div className="flex gap-2 justify-center mb-4">
+              {GENDER_TABS.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveGender(tab)}
+                  className={`px-4 py-1.5 rounded-full text-xs font-bold uppercase transition-all ${
+                    activeGender === tab
+                      ? "bg-[#E91E8C] text-[var(--text-main)] shadow-lg shadow-[#E91E8C]/20"
+                      : "glass border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)]"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
             {filteredPackages.map((pkg) => (
@@ -470,7 +484,7 @@ export default function Step2SelectItems() {
             <Sparkles className="w-3 h-3 text-[#E91E8C]" /> Curated Packages
           </div>
           <div className="flex gap-2">
-            {GENDER_TABS.map((tab) => (
+            {!isLadiesOnly && !isGuysOnly && GENDER_TABS.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveGender(tab)}

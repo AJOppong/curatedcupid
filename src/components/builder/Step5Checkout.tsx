@@ -14,7 +14,8 @@ import {
 export default function Step5Checkout() {
   const { cart, cartTotal, baseService, roomVibe, customVibe, roomTransport, roomTransportPrice, eventDetails, setStep } = useBuilder();
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [paymentPhase, setPaymentPhase] = useState<"none" | "details" | "completed">("none");
+  const [bookingId, setBookingId] = useState<string | null>(null);
   const [refundAcknowledged, setRefundAcknowledged] = useState(false);
 
   const total = cartTotal + 50 + (baseService === "Room Aesthetics" ? roomTransportPrice : 0);
@@ -25,7 +26,7 @@ export default function Step5Checkout() {
   const handleConfirm = async () => {
     setLoading(true);
     try {
-      await supabase.from("bookings").insert([{
+      const { data, error } = await supabase.from("bookings").insert([{
         name: eventDetails.name,
         phone: eventDetails.phone,
         recipient_name: eventDetails.recipientName,
@@ -40,13 +41,32 @@ export default function Step5Checkout() {
         items: cart,
         total_amount: total,
         delivery_method: eventDetails.deliveryMethodDetails ? `${deliveryObj?.label} - ${eventDetails.deliveryMethodDetails}` : deliveryObj?.label,
-        room_transport: baseService === "Room Aesthetics" ? transportObj?.label : null
-      }]);
+        room_transport: baseService === "Room Aesthetics" ? transportObj?.label : null,
+        status: "awaiting_payment"
+      }]).select();
+
+      if (data && data[0]) {
+        setBookingId(data[0].id);
+      }
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
-      setSubmitted(true);
+      setPaymentPhase("details");
+    }
+  };
+
+  const handleConfirmPayment = async () => {
+    setLoading(true);
+    try {
+      if (bookingId) {
+        await supabase.from("bookings").update({ status: "payment_verifying" }).eq("id", bookingId);
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+      setPaymentPhase("completed");
     }
   };
 
@@ -65,7 +85,51 @@ export default function Step5Checkout() {
     `*Notes:* ${eventDetails.instructions || "None"}`
   );
 
-  if (submitted) {
+  if (paymentPhase === "details") {
+    return (
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="text-center space-y-8 py-12"
+      >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", delay: 0.2 }}
+          className="w-20 h-20 rounded-full bg-[#E91E8C]/15 border border-[#E91E8C]/30 flex items-center justify-center mx-auto shadow-[0_0_40px_rgba(233,30,140,0.3)]"
+        >
+          <Phone className="w-10 h-10 text-[#E91E8C]" />
+        </motion.div>
+
+        <div>
+          <h2 className="text-3xl font-bold text-[var(--text-main)] mb-2">
+            Make <span className="text-[#E91E8C]">Payment</span>
+          </h2>
+          <p className="text-[var(--text-muted)] text-sm max-w-sm mx-auto">
+            Your booking is saved! Please send MTN Mobile Money to the number below to secure your celebration.
+          </p>
+        </div>
+
+        <div className="glass border border-[var(--border)] rounded-2xl p-6 text-center max-w-sm mx-auto space-y-4">
+          <p className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-widest">Payment Details</p>
+          <div className="space-y-1 py-2">
+            <p className="text-[var(--text-main)] font-bold text-lg tracking-widest">055 000 0000</p>
+            <p className="text-[var(--text-muted)] text-sm">Account Name: Curated Cupid</p>
+          </div>
+          <div className="pt-2 border-t border-[var(--border)]">
+             <p className="text-[var(--text-main)] text-sm">Amount to Pay:</p>
+             <p className="text-[#D4AF37] font-bold text-2xl">GH₵{total.toLocaleString()}</p>
+          </div>
+        </div>
+
+        <Button loading={loading} onClick={handleConfirmPayment} className="mx-auto w-full max-w-sm py-4">
+          I Have Made Payment
+        </Button>
+      </motion.div>
+    );
+  }
+
+  if (paymentPhase === "completed") {
     return (
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}

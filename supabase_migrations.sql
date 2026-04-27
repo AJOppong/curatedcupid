@@ -210,3 +210,18 @@ DROP POLICY IF EXISTS "Public can view themes" ON themes;
 CREATE POLICY "Public can view themes" ON themes FOR SELECT TO anon, authenticated USING (true);
 DROP POLICY IF EXISTS "Admin can manage themes" ON themes;
 CREATE POLICY "Admin can manage themes" ON themes FOR ALL TO anon, authenticated USING (true);
+
+-- 7. Storage Bucket for Item Images
+INSERT INTO storage.buckets (id, name, public) VALUES ('item_images', 'item_images', true) ON CONFLICT (id) DO NOTHING;
+
+DROP POLICY IF EXISTS "Public can view item_images" ON storage.objects;
+CREATE POLICY "Public can view item_images" ON storage.objects FOR SELECT TO public USING (bucket_id = 'item_images');
+
+DROP POLICY IF EXISTS "Admin can insert item_images" ON storage.objects;
+CREATE POLICY "Admin can insert item_images" ON storage.objects FOR INSERT TO public WITH CHECK (bucket_id = 'item_images');
+
+DROP POLICY IF EXISTS "Admin can update item_images" ON storage.objects;
+CREATE POLICY "Admin can update item_images" ON storage.objects FOR UPDATE TO public USING (bucket_id = 'item_images');
+
+DROP POLICY IF EXISTS "Admin can delete item_images" ON storage.objects;
+CREATE POLICY "Admin can delete item_images" ON storage.objects FOR DELETE TO public USING (bucket_id = 'item_images');

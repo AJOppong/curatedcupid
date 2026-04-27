@@ -87,6 +87,12 @@ function AdminContent() {
   const [loadingPackages, setLoadingPackages] = useState(false);
   const [showPackageModal, setShowPackageModal] = useState(false);
   const [newPackage, setNewPackage] = useState<Partial<PackageItem>>({ items: [], gender: 'all', active: true });
+  const [packageSearch, setPackageSearch] = useState("");
+
+  const [isNewCategory, setIsNewCategory] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  
+  const categories = Array.from(new Set(items.map(i => i.category))).filter(Boolean);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,6 +168,36 @@ function AdminContent() {
       await supabase.from('shop_items').delete().eq('id', id);
       fetchItems();
     } catch (e) { console.error(e); }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
+      alert("Only JPG and PNG formats are allowed.");
+      return;
+    }
+    
+    setUploadingImage(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('item_images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('item_images').getPublicUrl(filePath);
+      setNewItem({ ...newItem, image: data.publicUrl });
+    } catch (error: any) {
+      alert(`Error uploading image: ${error.message}`);
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   // ─── PACKAGES CRUD ───────────────────────────────────────────────
@@ -291,7 +327,7 @@ function AdminContent() {
               {/* List */}
               <div className="lg:col-span-2 space-y-4">
                 <div className="flex items-center gap-3 mb-2 overflow-x-auto pb-2 scrollbar-hide">
-                  {(["all", "pending", "confirmed", "completed", "cancelled"] as const).map(s => (
+                  {(["all", "awaiting_payment", "payment_verifying", "pending", "confirmed", "completed", "cancelled"] as const).map(s => (
                     <button
                       key={s}
                       onClick={() => setFilter(s)}
@@ -299,7 +335,7 @@ function AdminContent() {
                         filter === s ? "bg-[#E91E8C] text-white" : "glass border border-white/5 text-white/40 hover:text-white"
                       }`}
                     >
-                      {s}
+                      {s.replace('_', ' ')}
                     </button>
                   ))}
                   <Button onClick={fetchBookings} variant="secondary" className="ml-auto text-xs py-1.5 px-3">Refresh</Button>
@@ -343,7 +379,7 @@ function AdminContent() {
                             booking.status === "confirmed" ? "text-blue-500" :
                             booking.status === "cancelled" ? "text-red-500" :
                             "text-amber-500"
-                          }`}>{booking.status}</p>
+                          }`}>{booking.status.replace('_', ' ')}</p>
                         </div>
                       </motion.div>
                     ))
@@ -433,6 +469,8 @@ function AdminContent() {
                             onChange={(e) => updateStatus(selectedBooking.id, e.target.value as any)}
                             className="glass border border-white/10 rounded-xl px-3 py-2 text-xs text-white bg-transparent focus:outline-none"
                           >
+                            <option value="awaiting_payment" className="bg-[#1A1A1A]">Awaiting Payment</option>
+                            <option value="payment_verifying" className="bg-[#1A1A1A]">Payment Verifying</option>
                             <option value="pending" className="bg-[#1A1A1A]">Pending</option>
                             <option value="confirmed" className="bg-[#1A1A1A]">Confirmed</option>
                             <option value="completed" className="bg-[#1A1A1A]">Completed</option>
@@ -629,7 +667,42 @@ function AdminContent() {
                   <div className="space-y-1"><label className="text-white/60 text-xs">Price (GH₵)</label><input required type="number" value={newItem.price || ''} onChange={e => setNewItem({...newItem, price: parseInt(e.target.value)})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" /></div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1"><label className="text-white/60 text-xs">Category</label><input required value={newItem.category || ''} onChange={e => setNewItem({...newItem, category: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" /></div>
+                  <div className="space-y-1">
+                    <label className="text-white/60 text-xs">Category</label>
+                    <div className="flex gap-2">
+                      {!isNewCategory ? (
+                        <select 
+                          required 
+                          value={newItem.category || ''} 
+                          onChange={e => {
+                            if (e.target.value === "NEW") {
+                              setIsNewCategory(true);
+                              setNewItem({...newItem, category: ''});
+                            } else {
+                              setNewItem({...newItem, category: e.target.value});
+                            }
+                          }}
+                          className="w-full bg-white/5 rounded-xl px-3 py-2.5 text-white text-sm outline-none border-none focus:ring-0 [&>option]:bg-[#12101F]"
+                        >
+                          <option value="" disabled>Select Category</option>
+                          {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                          <option value="NEW">+ Add New Category</option>
+                        </select>
+                      ) : (
+                        <div className="flex w-full gap-2">
+                          <input 
+                            required 
+                            autoFocus
+                            placeholder="New category..."
+                            value={newItem.category || ''} 
+                            onChange={e => setNewItem({...newItem, category: e.target.value})} 
+                            className="flex-1 bg-white/5 rounded-xl px-3 py-2 text-white text-sm" 
+                          />
+                          <button type="button" onClick={() => {setIsNewCategory(false); setNewItem({...newItem, category: ''});}} className="px-2 text-white/40 hover:text-white"><X className="w-4 h-4"/></button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                   <div className="space-y-1">
                     <label className="text-white/60 text-xs">Gender Tag</label>
                     <select value={newItem.gender || 'all'} onChange={e => setNewItem({...newItem, gender: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2.5 text-white text-sm outline-none border-none focus:ring-0 [&>option]:bg-[#12101F]">
@@ -637,9 +710,20 @@ function AdminContent() {
                     </select>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1"><label className="text-white/60 text-xs">Icon Name (Lucide)</label><input value={newItem.emoji || ''} onChange={e => setNewItem({...newItem, emoji: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" placeholder="e.g. Wine, Gift" /></div>
-                  <div className="space-y-1"><label className="text-white/60 text-xs">Image URL (Optional)</label><input value={newItem.image || ''} onChange={e => setNewItem({...newItem, image: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" placeholder="/images/item.jpg" /></div>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-white/60 text-xs">Image Upload (JPG/PNG)</label>
+                    <div className="flex items-center gap-3">
+                      <input 
+                        type="file" 
+                        accept="image/jpeg, image/png, image/jpg" 
+                        onChange={handleImageUpload} 
+                        className="w-full bg-white/5 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-[#E91E8C] file:text-white hover:file:bg-[#E91E8C]/80 rounded-xl px-3 py-2 text-white text-sm" 
+                      />
+                      {uploadingImage && <span className="text-xs text-[#E91E8C] animate-pulse whitespace-nowrap">Uploading...</span>}
+                      {newItem.image && <div className="w-10 h-10 rounded overflow-hidden shrink-0"><img src={newItem.image} className="w-full h-full object-cover" /></div>}
+                    </div>
+                  </div>
                 </div>
                 <div className="space-y-1"><label className="text-white/60 text-xs">Description</label><textarea required rows={2} value={newItem.description || ''} onChange={e => setNewItem({...newItem, description: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm resize-none" /></div>
                 <div className="flex items-center gap-2 mt-2">
@@ -668,7 +752,41 @@ function AdminContent() {
                     <option value="all">All</option><option value="ladies">Ladies</option><option value="guys">Guys</option>
                   </select>
                 </div>
-                <div className="space-y-1"><label className="text-white/60 text-xs">Items (Comma separated IDs)</label><textarea required rows={3} value={newPackage.items?.join(', ') || ''} onChange={e => setNewPackage({...newPackage, items: e.target.value.split(',').map(i => i.trim()).filter(Boolean)})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm resize-none" placeholder="wine, jewelry, ferrero..." /></div>
+                <div className="space-y-1">
+                  <label className="text-white/60 text-xs">Items</label>
+                  <div className="relative">
+                    <Search className="w-4 h-4 absolute left-3 top-2.5 text-white/40" />
+                    <input 
+                      value={packageSearch} 
+                      onChange={e => setPackageSearch(e.target.value)} 
+                      placeholder="Search items to add..." 
+                      className="w-full bg-white/5 rounded-xl pl-9 pr-3 py-2 text-white text-sm focus:outline-none border border-transparent"
+                    />
+                  </div>
+                  <div className="max-h-32 overflow-y-auto mt-2 space-y-1 custom-scrollbar">
+                    {items.filter(i => i.name.toLowerCase().includes(packageSearch.toLowerCase()) && !(newPackage.items || []).includes(i.id)).map(i => (
+                      <div key={i.id} onClick={() => setNewPackage({...newPackage, items: [...(newPackage.items || []), i.id]})} className="text-xs text-white/70 hover:text-white cursor-pointer px-2 py-1.5 bg-white/5 rounded hover:bg-white/10 flex justify-between items-center transition-colors">
+                        <span>{i.name}</span>
+                        <span className="text-[#D4AF37] font-bold">GH₵{i.price}</span>
+                      </div>
+                    ))}
+                    {items.length > 0 && items.filter(i => i.name.toLowerCase().includes(packageSearch.toLowerCase()) && !(newPackage.items || []).includes(i.id)).length === 0 && (
+                      <div className="text-xs text-white/30 text-center py-2">No matching items to add.</div>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-2 p-2 bg-[#1A1A1A] rounded-xl border border-white/5 min-h-[40px]">
+                    {(newPackage.items || []).map(itemId => {
+                      const item = items.find(i => i.id === itemId);
+                      return (
+                        <span key={itemId} className="text-[10px] px-2 py-1 bg-[#E91E8C]/20 text-[#E91E8C] rounded flex items-center gap-1 font-bold">
+                          {item?.name || itemId}
+                          <button type="button" onClick={() => setNewPackage({...newPackage, items: (newPackage.items || []).filter(id => id !== itemId)})} className="hover:text-white transition-colors"><X className="w-3 h-3"/></button>
+                        </span>
+                      );
+                    })}
+                    {(newPackage.items || []).length === 0 && <span className="text-xs text-white/30 italic">No items added yet.</span>}
+                  </div>
+                </div>
                 <div className="flex items-center gap-2 mt-2">
                   <input type="checkbox" id="p-active" checked={newPackage.active} onChange={e => setNewPackage({...newPackage, active: e.target.checked})} className="w-4 h-4 rounded accent-[#E91E8C]" />
                   <label htmlFor="p-active" className="text-white/80 text-sm">Package is Active</label>
