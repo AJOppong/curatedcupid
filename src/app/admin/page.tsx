@@ -151,13 +151,14 @@ function AdminContent() {
     try {
       const id = newItem.id || newItem.name?.toLowerCase().replace(/\s+/g, '-');
       const itemToSave = { ...newItem, id };
-      const { error } = await supabase.from('shop_items').upsert([itemToSave]);
+      const { data, error } = await supabase.from('shop_items').upsert([itemToSave]).select();
       if (!error) {
+        console.log("Saved item:", data);
         setShowItemModal(false);
         setNewItem({ gender: 'all', active: true });
         fetchItems();
       } else {
-        alert(error.message);
+        alert("Error saving item: " + error.message);
       }
     } catch (e) { console.error(e); }
   };
@@ -212,15 +213,22 @@ function AdminContent() {
   const handleSavePackage = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const id = newPackage.id || newPackage.name?.toLowerCase().replace(/\s+/g, '-');
-      const packageToSave = { ...newPackage, id };
-      const { error } = await supabase.from('packages').upsert([packageToSave]);
+      const packageToSave = { 
+        id: newPackage.id || newPackage.name?.toLowerCase().replace(/\s+/g, '-'),
+        name: newPackage.name,
+        price: newPackage.price,
+        items: newPackage.items || [],
+        gender: newPackage.gender || 'all',
+        active: newPackage.active !== undefined ? newPackage.active : true
+      };
+      const { data, error } = await supabase.from('packages').upsert([packageToSave]).select();
       if (!error) {
+        console.log("Saved package:", data);
         setShowPackageModal(false);
         setNewPackage({ items: [], gender: 'all', active: true });
         fetchPackages();
       } else {
-        alert(error.message);
+        alert("Error saving package: " + error.message);
       }
     } catch (e) { console.error(e); }
   };
