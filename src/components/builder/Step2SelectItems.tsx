@@ -375,12 +375,12 @@ export default function Step2SelectItems() {
             </div>
 
             {/* Category Filter */}
-            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide -mx-1 px-1">
+            <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-4 md:pb-0 scrollbar-hide">
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
-                  className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase whitespace-nowrap transition-all flex-shrink-0 ${
+                  className={`px-4 py-3 rounded-2xl text-sm font-bold transition-all whitespace-nowrap md:whitespace-normal border ${
                     activeCategory === cat
                       ? "bg-[#E91E8C] text-[var(--text-main)]"
                       : "glass border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-[var(--border)]"

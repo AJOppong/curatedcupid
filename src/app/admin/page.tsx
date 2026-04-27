@@ -295,17 +295,17 @@ function AdminContent() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 p-1 glass border border-white/10 rounded-xl w-fit">
+        <div className="flex gap-2 p-1 glass border border-white/10 rounded-xl w-full md:w-fit overflow-x-auto scrollbar-hide">
           {[
-            { id: "bookings", label: "Bookings", icon: <Calendar className="w-4 h-4" /> },
-            { id: "items", label: "Shop Items", icon: <ShoppingBag className="w-4 h-4" /> },
-            { id: "packages", label: "Packages", icon: <Package className="w-4 h-4" /> },
-            { id: "themes", label: "Themes", icon: <Palette className="w-4 h-4" /> },
+            { id: "bookings", label: "Bookings", icon: <LucideIcons.Calendar className="w-4 h-4" /> },
+            { id: "items", label: "Shop Items", icon: <LucideIcons.ShoppingBag className="w-4 h-4" /> },
+            { id: "packages", label: "Packages", icon: <LucideIcons.Package className="w-4 h-4" /> },
+            { id: "themes", label: "Themes", icon: <LucideIcons.Palette className="w-4 h-4" /> },
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${
                 activeTab === tab.id ? "bg-[#E91E8C] text-white" : "text-white/40 hover:text-white hover:bg-white/5"
               }`}
             >
@@ -404,11 +404,13 @@ function AdminContent() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
-                      className="glass border border-white/10 rounded-3xl p-6 sticky top-24 space-y-6 shadow-2xl"
+                      className="fixed inset-0 z-[60] lg:relative lg:inset-auto lg:z-0 lg:block glass border border-white/10 rounded-none lg:rounded-3xl p-6 lg:sticky lg:top-24 space-y-6 shadow-2xl overflow-y-auto lg:overflow-visible bg-[#0A0A0A] lg:bg-transparent"
                     >
                       <div className="flex items-center justify-between">
                         <h3 className="text-lg font-bold text-white">Booking Details</h3>
-                        <button onClick={() => setSelectedBooking(null)} className="text-white/20 hover:text-white"><LogOut className="w-4 h-4 rotate-180" /></button>
+                        <button onClick={() => setSelectedBooking(null)} className="text-white/40 hover:text-white p-2">
+                          <LucideIcons.X className="w-5 h-5" />
+                        </button>
                       </div>
 
                       <div className="space-y-4">

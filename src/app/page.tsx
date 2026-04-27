@@ -60,7 +60,7 @@ function Hero() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.1 }}
-        className="text-6xl md:text-8xl font-bold leading-[1.0] max-w-4xl font-serif text-[var(--text-main)]"
+        className="text-5xl md:text-8xl lg:text-9xl font-accent leading-[0.9] md:leading-[0.8] mb-6 max-w-4xl font-serif text-[var(--text-main)]"
       >
         <span className="text-gradient-pink">Curated Cupid</span>
       </motion.h1>
@@ -329,7 +329,7 @@ function Gallery() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {galleryItems.map((item, i) => (
             <motion.div
               key={item.label}
