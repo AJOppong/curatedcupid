@@ -565,7 +565,10 @@ function AdminContent() {
                         {pkg.active ? 'Active' : 'Inactive'}
                       </span>
                     </div>
-                    <span className="text-[#D4AF37] font-bold text-xl">GH₵{pkg.price}</span>
+                    <span className="text-[#D4AF37] font-bold text-xl">GH₵{pkg.items?.reduce((sum: number, itemId: string) => {
+                      const item = items.find(i => i.id === itemId);
+                      return sum + (item?.price || 0);
+                    }, 0) || pkg.price}</span>
                     <div className="flex gap-2 text-xs font-bold uppercase text-white/30">
                       <span className="px-2 py-1 bg-white/5 rounded-md">{pkg.gender}</span>
                       <span className="px-2 py-1 bg-white/5 rounded-md">{pkg.items?.length || 0} items</span>

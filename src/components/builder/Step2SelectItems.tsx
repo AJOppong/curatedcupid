@@ -226,7 +226,10 @@ export default function Step2SelectItems() {
                   <div className="w-10 h-10 rounded-xl bg-[#E91E8C]/10 flex items-center justify-center group-hover:bg-[#E91E8C]/20 transition-all">
                     <Package className="w-5 h-5 text-[#E91E8C]" />
                   </div>
-                  <span className="text-xs font-black text-[#D4AF37]">GH₵{pkg.price.toLocaleString()}</span>
+                  <span className="text-xs font-black text-[#D4AF37]">GH₵{pkg.items.reduce((sum: number, id: string) => {
+                    const item = dbItems.find((i: any) => i.id === id);
+                    return sum + (item?.price || 0);
+                  }, 0).toLocaleString()}</span>
                 </div>
                 <h4 className="text-[var(--text-main)] font-bold text-base mb-1">{pkg.name}</h4>
                 <p className="text-[var(--text-muted)] text-[10px] uppercase font-bold tracking-widest mb-4">{pkg.items.length} items</p>
@@ -513,7 +516,10 @@ export default function Step2SelectItems() {
                 <div className="w-10 h-10 rounded-xl bg-[#E91E8C]/10 flex items-center justify-center group-hover:bg-[#E91E8C]/20 transition-all">
                   <Package className="w-5 h-5 text-[#E91E8C]" />
                 </div>
-                <span className="text-xs font-black text-[#D4AF37]">GH₵{pkg.price.toLocaleString()}</span>
+                <span className="text-xs font-black text-[#D4AF37]">GH₵{pkg.items.reduce((sum: number, id: string) => {
+                  const item = dbItems.find((i: any) => i.id === id);
+                  return sum + (item?.price || 0);
+                }, 0).toLocaleString()}</span>
               </div>
               <h4 className="text-[var(--text-main)] font-bold text-base mb-1">{pkg.name}</h4>
               <p className="text-[var(--text-muted)] text-[10px] uppercase font-bold tracking-widest mb-4">{pkg.items.length} Premium Items</p>
