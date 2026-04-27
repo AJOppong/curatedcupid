@@ -199,7 +199,7 @@ function Packages() {
     else if (isGuysOnly) setActiveGender('Guys');
   }, [isLadiesOnly, isGuysOnly]);
 
-  const filteredPackages = dbPackages.filter(p => p.gender === activeGender.toLowerCase());
+  const filteredPackages = dbPackages.filter(p => p.gender === 'all' || p.gender === activeGender.toLowerCase());
 
   return (
     <section id="packages" className="py-24 px-6 relative">

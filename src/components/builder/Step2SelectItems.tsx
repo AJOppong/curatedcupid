@@ -47,7 +47,7 @@ export default function Step2SelectItems() {
 
   const filteredPackages = useMemo(() => {
     if (activeGender === "All") return dbPackages;
-    return dbPackages.filter(p => p.gender === activeGender.toLowerCase());
+    return dbPackages.filter(p => p.gender === 'all' || p.gender === activeGender.toLowerCase());
   }, [activeGender, dbPackages]);
 
   const getCartItem = (id: string) => cart.find((c) => c.id === id);
