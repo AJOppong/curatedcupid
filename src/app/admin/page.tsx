@@ -277,10 +277,10 @@ function AdminContent() {
       <Navbar />
       
       <div className="max-w-7xl mx-auto space-y-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-white">Admin <span className="text-[#E91E8C]">Dashboard</span></h1>
-            <p className="text-white/40 text-sm">Manage bookings, items, and packages</p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-1">
+            <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Admin <span className="text-[#E91E8C]">Dashboard</span></h1>
+            <p className="text-white/40 text-xs md:text-sm">Manage bookings, items, and packages</p>
           </div>
           <div className="flex items-center gap-3">
             <button 
@@ -295,7 +295,7 @@ function AdminContent() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 p-1 glass border border-white/10 rounded-xl w-full md:w-fit overflow-x-auto scrollbar-hide">
+        <div className="flex gap-2 p-1.5 glass border border-white/10 rounded-2xl w-full md:w-fit overflow-x-auto scrollbar-hide snap-x snap-mandatory">
           {[
             { id: "bookings", label: "Bookings", icon: <LucideIcons.Calendar className="w-4 h-4" /> },
             { id: "items", label: "Shop Items", icon: <LucideIcons.ShoppingBag className="w-4 h-4" /> },
@@ -305,8 +305,8 @@ function AdminContent() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${
-                activeTab === tab.id ? "bg-[#E91E8C] text-white" : "text-white/40 hover:text-white hover:bg-white/5"
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all whitespace-nowrap snap-start ${
+                activeTab === tab.id ? "bg-[#E91E8C] text-white shadow-lg shadow-[#E91E8C]/20" : "text-white/40 hover:text-white hover:bg-white/5"
               }`}
             >
               {tab.icon} {tab.label}
@@ -334,19 +334,18 @@ function AdminContent() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* List */}
               <div className="lg:col-span-2 space-y-4">
-                <div className="flex items-center gap-3 mb-2 overflow-x-auto pb-2 scrollbar-hide">
+                <div className="flex items-center gap-2 mb-2 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
                   {(["all", "awaiting_payment", "payment_verifying", "pending", "confirmed", "completed", "cancelled"] as const).map(s => (
                     <button
                       key={s}
                       onClick={() => setFilter(s)}
-                      className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase transition-all whitespace-nowrap ${
-                        filter === s ? "bg-[#E91E8C] text-white" : "glass border border-white/5 text-white/40 hover:text-white"
+                      className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase transition-all whitespace-nowrap snap-start ${
+                        filter === s ? "bg-[#E91E8C] text-white shadow-lg shadow-[#E91E8C]/20" : "glass border border-white/5 text-white/40 hover:text-white"
                       }`}
                     >
                       {s.replace('_', ' ')}
                     </button>
                   ))}
-                  <Button onClick={fetchBookings} variant="secondary" className="ml-auto text-xs py-1.5 px-3">Refresh</Button>
                 </div>
 
                 <div className="space-y-3">
@@ -374,9 +373,9 @@ function AdminContent() {
                             {booking.status === "completed" ? <CheckCircle2 className="w-5 h-5" /> : <Clock className="w-5 h-5" />}
                           </div>
                           <div>
-                            <p className="text-white font-bold text-sm">{booking.name}</p>
-                            <div className="flex items-center gap-2 text-[10px] text-white/30 mt-0.5">
-                              <Calendar className="w-3 h-3" /> {new Date(booking.event_date).toLocaleDateString()} at {booking.event_time}
+                            <p className="text-white font-bold text-sm line-clamp-1">{booking.name}</p>
+                            <div className="flex items-center gap-2 text-[10px] text-white/30 mt-0.5 whitespace-nowrap overflow-hidden text-ellipsis">
+                              <Calendar className="w-3 h-3 shrink-0" /> {new Date(booking.event_date).toLocaleDateString()}
                             </div>
                           </div>
                         </div>
@@ -404,11 +403,16 @@ function AdminContent() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
-                      className="fixed inset-0 z-[60] lg:relative lg:inset-auto lg:z-0 lg:block glass border border-white/10 rounded-none lg:rounded-3xl p-6 lg:sticky lg:top-24 space-y-6 shadow-2xl overflow-y-auto lg:overflow-visible bg-[#0A0A0A] lg:bg-transparent"
+                      className="fixed inset-0 z-[60] lg:relative lg:inset-auto lg:z-0 lg:block glass border border-white/10 rounded-none lg:rounded-3xl p-4 md:p-6 lg:sticky lg:top-24 space-y-6 shadow-2xl overflow-y-auto lg:overflow-visible bg-[#0A0A0A] lg:bg-transparent"
                     >
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-lg font-bold text-white">Booking Details</h3>
-                        <button onClick={() => setSelectedBooking(null)} className="text-white/40 hover:text-white p-2">
+                      <div className="flex items-center justify-between pb-2 border-b border-white/5 lg:border-none">
+                        <div className="flex items-center gap-3">
+                          <button onClick={() => setSelectedBooking(null)} className="lg:hidden text-white/40 hover:text-white p-2 -ml-2">
+                            <ChevronRight className="w-5 h-5 rotate-180" />
+                          </button>
+                          <h3 className="text-lg font-bold text-white">Booking Details</h3>
+                        </div>
+                        <button onClick={() => setSelectedBooking(null)} className="hidden lg:block text-white/40 hover:text-white p-2">
                           <LucideIcons.X className="w-5 h-5" />
                         </button>
                       </div>
@@ -670,8 +674,8 @@ function AdminContent() {
       {/* ─── MODALS ─────────────────────────────────────────────────── */}
       <AnimatePresence>
         {showItemModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-[#12101F] border border-white/10 rounded-3xl p-6 w-full max-w-lg relative max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-4 bg-black/80 backdrop-blur-sm">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-[#12101F] border border-white/10 rounded-3xl p-4 md:p-6 w-full max-w-lg relative max-h-[95vh] overflow-y-auto">
               <button onClick={() => setShowItemModal(false)} className="absolute top-4 right-4 text-white/40 hover:text-white"><X className="w-5 h-5" /></button>
               <h3 className="text-2xl font-bold text-white mb-4">{newItem.id ? 'Edit Item' : 'Add New Item'}</h3>
               <form onSubmit={handleSaveItem} className="space-y-4">
@@ -750,8 +754,8 @@ function AdminContent() {
         )}
 
         {showPackageModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-[#12101F] border border-white/10 rounded-3xl p-6 w-full max-w-lg relative max-h-[90vh] overflow-y-auto">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-4 bg-black/80 backdrop-blur-sm">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="bg-[#12101F] border border-white/10 rounded-3xl p-4 md:p-6 w-full max-w-lg relative max-h-[95vh] overflow-y-auto">
               <button onClick={() => setShowPackageModal(false)} className="absolute top-4 right-4 text-white/40 hover:text-white"><X className="w-5 h-5" /></button>
               <h3 className="text-2xl font-bold text-white mb-4">{newPackage.id ? 'Edit Package' : 'Add New Package'}</h3>
               <form onSubmit={handleSavePackage} className="space-y-4">
