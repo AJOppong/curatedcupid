@@ -363,7 +363,7 @@ function Gallery() {
                 <span className="inline-block px-2.5 py-0.5 rounded-full bg-[#E91E8C]/20 border border-[#E91E8C]/30 text-[#FF6BB5] text-[10px] font-medium mb-1.5">
                   {item.tag}
                 </span>
-                <p className="text-[var(--text-main)] text-sm font-medium">{item.label}</p>
+                <p className="text-white text-sm font-medium">{item.label}</p>
               </div>
             </motion.div>
           ))}
@@ -618,7 +618,7 @@ function Contact() {
           {/* Contact Info */}
           <motion.div {...fadeUp(0.1)} className="lg:col-span-2 space-y-6">
             <div className="bg-[#12101F]/80 border border-[var(--border)] rounded-2xl p-6 space-y-5">
-              <h3 className="text-[var(--text-main)] font-semibold text-lg">Contact Details</h3>
+              <h3 className="text-white font-semibold text-lg">Contact Details</h3>
               {[
                 { icon: <Phone className="w-4 h-4" />, label: "Phone", value: "+233 24 123 4567" },
                 { icon: <Mail className="w-4 h-4" />, label: "Email", value: "hello@curatedcupid.com" },
@@ -630,8 +630,8 @@ function Contact() {
                     {item.icon}
                   </div>
                   <div>
-                    <p className="text-[var(--text-muted)] text-xs mb-0.5">{item.label}</p>
-                    <p className="text-[var(--text-main)] text-sm">{item.value}</p>
+                    <p className="text-white/40 text-xs mb-0.5">{item.label}</p>
+                    <p className="text-white text-sm">{item.value}</p>
                   </div>
                 </div>
               ))}
@@ -639,7 +639,7 @@ function Contact() {
 
             {/* Social handles */}
             <div className="bg-[#12101F]/80 border border-[var(--border)] rounded-2xl p-6 space-y-4">
-              <h3 className="text-[var(--text-main)] font-semibold text-sm">Follow Our Magic</h3>
+              <h3 className="text-white font-semibold text-sm">Follow Our Magic</h3>
               <div className="flex flex-wrap gap-3">
                 {[
                   { name: "WhatsApp", icon: <MessageCircle className="w-4 h-4" />, color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/233241234567" },
@@ -668,25 +668,25 @@ function Contact() {
               <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-[var(--text-muted)] text-xs">Your Name</label>
-                    <input type="text" placeholder="e.g. Amara Johnson" className="w-full bg-white/4 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                    <label className="text-white/60 text-xs">Your Name</label>
+                    <input type="text" placeholder="e.g. Amara Johnson" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-[var(--text-muted)] text-xs">Phone / WhatsApp</label>
-                    <input type="tel" placeholder="e.g. 0241234567" className="w-full bg-white/4 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                    <label className="text-white/60 text-xs">Phone / WhatsApp</label>
+                    <input type="tel" placeholder="e.g. 0241234567" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                   </div>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[var(--text-muted)] text-xs">Email Address</label>
-                  <input type="email" placeholder="your@email.com" className="w-full bg-white/4 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                  <label className="text-white/60 text-xs">Email Address</label>
+                  <input type="email" placeholder="your@email.com" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[var(--text-muted)] text-xs">Event Date (Approx.)</label>
-                  <input type="date" className="w-full bg-white/4 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm focus:outline-none focus:border-[#E91E8C]/50 transition-all" />
+                  <label className="text-white/60 text-xs">Event Date (Approx.)</label>
+                  <input type="date" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#E91E8C]/50 transition-all" />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[var(--text-muted)] text-xs">Message</label>
-                  <textarea rows={4} placeholder="Tell us about your dream setup..." className="w-full bg-white/4 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all resize-none" />
+                  <label className="text-white/60 text-xs">Message</label>
+                  <textarea rows={4} placeholder="Tell us about your dream setup..." className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all resize-none" />
                 </div>
                 <button type="submit" className="w-full btn-pink-gradient text-white font-semibold py-3.5 rounded-xl text-sm hover:scale-[1.01] transition-transform">
                   Send Message
@@ -710,8 +710,8 @@ function CTABanner() {
         style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(233,30,140,0.12), transparent 60%), #12101F" }}
       >
         <div className="text-5xl mb-4 text-[#E91E8C]"><Heart className="w-12 h-12 fill-[#E91E8C]" /></div>
-        <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-main)] mb-4">Make someone smile today</h2>
-        <p className="text-[var(--text-muted)] text-sm mb-8 max-w-md mx-auto leading-relaxed">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Make someone smile today</h2>
+        <p className="text-white/60 text-sm mb-8 max-w-md mx-auto leading-relaxed">
           Start building your personalized surprise experience. Transparent pricing, handcrafted details — just pure joy.
         </p>
         <Link href="/builder" className="inline-flex items-center gap-2 btn-pink-gradient px-10 py-4 rounded-full text-white font-bold text-sm hover:scale-105 hover:-translate-y-1 transition-all">
