@@ -89,7 +89,7 @@ function Hero() {
         transition={{ duration: 0.7, delay: 0.1 }}
         className="text-5xl md:text-8xl lg:text-9xl font-accent leading-tight md:leading-tight mb-6 max-w-4xl font-serif text-[var(--text-main)] pb-4"
       >
-        <span className="text-gradient-pink">Curated Cupid</span>
+        <span className="text-gradient-pink pb-4 pr-4 block lg:inline-block">Curated Cupid</span>
       </motion.h1>
 
       <motion.p
@@ -268,14 +268,14 @@ function Packages() {
                 key={pkg.id}
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
+                animate={{ opacity: 1, scale: (pkg as any).tag === "Most Popular" ? 1.03 : 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                whileHover={{ y: -6 }}
+                whileHover={{ y: -6, scale: (pkg as any).tag === "Most Popular" ? 1.05 : 1.02 }}
                 transition={{ type: "spring", stiffness: 280, damping: 22 }}
-                className={`relative rounded-2xl border overflow-hidden flex flex-col ${
+                className={`relative rounded-2xl overflow-hidden flex flex-col ${
                   (pkg as any).tag === "Most Popular"
-                    ? "border-[var(--primary)] bg-[var(--surface)] shadow-xl"
-                    : "border-[var(--border)] bg-[var(--surface)]"
+                    ? "border-2 border-[#D4AF37] bg-gradient-to-b from-[#D4AF37]/10 to-[var(--surface)] shadow-[0_0_40px_rgba(212,175,55,0.25)] z-10"
+                    : "border border-[var(--border)] bg-[var(--surface)]"
                 }`}
               >
                 {/* Top tag */}
@@ -415,7 +415,7 @@ function WhyUs() {
         <motion.div {...fadeUp()} className="text-center mb-14">
           <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Why Curated Cupid" />
           <h2 className="text-4xl md:text-5xl font-bold text-[var(--text-main)]">
-            Passionate about making <span className="text-gradient-pink">every moment count</span>
+            Passionate about making <span className="text-gradient-pink pb-2 pr-2">every moment count</span>
           </h2>
         </motion.div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -763,7 +763,7 @@ function Footer() {
                 <Heart className="w-4 h-4 text-[var(--text-main)] fill-white" />
               </div>
               <div className="flex flex-col pb-1">
-                <span className="font-accent text-2xl text-[var(--primary)] leading-normal mt-1">Curated Cupid</span>
+                <span className="font-accent text-2xl text-[var(--primary)] leading-normal mt-1 pb-2 pr-2">Curated Cupid</span>
               </div>
             </div>
             <p className="text-[var(--text-muted)] text-sm leading-relaxed max-w-xs">
