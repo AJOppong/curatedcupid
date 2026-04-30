@@ -3,9 +3,10 @@
 import { useBuilder } from "@/context/BuilderContext";
 import { deliveryMethods } from "@/lib/data";
 import Button from "@/components/ui/Button";
-import { ArrowRight, ArrowLeft, User, Phone, Calendar, Clock, MapPin, Palette, MessageSquare, Gift, Truck } from "lucide-react";
+import { ArrowRight, ArrowLeft, User, Phone, Calendar, Clock, MapPin, Palette, MessageSquare, Gift, Truck, AlertTriangle } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@/context/ThemeContext";
 
 const inputClass =
   "w-full glass border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_15px_rgba(233,30,140,0.1)] transition-all bg-transparent";
@@ -34,8 +35,18 @@ function Field({ label, icon, children, optional }: FieldProps) {
 
 export default function Step4EventDetails() {
   const { eventDetails, setEventDetails: updateEventDetails, setStep } = useBuilder();
+  const { activeTheme } = useTheme();
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showDeliveryPicker, setShowDeliveryPicker] = useState(false);
+
+  // Pre-order end date
+  const preorderEnd = activeTheme?.end_date ? new Date(activeTheme.end_date) : null;
+  const now = new Date();
+  const showPreorderBanner = preorderEnd && preorderEnd > now;
+  const daysLeft = preorderEnd ? Math.ceil((preorderEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : 0;
+  const formattedEndDate = preorderEnd
+    ? preorderEnd.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+    : '';
 
   const deliveryRef = useRef<HTMLDivElement>(null);
   
@@ -78,6 +89,23 @@ export default function Step4EventDetails() {
         <p className="text-[var(--text-muted)] text-sm">Tell us everything we need to make it perfect</p>
       </div>
 
+      {/* Pre-order deadline notice */}
+      {showPreorderBanner && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-start gap-3 px-4 py-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25"
+        >
+          <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-amber-300 text-xs font-bold mb-0.5">Pre-order Deadline</p>
+            <p className="text-amber-400/80 text-xs leading-relaxed">
+              Bookings close on <strong className="text-amber-300">{formattedEndDate}</strong> — only{' '}
+              <strong className="text-amber-300">{daysLeft} day{daysLeft !== 1 ? 's' : ''}</strong> left to secure your experience.
+            </p>
+          </div>
+        </motion.div>
+      )}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Your Details */}
         <div className="space-y-4">

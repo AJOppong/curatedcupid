@@ -54,6 +54,7 @@ interface PackageItem {
   items: string[];
   gender: string;
   active: boolean;
+  tag?: string | null;
 }
 
 export default function AdminDashboard() {
@@ -237,6 +238,41 @@ function AdminContent() {
     if (!confirm("Delete this package?")) return;
     try {
       await supabase.from('packages').delete().eq('id', id);
+      fetchPackages();
+    } catch (e) { console.error(e); }
+  };
+
+  const deleteAllItems = async () => {
+    if (!confirm("Delete ALL shop items? This cannot be undone.")) return;
+    try {
+      const ids = items.map(i => i.id);
+      if (ids.length > 0) await supabase.from('shop_items').delete().in('id', ids);
+      fetchItems();
+    } catch (e) { console.error(e); }
+  };
+
+  const deleteAllPackages = async () => {
+    if (!confirm("Delete ALL packages? This cannot be undone.")) return;
+    try {
+      const ids = packages.map(p => p.id);
+      if (ids.length > 0) await supabase.from('packages').delete().in('id', ids);
+      fetchPackages();
+    } catch (e) { console.error(e); }
+  };
+
+  const setMostPopular = async (id: string) => {
+    try {
+      // Clear tag from all
+      await supabase.from('packages').update({ tag: null }).neq('id', '__none__');
+      // Set Most Popular on selected
+      await supabase.from('packages').update({ tag: 'Most Popular' }).eq('id', id);
+      fetchPackages();
+    } catch (e) { console.error(e); }
+  };
+
+  const clearMostPopular = async () => {
+    try {
+      await supabase.from('packages').update({ tag: null }).neq('id', '__none__');
       fetchPackages();
     } catch (e) { console.error(e); }
   };
@@ -518,7 +554,17 @@ function AdminContent() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold text-white">Manage Shop Items</h2>
-              <Button onClick={() => setShowItemModal(true)} className="gap-2 py-2 text-sm"><Plus className="w-4 h-4"/> Add New Item</Button>
+              <div className="flex items-center gap-3">
+                {items.length > 0 && (
+                  <button
+                    onClick={deleteAllItems}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-bold hover:bg-red-500/20 transition-all"
+                  >
+                    <Trash2 className="w-3 h-3" /> Delete All
+                  </button>
+                )}
+                <Button onClick={() => setShowItemModal(true)} className="gap-2 py-2 text-sm"><Plus className="w-4 h-4"/> Add New Item</Button>
+              </div>
             </div>
             
             {loadingItems ? (
@@ -564,7 +610,17 @@ function AdminContent() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-bold text-white">Manage Packages</h2>
-              <Button onClick={() => setShowPackageModal(true)} className="gap-2 py-2 text-sm"><Plus className="w-4 h-4"/> Add New Package</Button>
+              <div className="flex items-center gap-3">
+                {packages.length > 0 && (
+                  <button
+                    onClick={deleteAllPackages}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 text-xs font-bold hover:bg-red-500/20 transition-all"
+                  >
+                    <Trash2 className="w-3 h-3" /> Delete All
+                  </button>
+                )}
+                <Button onClick={() => setShowPackageModal(true)} className="gap-2 py-2 text-sm"><Plus className="w-4 h-4"/> Add New Package</Button>
+              </div>
             </div>
 
             {loadingPackages ? (
@@ -572,9 +628,16 @@ function AdminContent() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {packages.map(pkg => (
-                  <div key={pkg.id} className="glass border border-white/10 p-5 rounded-2xl flex flex-col gap-3">
+                  <div key={pkg.id} className={`glass border p-5 rounded-2xl flex flex-col gap-3 transition-all ${
+                    pkg.tag === 'Most Popular'
+                      ? 'border-yellow-500/50 bg-yellow-500/5 shadow-[0_0_30px_rgba(234,179,8,0.08)]'
+                      : 'border-white/10'
+                  }`}>
                     <div className="flex items-center justify-between">
-                      <h3 className="text-white font-bold text-lg uppercase">{pkg.name}</h3>
+                      <h3 className="text-white font-bold text-lg uppercase flex items-center gap-2">
+                        {pkg.name}
+                        {pkg.tag === 'Most Popular' && <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />}
+                      </h3>
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${pkg.active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
                         {pkg.active ? 'Active' : 'Inactive'}
                       </span>
@@ -587,9 +650,24 @@ function AdminContent() {
                       <span className="px-2 py-1 bg-white/5 rounded-md">{pkg.gender}</span>
                       <span className="px-2 py-1 bg-white/5 rounded-md">{pkg.items?.length || 0} items</span>
                     </div>
-                    <div className="mt-auto pt-3 flex justify-end gap-3 border-t border-white/10">
-                      <button onClick={() => {setNewPackage(pkg); setShowPackageModal(true);}} className="text-blue-400 hover:text-blue-300 text-sm font-bold">Edit</button>
-                      <button onClick={() => deletePackage(pkg.id)} className="text-red-500 hover:text-red-400 text-sm font-bold">Delete</button>
+                    <div className="mt-auto pt-3 flex items-center justify-between gap-3 border-t border-white/10">
+                      {/* Most Popular toggle */}
+                      <button
+                        onClick={() => pkg.tag === 'Most Popular' ? clearMostPopular() : setMostPopular(pkg.id)}
+                        title={pkg.tag === 'Most Popular' ? 'Remove Most Popular' : 'Set as Most Popular'}
+                        className={`flex items-center gap-1.5 text-xs font-bold transition-all ${
+                          pkg.tag === 'Most Popular'
+                            ? 'text-yellow-400 hover:text-yellow-300'
+                            : 'text-white/30 hover:text-yellow-400'
+                        }`}
+                      >
+                        <Star className={`w-3.5 h-3.5 transition-all ${pkg.tag === 'Most Popular' ? 'fill-yellow-400' : ''}`} />
+                        {pkg.tag === 'Most Popular' ? 'Popular' : 'Set Popular'}
+                      </button>
+                      <div className="flex gap-3">
+                        <button onClick={() => {setNewPackage(pkg); setShowPackageModal(true);}} className="text-blue-400 hover:text-blue-300 text-sm font-bold">Edit</button>
+                        <button onClick={() => deletePackage(pkg.id)} className="text-red-500 hover:text-red-400 text-sm font-bold">Delete</button>
+                      </div>
                     </div>
                   </div>
                 ))}

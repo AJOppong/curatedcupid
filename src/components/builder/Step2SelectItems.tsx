@@ -16,7 +16,7 @@ const GENDER_TABS = ["Ladies", "Guys"];
 export default function Step2SelectItems() {
   const {
     addToCart, removeFromCart, updateQuantity, clearCart, preloadItems,
-    cart, setStep, baseService, selectedPackageName, dbItems, dbPackages
+    cart, setStep, baseService, selectedPackageName, dbItems, dbPackages, setCartItemNote
   } = useBuilder();
   const { activeTheme } = useTheme();
 
@@ -406,7 +406,7 @@ export default function Step2SelectItems() {
                       cartItem ? "border-[#E91E8C]/30 bg-[#E91E8C]/5" : "border-[var(--border)] hover:border-[var(--border)]"
                     }`}
                   >
-                    <ItemIcon item={item} className="w-full aspect-square rounded-xl bg-[var(--glass-bg)] text-3xl border border-[var(--border)]" />
+                    <ItemIcon item={item} className="w-full h-28 rounded-xl bg-[var(--glass-bg)] text-3xl border border-[var(--border)]" />
                     <div>
                       <p className="text-[var(--text-main)] text-xs font-semibold leading-tight line-clamp-1">{item.name}</p>
                       <p className="text-[#D4AF37] text-[11px] font-bold mt-0.5">GH₵{item.price.toLocaleString()}</p>
@@ -450,6 +450,16 @@ export default function Step2SelectItems() {
                           )}
                         </AnimatePresence>
                       </motion.button>
+                    )}
+                    {/* Custom note for items in cart */}
+                    {cartItem && (
+                      <input
+                        type="text"
+                        placeholder="Add a custom note..."
+                        value={cartItem.customNote || ''}
+                        onChange={e => setCartItemNote(cartItem.id, e.target.value)}
+                        className="w-full text-[10px] bg-white/5 border border-[var(--border)] rounded-lg px-2 py-1 text-[var(--text-muted)] placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/40 transition-all"
+                      />
                     )}
                   </motion.div>
                 );
@@ -578,7 +588,7 @@ export default function Step2SelectItems() {
                 whileHover={{ y: -4 }}
                 className="glass border border-[var(--border)] rounded-2xl p-4 flex flex-col gap-3 hover:border-[#E91E8C]/25 transition-all"
               >
-                <ItemIcon item={item} className="w-full aspect-square rounded-xl bg-gradient-to-br from-[#E91E8C]/6 to-[#7C3AED]/6 text-4xl border border-[var(--border)]" />
+                <ItemIcon item={item} className="w-full h-44 rounded-xl bg-gradient-to-br from-[#E91E8C]/6 to-[#7C3AED]/6 text-4xl border border-[var(--border)]" />
                 <div>
                   <p className="text-[var(--text-main)] text-sm font-medium">{item.name}</p>
                   <p className="text-[var(--text-muted)] text-[10px] mt-0.5 line-clamp-1">{item.description}</p>
@@ -613,6 +623,16 @@ export default function Step2SelectItems() {
                         )}
                       </AnimatePresence>
                     </motion.button>
+                  )}
+                  {/* Custom note for items in cart */}
+                  {cartItem && (
+                    <input
+                      type="text"
+                      placeholder="Add a custom note..."
+                      value={cartItem.customNote || ''}
+                      onChange={e => setCartItemNote(cartItem.id, e.target.value)}
+                      className="w-full text-[10px] bg-white/5 border border-[var(--border)] rounded-lg px-2 py-1 text-[var(--text-muted)] placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/40 transition-all"
+                    />
                   )}
                 </div>
               </motion.div>

@@ -25,6 +25,32 @@ const fadeUp = (delay = 0) => ({
   transition: { duration: 0.6, delay, ease: "easeOut" } as Transition,
 });
 
+// ── Pre-order Banner ──────────────────────────────────────
+function PreorderBanner() {
+  const { activeTheme } = useTheme();
+  if (!activeTheme?.end_date) return null;
+  const endDate = new Date(activeTheme.end_date);
+  const now = new Date();
+  if (endDate <= now) return null;
+  const daysLeft = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+  const formatted = endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.2 }}
+      className="fixed top-16 left-0 right-0 z-40 flex items-center justify-center gap-3 py-2.5 px-6 text-xs font-semibold text-white shadow-lg"
+      style={{ background: "linear-gradient(90deg, #E91E8C, #7C3AED)" }}
+    >
+      <Clock className="w-3 h-3 flex-shrink-0" />
+      <span>
+        🎀 Pre-order closes <strong>{formatted}</strong> — only{' '}
+        <strong>{daysLeft} day{daysLeft !== 1 ? 's' : ''}</strong> left to secure your experience!
+      </span>
+    </motion.div>
+  );
+}
+
 function SectionBadge({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full section-badge text-xs mb-5">
@@ -60,7 +86,7 @@ function Hero() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.1 }}
-        className="text-5xl md:text-8xl lg:text-9xl font-accent leading-[0.9] md:leading-[0.8] mb-6 max-w-4xl font-serif text-[var(--text-main)]"
+        className="text-5xl md:text-8xl lg:text-9xl font-accent leading-[0.9] md:leading-[0.8] mb-6 max-w-4xl font-serif text-[var(--text-main)] pb-4"
       >
         <span className="text-gradient-pink">Curated Cupid</span>
       </motion.h1>
@@ -735,7 +761,7 @@ function Footer() {
               <div className="w-8 h-8 rounded-full btn-pink-gradient flex items-center justify-center">
                 <Heart className="w-4 h-4 text-[var(--text-main)] fill-white" />
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col pb-1">
                 <span className="font-accent text-2xl text-[var(--primary)] leading-none mt-1">Curated Cupid</span>
               </div>
             </div>
@@ -774,6 +800,7 @@ export default function HomePage() {
   return (
     <BuilderProvider>
       <Navbar />
+      <PreorderBanner />
       <main>
         <Hero />
         <Services />

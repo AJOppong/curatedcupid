@@ -11,7 +11,7 @@ import * as LucideIcons from "lucide-react";
 import Image from "next/image";
 
 export default function Step3Cart() {
-  const { cart, removeFromCart, updateQuantity, cartTotal, setStep, selectedPackageName } = useBuilder();
+  const { cart, removeFromCart, updateQuantity, cartTotal, setStep, selectedPackageName, setCartItemNote } = useBuilder();
   const SERVICE_FEE = 50;
   const totalWithFee = cartTotal + SERVICE_FEE;
   const itemCount = cart.reduce((s, i) => s + i.quantity, 0);
@@ -108,6 +108,13 @@ export default function Step3Cart() {
                   <p className="text-[var(--text-muted)] text-xs mt-0.5">
                     GH₵{item.price.toLocaleString()} × {item.quantity}
                   </p>
+                  <input
+                    type="text"
+                    placeholder="Add a note (e.g. size, engraving)..."
+                    value={item.customNote || ''}
+                    onChange={e => setCartItemNote(item.id, e.target.value)}
+                    className="mt-1.5 w-full text-[10px] bg-white/5 border border-[var(--border)] rounded-lg px-2 py-1 text-[var(--text-muted)] placeholder-white/15 focus:outline-none focus:border-[#E91E8C]/40 transition-all"
+                  />
                 </div>
 
                 {/* Qty controls */}

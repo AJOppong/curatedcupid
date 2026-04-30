@@ -35,7 +35,7 @@ export default function Navbar() {
             <div className="w-8 h-8 rounded-full btn-pink-gradient flex items-center justify-center shadow-sm">
               <Heart className="w-4 h-4 text-white fill-white" />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col pb-1">
               <span className="font-accent text-2xl text-[var(--primary)] leading-none mt-1">
                 Curated Cupid
               </span>

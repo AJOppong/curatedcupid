@@ -11,6 +11,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   image: string;
+  customNote?: string;
 }
 
 export interface EventDetails {
@@ -73,6 +74,7 @@ interface BuilderContextType {
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  setCartItemNote: (id: string, note: string) => void;
   clearCart: () => void;
   preloadItems: (items: CartItem[], packageName?: string) => void;
   setEventDetails: (details: Partial<EventDetails>) => void;
@@ -136,6 +138,10 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
     setCart((prev) => prev.map((i) => (i.id === id ? { ...i, quantity } : i)));
   };
 
+  const setCartItemNote = (id: string, note: string) => {
+    setCart((prev) => prev.map((i) => (i.id === id ? { ...i, customNote: note } : i)));
+  };
+
   const clearCart = () => { setCart([]); setSelectedPackageName(""); };
 
   const preloadItems = (items: CartItem[], packageName?: string) => {
@@ -167,7 +173,7 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
         setStep, setBaseService, setRoomVibe: setRoomVibeWithImage,
         setCustomVibe, setRoomTransport,
         setSelectedPackageName, addToCart, removeFromCart,
-        updateQuantity, clearCart, preloadItems, setEventDetails,
+        updateQuantity, setCartItemNote, clearCart, preloadItems, setEventDetails,
       }}
     >
       {children}
