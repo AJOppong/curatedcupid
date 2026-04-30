@@ -36,7 +36,7 @@ export default function Navbar() {
               <Heart className="w-4 h-4 text-white fill-white" />
             </div>
             <div className="flex flex-col pb-1">
-              <span className="font-accent text-2xl text-[var(--primary)] leading-none mt-1">
+              <span className="font-accent text-2xl text-[var(--primary)] leading-normal mt-1">
                 Curated Cupid
               </span>
             </div>

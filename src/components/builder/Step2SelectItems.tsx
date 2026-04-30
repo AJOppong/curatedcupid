@@ -70,7 +70,8 @@ export default function Step2SelectItems() {
 
   const ItemIcon = ({ item, className }: { item: typeof dbItems[0] | any, className?: string }) => {
     // If it's a cart item it has .image, if it's a shop item it has .image or .emoji
-    const imgSrc = item.image && item.image.startsWith('/') ? item.image : null;
+    const isImage = item.image && (item.image.startsWith('/') || item.image.startsWith('http'));
+    const imgSrc = isImage ? item.image : null;
     const emojiStr = imgSrc ? null : (item.emoji || item.image);
 
     if (imgSrc) {
@@ -402,11 +403,11 @@ export default function Step2SelectItems() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: i * 0.03 }}
-                    className={`glass border rounded-2xl p-3 flex flex-col gap-2 transition-all ${
+                    className={`glass border rounded-2xl p-4 flex flex-col gap-2 transition-all ${
                       cartItem ? "border-[#E91E8C]/30 bg-[#E91E8C]/5" : "border-[var(--border)] hover:border-[var(--border)]"
                     }`}
                   >
-                    <ItemIcon item={item} className="w-full h-28 rounded-xl bg-[var(--glass-bg)] text-3xl border border-[var(--border)]" />
+                    <ItemIcon item={item} className="w-full aspect-square rounded-xl bg-[var(--glass-bg)] text-4xl border border-[var(--border)]" />
                     <div>
                       <p className="text-[var(--text-main)] text-xs font-semibold leading-tight line-clamp-1">{item.name}</p>
                       <p className="text-[#D4AF37] text-[11px] font-bold mt-0.5">GH₵{item.price.toLocaleString()}</p>
@@ -451,15 +452,17 @@ export default function Step2SelectItems() {
                         </AnimatePresence>
                       </motion.button>
                     )}
-                    {/* Custom note for items in cart */}
+                    {/* Custom note & image for items in cart */}
                     {cartItem && (
-                      <input
-                        type="text"
-                        placeholder="Add a custom note..."
-                        value={cartItem.customNote || ''}
-                        onChange={e => setCartItemNote(cartItem.id, e.target.value)}
-                        className="w-full text-[10px] bg-white/5 border border-[var(--border)] rounded-lg px-2 py-1 text-[var(--text-muted)] placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/40 transition-all"
-                      />
+                      <div className="flex flex-col gap-1.5 mt-1">
+                        <input
+                          type="text"
+                          placeholder="Add details (e.g. size, name)..."
+                          value={cartItem.customNote || ''}
+                          onChange={e => setCartItemNote(cartItem.id, e.target.value)}
+                          className="w-full text-[10px] bg-white/5 border border-[var(--border)] rounded-lg px-2 py-1.5 text-[var(--text-main)] placeholder-white/40 focus:outline-none focus:border-[#E91E8C]/40 transition-all"
+                        />
+                      </div>
                     )}
                   </motion.div>
                 );
@@ -575,7 +578,7 @@ export default function Step2SelectItems() {
           ))}
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredItems.map((item, i) => {
             const cartItem = getCartItem(item.id);
             const justAdded = addedIds.includes(item.id);
@@ -586,9 +589,9 @@ export default function Step2SelectItems() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.03 }}
                 whileHover={{ y: -4 }}
-                className="glass border border-[var(--border)] rounded-2xl p-4 flex flex-col gap-3 hover:border-[#E91E8C]/25 transition-all"
+                className="glass border border-[var(--border)] rounded-2xl p-5 flex flex-col gap-3 hover:border-[#E91E8C]/25 transition-all"
               >
-                <ItemIcon item={item} className="w-full h-44 rounded-xl bg-gradient-to-br from-[#E91E8C]/6 to-[#7C3AED]/6 text-4xl border border-[var(--border)]" />
+                <ItemIcon item={item} className="w-full aspect-[4/3] rounded-xl bg-gradient-to-br from-[#E91E8C]/6 to-[#7C3AED]/6 text-5xl border border-[var(--border)]" />
                 <div>
                   <p className="text-[var(--text-main)] text-sm font-medium">{item.name}</p>
                   <p className="text-[var(--text-muted)] text-[10px] mt-0.5 line-clamp-1">{item.description}</p>
@@ -624,15 +627,17 @@ export default function Step2SelectItems() {
                       </AnimatePresence>
                     </motion.button>
                   )}
-                  {/* Custom note for items in cart */}
+                  {/* Custom note & image for items in cart */}
                   {cartItem && (
-                    <input
-                      type="text"
-                      placeholder="Add a custom note..."
-                      value={cartItem.customNote || ''}
-                      onChange={e => setCartItemNote(cartItem.id, e.target.value)}
-                      className="w-full text-[10px] bg-white/5 border border-[var(--border)] rounded-lg px-2 py-1 text-[var(--text-muted)] placeholder-white/20 focus:outline-none focus:border-[#E91E8C]/40 transition-all"
-                    />
+                    <div className="flex flex-col gap-1.5 mt-2">
+                      <input
+                        type="text"
+                        placeholder="Add details (e.g. size, name)..."
+                        value={cartItem.customNote || ''}
+                        onChange={e => setCartItemNote(cartItem.id, e.target.value)}
+                        className="w-full text-xs bg-white/5 border border-[var(--border)] rounded-lg px-3 py-2 text-[var(--text-main)] placeholder-white/40 focus:outline-none focus:border-[#E91E8C]/40 transition-all"
+                      />
+                    </div>
                   )}
                 </div>
               </motion.div>

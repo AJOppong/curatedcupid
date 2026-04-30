@@ -5,7 +5,7 @@ import { useBuilder } from "@/context/BuilderContext";
 import Button from "@/components/ui/Button";
 import {
   ArrowRight, ArrowLeft, Trash2, Plus, Minus,
-  ShoppingBag, Package, Gift, Sparkles, ChevronLeft
+  ShoppingBag, Package, Gift, Sparkles, ChevronLeft, Camera, X
 } from "lucide-react";
 import * as LucideIcons from "lucide-react";
 import Image from "next/image";
@@ -17,7 +17,7 @@ export default function Step3Cart() {
   const itemCount = cart.reduce((s, i) => s + i.quantity, 0);
 
   const renderCartIcon = (imageStr: string, className?: string) => {
-    const isPath = imageStr && imageStr.startsWith('/');
+    const isPath = imageStr && (imageStr.startsWith('/') || imageStr.startsWith('http') || imageStr.startsWith('data:image'));
     if (isPath) {
       return (
         <div className={`relative overflow-hidden ${className}`}>
@@ -108,13 +108,55 @@ export default function Step3Cart() {
                   <p className="text-[var(--text-muted)] text-xs mt-0.5">
                     GH₵{item.price.toLocaleString()} × {item.quantity}
                   </p>
-                  <input
-                    type="text"
-                    placeholder="Add a note (e.g. size, engraving)..."
-                    value={item.customNote || ''}
-                    onChange={e => setCartItemNote(item.id, e.target.value)}
-                    className="mt-1.5 w-full text-[10px] bg-white/5 border border-[var(--border)] rounded-lg px-2 py-1 text-[var(--text-muted)] placeholder-white/15 focus:outline-none focus:border-[#E91E8C]/40 transition-all"
-                  />
+                  <div className="mt-1.5 w-full flex flex-col gap-2">
+                    <input
+                      type="text"
+                      placeholder="Add a note (e.g. size, engraving)..."
+                      value={item.customNote || ''}
+                      onChange={e => setCartItemNote(item.id, e.target.value)}
+                      className="w-full text-[10px] bg-white/5 border border-[var(--border)] rounded-lg px-2 py-1.5 text-[var(--text-main)] placeholder-white/40 focus:outline-none focus:border-[#E91E8C]/40 transition-all"
+                    />
+                    <div className="flex items-center gap-2">
+                      <div className="relative w-full">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          id={`file-cart-${item.id}`}
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                // @ts-ignore - setCartItemImage will be available in context
+                                if (typeof useBuilder().setCartItemImage === 'function') {
+                                  // @ts-ignore
+                                  useBuilder().setCartItemImage(item.id, reader.result as string);
+                                }
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                        />
+                        <label htmlFor={`file-cart-${item.id}`} className="flex items-center justify-center gap-1.5 w-full text-[10px] bg-[var(--glass-bg)] border border-[var(--border)] rounded-lg px-3 py-1.5 text-[var(--text-main)] cursor-pointer hover:border-[#E91E8C]/30 transition-all font-medium">
+                          <Camera className="w-3.5 h-3.5" />
+                          {item.customImage ? "Change Image" : "Upload Reference"}
+                        </label>
+                      </div>
+                      
+                      {item.customImage && (
+                        <div className="relative w-9 h-9 rounded-lg overflow-hidden border border-[var(--border)] shadow-sm flex-shrink-0">
+                           <Image src={item.customImage} alt="Custom" fill className="object-cover" />
+                           <button onClick={() => {
+                             // @ts-ignore
+                             if (typeof useBuilder().setCartItemImage === 'function') useBuilder().setCartItemImage(item.id, "");
+                           }} className="absolute top-0 right-0 bg-black/60 rounded-full text-white p-0.5 m-0.5">
+                             <X className="w-2.5 h-2.5"/>
+                           </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Qty controls */}

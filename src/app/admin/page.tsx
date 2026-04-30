@@ -243,19 +243,17 @@ function AdminContent() {
   };
 
   const deleteAllItems = async () => {
-    if (!confirm("Delete ALL shop items? This cannot be undone.")) return;
+    if (!confirm("Are you absolutely sure you want to delete ALL shop items? This cannot be undone.")) return;
     try {
-      const ids = items.map(i => i.id);
-      if (ids.length > 0) await supabase.from('shop_items').delete().in('id', ids);
+      await supabase.from('shop_items').delete().neq('id', 'dummy_id_to_delete_all');
       fetchItems();
     } catch (e) { console.error(e); }
   };
 
   const deleteAllPackages = async () => {
-    if (!confirm("Delete ALL packages? This cannot be undone.")) return;
+    if (!confirm("Are you absolutely sure you want to delete ALL packages? This cannot be undone.")) return;
     try {
-      const ids = packages.map(p => p.id);
-      if (ids.length > 0) await supabase.from('packages').delete().in('id', ids);
+      await supabase.from('packages').delete().neq('id', 'dummy_id_to_delete_all');
       fetchPackages();
     } catch (e) { console.error(e); }
   };

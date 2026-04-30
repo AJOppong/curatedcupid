@@ -25,7 +25,6 @@ const fadeUp = (delay = 0) => ({
   transition: { duration: 0.6, delay, ease: "easeOut" } as Transition,
 });
 
-// ── Pre-order Banner ──────────────────────────────────────
 function PreorderBanner() {
   const { activeTheme } = useTheme();
   if (!activeTheme?.end_date) return null;
@@ -39,13 +38,13 @@ function PreorderBanner() {
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.2 }}
-      className="fixed top-16 left-0 right-0 z-40 flex items-center justify-center gap-3 py-2.5 px-6 text-xs font-semibold text-white shadow-lg"
+      className="inline-flex items-center justify-center gap-3 py-2 px-6 rounded-full text-xs font-semibold text-white shadow-lg mb-6"
       style={{ background: "linear-gradient(90deg, #E91E8C, #7C3AED)" }}
     >
-      <Clock className="w-3 h-3 flex-shrink-0" />
+      <Clock className="w-4 h-4 flex-shrink-0" />
       <span>
-        🎀 Pre-order closes <strong>{formatted}</strong> — only{' '}
-        <strong>{daysLeft} day{daysLeft !== 1 ? 's' : ''}</strong> left to secure your experience!
+        Pre-order closes on <strong>{formatted}</strong> — only{' '}
+        <strong>{daysLeft} day{daysLeft !== 1 ? 's' : ''}</strong> left!
       </span>
     </motion.div>
   );
@@ -81,12 +80,14 @@ function Hero() {
         <SectionBadge icon={<Sparkles className="w-3 h-3" />} label="Luxury Gifts & Event Setups" />
       </motion.div>
 
+      <PreorderBanner />
+
       {/* Headline */}
       <motion.h1
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.1 }}
-        className="text-5xl md:text-8xl lg:text-9xl font-accent leading-[0.9] md:leading-[0.8] mb-6 max-w-4xl font-serif text-[var(--text-main)] pb-4"
+        className="text-5xl md:text-8xl lg:text-9xl font-accent leading-tight md:leading-tight mb-6 max-w-4xl font-serif text-[var(--text-main)] pb-4"
       >
         <span className="text-gradient-pink">Curated Cupid</span>
       </motion.h1>
@@ -287,7 +288,7 @@ function Packages() {
                 <div className="p-7 flex flex-col h-full">
                   {/* Icon */}
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
-                    (pkg as any).tag === "Most Popular" ? "bg-[var(--primary-glow)] text-[var(--primary)]" : "bg-[var(--primary-glow)] text-[var(--primary)]"
+                    (pkg as any).tag === "Most Popular" ? "bg-gradient-to-br from-[#D4AF37] to-[#AA8529] text-white shadow-lg shadow-[#D4AF37]/30" : "bg-[var(--primary-glow)] text-[var(--primary)]"
                   }`}>
                     <Crown className="w-5 h-5" />
                   </div>
@@ -762,7 +763,7 @@ function Footer() {
                 <Heart className="w-4 h-4 text-[var(--text-main)] fill-white" />
               </div>
               <div className="flex flex-col pb-1">
-                <span className="font-accent text-2xl text-[var(--primary)] leading-none mt-1">Curated Cupid</span>
+                <span className="font-accent text-2xl text-[var(--primary)] leading-normal mt-1">Curated Cupid</span>
               </div>
             </div>
             <p className="text-[var(--text-muted)] text-sm leading-relaxed max-w-xs">
@@ -800,7 +801,6 @@ export default function HomePage() {
   return (
     <BuilderProvider>
       <Navbar />
-      <PreorderBanner />
       <main>
         <Hero />
         <Services />
