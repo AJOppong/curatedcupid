@@ -208,16 +208,19 @@ function AdminContent() {
     setLoadingPackages(true);
     try {
       const { data, error } = await supabase.from("packages").select("*").order("price");
-      if (data) {
-        setPackages(data as PackageItem[]);
-        const pop = (data as PackageItem[]).find(p => p.tag === 'Most Popular');
-        setMostPopularPackageId(pop ? pop.id : null);
-      }
+      if (data) setPackages(data as PackageItem[]);
     } catch (e) { console.error(e); } finally { setLoadingPackages(false); }
   };
 
   const fetchMostPopular = async () => {
-    // Deprecated: Now derived from packages table directly
+    try {
+      const { data } = await supabase.from('themes').select('default_items').eq('name', 'app_settings').single();
+      if (data?.default_items?.mostPopularPackageId) {
+        setMostPopularPackageId(data.default_items.mostPopularPackageId);
+      } else {
+        setMostPopularPackageId(null);
+      }
+    } catch (e) { console.error(e); }
   };
 
   const handleSavePackage = async (e: React.FormEvent) => {
@@ -269,18 +272,25 @@ function AdminContent() {
 
   const setMostPopular = async (id: string) => {
     try {
-      await supabase.from('packages').update({ tag: null }).eq('tag', 'Most Popular');
-      await supabase.from('packages').update({ tag: 'Most Popular' }).eq('id', id);
+      await supabase.from('themes').upsert({ 
+        name: 'app_settings', 
+        colors: {}, 
+        fonts: {}, 
+        default_items: { mostPopularPackageId: id } 
+      });
       setMostPopularPackageId(id);
-      fetchPackages();
     } catch (e) { console.error(e); }
   };
 
   const clearMostPopular = async () => {
     try {
-      await supabase.from('packages').update({ tag: null }).eq('tag', 'Most Popular');
+      await supabase.from('themes').upsert({ 
+        name: 'app_settings', 
+        colors: {}, 
+        fonts: {}, 
+        default_items: { mostPopularPackageId: null } 
+      });
       setMostPopularPackageId(null);
-      fetchPackages();
     } catch (e) { console.error(e); }
   };
 

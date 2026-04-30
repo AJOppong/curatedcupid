@@ -115,19 +115,17 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     async function fetchData() {
-      const [itemsRes, pkgsRes] = await Promise.all([
+      const [itemsRes, pkgsRes, settingsRes] = await Promise.all([
         supabase.from("shop_items").select("*").eq("active", true),
-        supabase.from("packages").select("*").eq("active", true)
+        supabase.from("packages").select("*").eq("active", true),
+        supabase.from("themes").select("default_items").eq("name", "app_settings").single()
       ]);
       if (itemsRes.data) setDbItems(itemsRes.data as ShopItem[]);
-      if (pkgsRes.data) {
-        setDbPackages(pkgsRes.data as PackageItem[]);
-        const popular = (pkgsRes.data as PackageItem[]).find(p => p.tag === 'Most Popular');
-        if (popular) {
-          setMostPopularPackageId(popular.id);
-        } else {
-          setMostPopularPackageId(null);
-        }
+      if (pkgsRes.data) setDbPackages(pkgsRes.data as PackageItem[]);
+      if (settingsRes.data?.default_items?.mostPopularPackageId) {
+        setMostPopularPackageId(settingsRes.data.default_items.mostPopularPackageId);
+      } else {
+        setMostPopularPackageId(null);
       }
     }
     fetchData();
