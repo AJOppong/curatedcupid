@@ -212,11 +212,11 @@ function Services() {
 
 // ── Packages ──────────────────────────────────────────
 function Packages() {
-  const { dbPackages, dbItems, mostPopularPackageId } = useBuilder();
+  const { dbPackages, dbItems, mostPopularPackageIds } = useBuilder();
   const { activeTheme } = useTheme();
 
-  const isLadiesOnly = activeTheme?.name.toLowerCase().includes('mother') || activeTheme?.name.toLowerCase().includes('women');
-  const isGuysOnly = activeTheme?.name.toLowerCase().includes('father') || activeTheme?.name.toLowerCase().includes('men');
+  const isLadiesOnly = activeTheme?.name?.toLowerCase().includes('mother') || activeTheme?.name?.toLowerCase().includes('women');
+  const isGuysOnly = activeTheme?.name?.toLowerCase().includes('father') || activeTheme?.name?.toLowerCase().includes('men');
   
   const defaultGender = isLadiesOnly ? 'Ladies' : (isGuysOnly ? 'Guys' : 'Ladies');
   const [activeGender, setActiveGender] = useState(defaultGender);
@@ -268,18 +268,18 @@ function Packages() {
                 key={pkg.id}
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: pkg.id === mostPopularPackageId ? 1.03 : 1 }}
+                animate={{ opacity: 1, scale: mostPopularPackageIds.includes(pkg.id) ? 1.03 : 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                whileHover={{ y: -6, scale: pkg.id === mostPopularPackageId ? 1.05 : 1.02 }}
+                whileHover={{ y: -6, scale: mostPopularPackageIds.includes(pkg.id) ? 1.05 : 1.02 }}
                 transition={{ type: "spring", stiffness: 280, damping: 22 }}
                 className={`relative rounded-2xl overflow-hidden flex flex-col ${
-                  pkg.id === mostPopularPackageId
+                  mostPopularPackageIds.includes(pkg.id)
                     ? "border-2 border-[#D4AF37] bg-gradient-to-b from-[#D4AF37]/10 to-[var(--surface)] shadow-[0_0_40px_rgba(212,175,55,0.25)] z-10"
                     : "border border-[var(--border)] bg-[var(--surface)]"
                 }`}
               >
                 {/* Top tag */}
-                {pkg.id === mostPopularPackageId && (
+                {mostPopularPackageIds.includes(pkg.id) && (
                   <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-[#D4AF37] to-[#AA8529] text-white text-[10px] font-black uppercase tracking-widest py-1.5 text-center shadow-md z-20">
                     Most Popular Choice
                   </div>
@@ -288,7 +288,7 @@ function Packages() {
                 <div className="p-7 flex flex-col h-full">
                   {/* Icon */}
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
-                    pkg.id === mostPopularPackageId ? "bg-gradient-to-br from-[#D4AF37] to-[#AA8529] text-white shadow-lg shadow-[#D4AF37]/30" : "bg-[var(--primary-glow)] text-[var(--primary)]"
+                    mostPopularPackageIds.includes(pkg.id) ? "bg-gradient-to-br from-[#D4AF37] to-[#AA8529] text-white shadow-lg shadow-[#D4AF37]/30" : "bg-[var(--primary-glow)] text-[var(--primary)]"
                   }`}>
                     <Crown className="w-5 h-5" />
                   </div>
@@ -317,7 +317,7 @@ function Packages() {
                   {/* CTA */}
                   <Link href={`/builder?package=${encodeURIComponent(pkg.name)}`}>
                     <div className={`w-full py-4 rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2 ${
-                      pkg.id === mostPopularPackageId
+                      mostPopularPackageIds.includes(pkg.id)
                         ? "bg-gradient-to-r from-[#D4AF37] to-[#AA8529] text-white shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-[0_0_30px_rgba(212,175,55,0.6)] hover:scale-[1.02]"
                         : "bg-[var(--primary)] text-white hover:bg-[var(--primary-light)] hover:scale-[1.02]"
                     }`}>

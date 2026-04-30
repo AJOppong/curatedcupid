@@ -16,12 +16,12 @@ const GENDER_TABS = ["Ladies", "Guys"];
 export default function Step2SelectItems() {
   const {
     addToCart, removeFromCart, updateQuantity, clearCart, preloadItems,
-    cart, setStep, baseService, selectedPackageName, dbItems, dbPackages, setCartItemNote, mostPopularPackageId
+    cart, setStep, baseService, selectedPackageName, dbItems, dbPackages, setCartItemNote, mostPopularPackageIds
   } = useBuilder();
   const { activeTheme } = useTheme();
 
-  const isLadiesOnly = activeTheme?.name.toLowerCase().includes('mother') || activeTheme?.name.toLowerCase().includes('women');
-  const isGuysOnly = activeTheme?.name.toLowerCase().includes('father') || activeTheme?.name.toLowerCase().includes('men');
+  const isLadiesOnly = activeTheme?.name?.toLowerCase().includes('mother') || activeTheme?.name?.toLowerCase().includes('women');
+  const isGuysOnly = activeTheme?.name?.toLowerCase().includes('father') || activeTheme?.name?.toLowerCase().includes('men');
   
   const defaultGender = isLadiesOnly ? 'Ladies' : (isGuysOnly ? 'Guys' : 'Ladies');
 
@@ -222,12 +222,12 @@ export default function Step2SelectItems() {
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handlePackageSelect(pkg)}
                 className={`flex-shrink-0 w-60 glass border rounded-3xl p-5 pt-6 text-left transition-all group relative overflow-hidden ${
-                  pkg.id === mostPopularPackageId
+                  mostPopularPackageIds.includes(pkg.id)
                     ? "border-[#D4AF37] shadow-[0_0_20px_rgba(212,175,55,0.15)] hover:border-[#D4AF37] hover:shadow-[0_0_30px_rgba(212,175,55,0.25)]"
                     : "border-[var(--border)] hover:border-[#E91E8C]/40 hover:shadow-[0_0_30px_rgba(233,30,140,0.12)]"
                 }`}
               >
-                {pkg.id === mostPopularPackageId && (
+                {mostPopularPackageIds.includes(pkg.id) && (
                   <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-[#D4AF37] to-[#AA8529] text-white text-[9px] font-black uppercase tracking-widest py-1 text-center shadow-md z-20">
                     Most Popular Choice
                   </div>
@@ -533,12 +533,12 @@ export default function Step2SelectItems() {
               whileTap={{ scale: 0.97 }}
               onClick={() => handlePackageSelect(pkg)}
               className={`flex-shrink-0 w-60 glass border rounded-3xl p-5 pt-6 text-left transition-all group relative overflow-hidden ${
-                pkg.id === mostPopularPackageId
+                mostPopularPackageIds.includes(pkg.id)
                   ? "border-[#D4AF37] shadow-[0_0_20px_rgba(212,175,55,0.15)] hover:border-[#D4AF37] hover:shadow-[0_0_30px_rgba(212,175,55,0.25)]"
                   : "border-[var(--border)] hover:border-[#E91E8C]/40 hover:shadow-[0_0_30px_rgba(233,30,140,0.12)]"
               }`}
             >
-              {pkg.id === mostPopularPackageId && (
+              {mostPopularPackageIds.includes(pkg.id) && (
                 <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-[#D4AF37] to-[#AA8529] text-white text-[9px] font-black uppercase tracking-widest py-1 text-center shadow-md z-20">
                   Most Popular Choice
                 </div>

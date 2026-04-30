@@ -66,7 +66,7 @@ interface BuilderContextType {
   eventDetails: EventDetails;
   dbItems: ShopItem[];
   dbPackages: PackageItem[];
-  mostPopularPackageId: string | null;
+  mostPopularPackageIds: string[];
   setStep: (step: number) => void;
   setBaseService: (service: string) => void;
   setRoomVibe: (vibe: string, image: string) => void;
@@ -96,7 +96,7 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
   const [selectedPackageName, setSelectedPackageName] = useState("");
   const [dbItems, setDbItems] = useState<ShopItem[]>([]);
   const [dbPackages, setDbPackages] = useState<PackageItem[]>([]);
-  const [mostPopularPackageId, setMostPopularPackageId] = useState<string | null>(null);
+  const [mostPopularPackageIds, setMostPopularPackageIds] = useState<string[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [eventDetails, setEventDetailsState] = useState<EventDetails>({
     name: "",
@@ -122,10 +122,13 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
       ]);
       if (itemsRes.data) setDbItems(itemsRes.data as ShopItem[]);
       if (pkgsRes.data) setDbPackages(pkgsRes.data as PackageItem[]);
-      if (settingsRes.data?.default_items?.mostPopularPackageId) {
-        setMostPopularPackageId(settingsRes.data.default_items.mostPopularPackageId);
+      if (settingsRes.data?.default_items?.mostPopularPackageIds) {
+        setMostPopularPackageIds(settingsRes.data.default_items.mostPopularPackageIds);
+      } else if (settingsRes.data?.default_items?.mostPopularPackageId) {
+        // Fallback for legacy single ID
+        setMostPopularPackageIds([settingsRes.data.default_items.mostPopularPackageId]);
       } else {
-        setMostPopularPackageId(null);
+        setMostPopularPackageIds([]);
       }
     }
     fetchData();
@@ -183,7 +186,7 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
       value={{
         step, cart, cartTotal, baseService, roomVibe, vibeImage,
         customVibe, roomTransport, roomTransportPrice,
-        selectedPackageName, eventDetails, dbItems, dbPackages, mostPopularPackageId,
+        selectedPackageName, eventDetails, dbItems, dbPackages, mostPopularPackageIds,
         setStep, setBaseService, setRoomVibe: setRoomVibeWithImage,
         setCustomVibe, setRoomTransport,
         setSelectedPackageName, addToCart, removeFromCart,

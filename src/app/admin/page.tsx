@@ -89,7 +89,7 @@ function AdminContent() {
   const [showPackageModal, setShowPackageModal] = useState(false);
   const [newPackage, setNewPackage] = useState<Partial<PackageItem>>({ items: [], gender: 'all', active: true });
   const [packageSearch, setPackageSearch] = useState("");
-  const [mostPopularPackageId, setMostPopularPackageId] = useState<string | null>(null);
+  const [mostPopularPackageIds, setMostPopularPackageIds] = useState<string[]>([]);
 
   const [isNewCategory, setIsNewCategory] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -215,10 +215,12 @@ function AdminContent() {
   const fetchMostPopular = async () => {
     try {
       const { data } = await supabase.from('themes').select('default_items').eq('name', 'app_settings').single();
-      if (data?.default_items?.mostPopularPackageId) {
-        setMostPopularPackageId(data.default_items.mostPopularPackageId);
+      if (data?.default_items?.mostPopularPackageIds) {
+        setMostPopularPackageIds(data.default_items.mostPopularPackageIds);
+      } else if (data?.default_items?.mostPopularPackageId) {
+        setMostPopularPackageIds([data.default_items.mostPopularPackageId]);
       } else {
-        setMostPopularPackageId(null);
+        setMostPopularPackageIds([]);
       }
     } catch (e) { console.error(e); }
   };
@@ -272,25 +274,37 @@ function AdminContent() {
 
   const setMostPopular = async (id: string) => {
     try {
+      const pkg = packages.find(p => p.id === id);
+      if (!pkg) return;
+
+      // Filter out existing popular IDs that have the same gender
+      const otherPopularPackages = packages.filter(p => mostPopularPackageIds.includes(p.id));
+      const filteredIds = otherPopularPackages
+        .filter(p => p.gender !== pkg.gender)
+        .map(p => p.id);
+      
+      const updatedIds = [...filteredIds, id];
+
       await supabase.from('themes').upsert({ 
         name: 'app_settings', 
         colors: {}, 
         fonts: {}, 
-        default_items: { mostPopularPackageId: id } 
+        default_items: { mostPopularPackageIds: updatedIds } 
       }, { onConflict: 'name' });
-      setMostPopularPackageId(id);
+      setMostPopularPackageIds(updatedIds);
     } catch (e) { console.error(e); }
   };
 
-  const clearMostPopular = async () => {
+  const clearMostPopular = async (id: string) => {
     try {
+      const updatedIds = mostPopularPackageIds.filter(pid => pid !== id);
       await supabase.from('themes').upsert({ 
         name: 'app_settings', 
         colors: {}, 
         fonts: {}, 
-        default_items: { mostPopularPackageId: null } 
+        default_items: { mostPopularPackageIds: updatedIds } 
       }, { onConflict: 'name' });
-      setMostPopularPackageId(null);
+      setMostPopularPackageIds(updatedIds);
     } catch (e) { console.error(e); }
   };
 
@@ -646,14 +660,14 @@ function AdminContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {packages.map(pkg => (
                   <div key={pkg.id} className={`glass border p-5 rounded-2xl flex flex-col gap-3 transition-all ${
-                    pkg.id === mostPopularPackageId
+                    mostPopularPackageIds.includes(pkg.id)
                       ? 'border-yellow-500/50 bg-yellow-500/5 shadow-[0_0_30px_rgba(234,179,8,0.08)]'
                       : 'border-white/10'
                   }`}>
                     <div className="flex items-center justify-between">
                       <h3 className="text-white font-bold text-lg uppercase flex items-center gap-2">
                         {pkg.name}
-                        {pkg.id === mostPopularPackageId && <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />}
+                        {mostPopularPackageIds.includes(pkg.id) && <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />}
                       </h3>
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${pkg.active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
                         {pkg.active ? 'Active' : 'Inactive'}
@@ -669,16 +683,16 @@ function AdminContent() {
                     </div>
                     <div className="mt-auto pt-3 flex items-center justify-between gap-3 border-t border-white/10">
                       <button
-                        onClick={() => pkg.id === mostPopularPackageId ? clearMostPopular() : setMostPopular(pkg.id)}
-                        title={pkg.id === mostPopularPackageId ? 'Remove Most Popular' : 'Set as Most Popular'}
+                        onClick={() => mostPopularPackageIds.includes(pkg.id) ? clearMostPopular(pkg.id) : setMostPopular(pkg.id)}
+                        title={mostPopularPackageIds.includes(pkg.id) ? 'Remove Most Popular' : 'Set as Most Popular'}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                          pkg.id === mostPopularPackageId
+                          mostPopularPackageIds.includes(pkg.id)
                             ? 'bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30'
                             : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
                         }`}
                       >
-                        <Star className={`w-3.5 h-3.5 transition-all ${pkg.id === mostPopularPackageId ? 'fill-yellow-400' : ''}`} />
-                        {pkg.id === mostPopularPackageId ? 'Popular' : 'Set Popular'}
+                        <Star className={`w-3.5 h-3.5 transition-all ${mostPopularPackageIds.includes(pkg.id) ? 'fill-yellow-400' : ''}`} />
+                        {mostPopularPackageIds.includes(pkg.id) ? 'Popular' : 'Set Popular'}
                       </button>
                       <div className="flex gap-3">
                         <button onClick={() => {setNewPackage(pkg); setShowPackageModal(true);}} className="text-blue-400 hover:text-blue-300 text-sm font-bold">Edit</button>
