@@ -277,7 +277,7 @@ function AdminContent() {
         colors: {}, 
         fonts: {}, 
         default_items: { mostPopularPackageId: id } 
-      });
+      }, { onConflict: 'name' });
       setMostPopularPackageId(id);
     } catch (e) { console.error(e); }
   };
@@ -289,7 +289,7 @@ function AdminContent() {
         colors: {}, 
         fonts: {}, 
         default_items: { mostPopularPackageId: null } 
-      });
+      }, { onConflict: 'name' });
       setMostPopularPackageId(null);
     } catch (e) { console.error(e); }
   };
