@@ -208,15 +208,16 @@ function AdminContent() {
     setLoadingPackages(true);
     try {
       const { data, error } = await supabase.from("packages").select("*").order("price");
-      if (data) setPackages(data as PackageItem[]);
+      if (data) {
+        setPackages(data as PackageItem[]);
+        const pop = (data as PackageItem[]).find(p => p.tag === 'Most Popular');
+        setMostPopularPackageId(pop ? pop.id : null);
+      }
     } catch (e) { console.error(e); } finally { setLoadingPackages(false); }
   };
 
   const fetchMostPopular = async () => {
-    try {
-      const { data } = await supabase.from('settings').select('value').eq('key', 'most_popular_package').single();
-      if (data) setMostPopularPackageId(data.value);
-    } catch (e) { console.error(e); }
+    // Deprecated: Now derived from packages table directly
   };
 
   const handleSavePackage = async (e: React.FormEvent) => {
@@ -268,15 +269,18 @@ function AdminContent() {
 
   const setMostPopular = async (id: string) => {
     try {
-      await supabase.from('settings').upsert({ key: 'most_popular_package', value: id });
+      await supabase.from('packages').update({ tag: null }).eq('tag', 'Most Popular');
+      await supabase.from('packages').update({ tag: 'Most Popular' }).eq('id', id);
       setMostPopularPackageId(id);
+      fetchPackages();
     } catch (e) { console.error(e); }
   };
 
   const clearMostPopular = async () => {
     try {
-      await supabase.from('settings').upsert({ key: 'most_popular_package', value: '' });
+      await supabase.from('packages').update({ tag: null }).eq('tag', 'Most Popular');
       setMostPopularPackageId(null);
+      fetchPackages();
     } catch (e) { console.error(e); }
   };
 

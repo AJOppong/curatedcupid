@@ -16,7 +16,7 @@ const GENDER_TABS = ["Ladies", "Guys"];
 export default function Step2SelectItems() {
   const {
     addToCart, removeFromCart, updateQuantity, clearCart, preloadItems,
-    cart, setStep, baseService, selectedPackageName, dbItems, dbPackages, setCartItemNote
+    cart, setStep, baseService, selectedPackageName, dbItems, dbPackages, setCartItemNote, mostPopularPackageId
   } = useBuilder();
   const { activeTheme } = useTheme();
 
@@ -221,8 +221,17 @@ export default function Step2SelectItems() {
                 whileHover={{ y: -4, scale: 1.02 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={() => handlePackageSelect(pkg)}
-                className="flex-shrink-0 w-60 glass border border-[var(--border)] rounded-3xl p-5 text-left hover:border-[#E91E8C]/40 transition-all group"
+                className={`flex-shrink-0 w-60 glass border rounded-3xl p-5 pt-6 text-left transition-all group relative overflow-hidden ${
+                  pkg.id === mostPopularPackageId
+                    ? "border-[#D4AF37] shadow-[0_0_20px_rgba(212,175,55,0.15)] hover:border-[#D4AF37] hover:shadow-[0_0_30px_rgba(212,175,55,0.25)]"
+                    : "border-[var(--border)] hover:border-[#E91E8C]/40 hover:shadow-[0_0_30px_rgba(233,30,140,0.12)]"
+                }`}
               >
+                {pkg.id === mostPopularPackageId && (
+                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-[#D4AF37] to-[#AA8529] text-white text-[9px] font-black uppercase tracking-widest py-1 text-center shadow-md z-20">
+                    Most Popular Choice
+                  </div>
+                )}
                 <div className="flex items-center justify-between mb-3">
                   <div className="w-10 h-10 rounded-xl bg-[#E91E8C]/10 flex items-center justify-center group-hover:bg-[#E91E8C]/20 transition-all">
                     <Package className="w-5 h-5 text-[#E91E8C]" />
@@ -523,8 +532,17 @@ export default function Step2SelectItems() {
               whileHover={{ y: -4, scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => handlePackageSelect(pkg)}
-              className="flex-shrink-0 w-60 glass border border-[var(--border)] rounded-3xl p-5 text-left hover:border-[#E91E8C]/40 hover:shadow-[0_0_30px_rgba(233,30,140,0.12)] transition-all group"
+              className={`flex-shrink-0 w-60 glass border rounded-3xl p-5 pt-6 text-left transition-all group relative overflow-hidden ${
+                pkg.id === mostPopularPackageId
+                  ? "border-[#D4AF37] shadow-[0_0_20px_rgba(212,175,55,0.15)] hover:border-[#D4AF37] hover:shadow-[0_0_30px_rgba(212,175,55,0.25)]"
+                  : "border-[var(--border)] hover:border-[#E91E8C]/40 hover:shadow-[0_0_30px_rgba(233,30,140,0.12)]"
+              }`}
             >
+              {pkg.id === mostPopularPackageId && (
+                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-[#D4AF37] to-[#AA8529] text-white text-[9px] font-black uppercase tracking-widest py-1 text-center shadow-md z-20">
+                  Most Popular Choice
+                </div>
+              )}
               <div className="flex items-center justify-between mb-3">
                 <div className="w-10 h-10 rounded-xl bg-[#E91E8C]/10 flex items-center justify-center group-hover:bg-[#E91E8C]/20 transition-all">
                   <Package className="w-5 h-5 text-[#E91E8C]" />
