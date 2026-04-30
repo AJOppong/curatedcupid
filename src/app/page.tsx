@@ -212,7 +212,7 @@ function Services() {
 
 // ── Packages ──────────────────────────────────────────
 function Packages() {
-  const { dbPackages, dbItems } = useBuilder();
+  const { dbPackages, dbItems, mostPopularPackageId } = useBuilder();
   const { activeTheme } = useTheme();
 
   const isLadiesOnly = activeTheme?.name.toLowerCase().includes('mother') || activeTheme?.name.toLowerCase().includes('women');
@@ -268,27 +268,27 @@ function Packages() {
                 key={pkg.id}
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: (pkg as any).tag === "Most Popular" ? 1.03 : 1 }}
+                animate={{ opacity: 1, scale: pkg.id === mostPopularPackageId ? 1.03 : 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                whileHover={{ y: -6, scale: (pkg as any).tag === "Most Popular" ? 1.05 : 1.02 }}
+                whileHover={{ y: -6, scale: pkg.id === mostPopularPackageId ? 1.05 : 1.02 }}
                 transition={{ type: "spring", stiffness: 280, damping: 22 }}
                 className={`relative rounded-2xl overflow-hidden flex flex-col ${
-                  (pkg as any).tag === "Most Popular"
+                  pkg.id === mostPopularPackageId
                     ? "border-2 border-[#D4AF37] bg-gradient-to-b from-[#D4AF37]/10 to-[var(--surface)] shadow-[0_0_40px_rgba(212,175,55,0.25)] z-10"
                     : "border border-[var(--border)] bg-[var(--surface)]"
                 }`}
               >
                 {/* Top tag */}
-                {(pkg as any).tag && (
-                  <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-bold btn-pink-gradient text-white">
-                    {(pkg as any).tag}
+                {pkg.id === mostPopularPackageId && (
+                  <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-[#D4AF37] to-[#AA8529] text-white text-[10px] font-black uppercase tracking-widest py-1.5 text-center shadow-md z-20">
+                    Most Popular Choice
                   </div>
                 )}
                 
                 <div className="p-7 flex flex-col h-full">
                   {/* Icon */}
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
-                    (pkg as any).tag === "Most Popular" ? "bg-gradient-to-br from-[#D4AF37] to-[#AA8529] text-white shadow-lg shadow-[#D4AF37]/30" : "bg-[var(--primary-glow)] text-[var(--primary)]"
+                    pkg.id === mostPopularPackageId ? "bg-gradient-to-br from-[#D4AF37] to-[#AA8529] text-white shadow-lg shadow-[#D4AF37]/30" : "bg-[var(--primary-glow)] text-[var(--primary)]"
                   }`}>
                     <Crown className="w-5 h-5" />
                   </div>
@@ -316,10 +316,10 @@ function Packages() {
 
                   {/* CTA */}
                   <Link href={`/builder?package=${encodeURIComponent(pkg.name)}`}>
-                    <div className={`text-center py-3 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
-                      (pkg as any).tag === "Most Popular"
-                        ? "btn-pink-gradient text-white hover:scale-[1.02] hover:opacity-90"
-                        : "border border-[var(--border)] text-[var(--text-muted)] hover:border-[var(--border)] hover:text-[var(--text-main)]"
+                    <div className={`w-full py-4 rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2 ${
+                      pkg.id === mostPopularPackageId
+                        ? "bg-gradient-to-r from-[#D4AF37] to-[#AA8529] text-white shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-[0_0_30px_rgba(212,175,55,0.6)] hover:scale-[1.02]"
+                        : "bg-[var(--primary)] text-white hover:bg-[var(--primary-light)] hover:scale-[1.02]"
                     }`}>
                       Book This Package
                     </div>

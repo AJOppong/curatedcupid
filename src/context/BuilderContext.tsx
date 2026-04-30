@@ -66,6 +66,7 @@ interface BuilderContextType {
   eventDetails: EventDetails;
   dbItems: ShopItem[];
   dbPackages: PackageItem[];
+  mostPopularPackageId: string | null;
   setStep: (step: number) => void;
   setBaseService: (service: string) => void;
   setRoomVibe: (vibe: string, image: string) => void;
@@ -95,6 +96,7 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
   const [selectedPackageName, setSelectedPackageName] = useState("");
   const [dbItems, setDbItems] = useState<ShopItem[]>([]);
   const [dbPackages, setDbPackages] = useState<PackageItem[]>([]);
+  const [mostPopularPackageId, setMostPopularPackageId] = useState<string | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [eventDetails, setEventDetailsState] = useState<EventDetails>({
     name: "",
@@ -113,12 +115,14 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     async function fetchData() {
-      const [itemsRes, pkgsRes] = await Promise.all([
+      const [itemsRes, pkgsRes, settingsRes] = await Promise.all([
         supabase.from("shop_items").select("*").eq("active", true),
-        supabase.from("packages").select("*").eq("active", true)
+        supabase.from("packages").select("*").eq("active", true),
+        supabase.from("settings").select("*").eq("key", "most_popular_package").single()
       ]);
       if (itemsRes.data) setDbItems(itemsRes.data as ShopItem[]);
       if (pkgsRes.data) setDbPackages(pkgsRes.data as PackageItem[]);
+      if (settingsRes.data) setMostPopularPackageId(settingsRes.data.value);
     }
     fetchData();
   }, []);
@@ -175,7 +179,7 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
       value={{
         step, cart, cartTotal, baseService, roomVibe, vibeImage,
         customVibe, roomTransport, roomTransportPrice,
-        selectedPackageName, eventDetails, dbItems, dbPackages,
+        selectedPackageName, eventDetails, dbItems, dbPackages, mostPopularPackageId,
         setStep, setBaseService, setRoomVibe: setRoomVibeWithImage,
         setCustomVibe, setRoomTransport,
         setSelectedPackageName, addToCart, removeFromCart,

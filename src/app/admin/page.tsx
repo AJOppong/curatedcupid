@@ -89,6 +89,7 @@ function AdminContent() {
   const [showPackageModal, setShowPackageModal] = useState(false);
   const [newPackage, setNewPackage] = useState<Partial<PackageItem>>({ items: [], gender: 'all', active: true });
   const [packageSearch, setPackageSearch] = useState("");
+  const [mostPopularPackageId, setMostPopularPackageId] = useState<string | null>(null);
 
   const [isNewCategory, setIsNewCategory] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -108,7 +109,7 @@ function AdminContent() {
     if (isAuthenticated) {
       if (activeTab === "bookings") fetchBookings();
       if (activeTab === "items") fetchItems();
-      if (activeTab === "packages") fetchPackages();
+      if (activeTab === "packages") { fetchPackages(); fetchMostPopular(); }
     }
   }, [isAuthenticated, activeTab]);
 
@@ -211,6 +212,13 @@ function AdminContent() {
     } catch (e) { console.error(e); } finally { setLoadingPackages(false); }
   };
 
+  const fetchMostPopular = async () => {
+    try {
+      const { data } = await supabase.from('settings').select('value').eq('key', 'most_popular_package').single();
+      if (data) setMostPopularPackageId(data.value);
+    } catch (e) { console.error(e); }
+  };
+
   const handleSavePackage = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -260,18 +268,15 @@ function AdminContent() {
 
   const setMostPopular = async (id: string) => {
     try {
-      // Clear tag from all
-      await supabase.from('packages').update({ tag: null }).neq('id', '__none__');
-      // Set Most Popular on selected
-      await supabase.from('packages').update({ tag: 'Most Popular' }).eq('id', id);
-      fetchPackages();
+      await supabase.from('settings').upsert({ key: 'most_popular_package', value: id });
+      setMostPopularPackageId(id);
     } catch (e) { console.error(e); }
   };
 
   const clearMostPopular = async () => {
     try {
-      await supabase.from('packages').update({ tag: null }).neq('id', '__none__');
-      fetchPackages();
+      await supabase.from('settings').upsert({ key: 'most_popular_package', value: '' });
+      setMostPopularPackageId(null);
     } catch (e) { console.error(e); }
   };
 
@@ -627,14 +632,14 @@ function AdminContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {packages.map(pkg => (
                   <div key={pkg.id} className={`glass border p-5 rounded-2xl flex flex-col gap-3 transition-all ${
-                    pkg.tag === 'Most Popular'
+                    pkg.id === mostPopularPackageId
                       ? 'border-yellow-500/50 bg-yellow-500/5 shadow-[0_0_30px_rgba(234,179,8,0.08)]'
                       : 'border-white/10'
                   }`}>
                     <div className="flex items-center justify-between">
                       <h3 className="text-white font-bold text-lg uppercase flex items-center gap-2">
                         {pkg.name}
-                        {pkg.tag === 'Most Popular' && <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />}
+                        {pkg.id === mostPopularPackageId && <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />}
                       </h3>
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${pkg.active ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
                         {pkg.active ? 'Active' : 'Inactive'}
@@ -649,18 +654,17 @@ function AdminContent() {
                       <span className="px-2 py-1 bg-white/5 rounded-md">{pkg.items?.length || 0} items</span>
                     </div>
                     <div className="mt-auto pt-3 flex items-center justify-between gap-3 border-t border-white/10">
-                      {/* Most Popular toggle */}
                       <button
-                        onClick={() => pkg.tag === 'Most Popular' ? clearMostPopular() : setMostPopular(pkg.id)}
-                        title={pkg.tag === 'Most Popular' ? 'Remove Most Popular' : 'Set as Most Popular'}
-                        className={`flex items-center gap-1.5 text-xs font-bold transition-all ${
-                          pkg.tag === 'Most Popular'
-                            ? 'text-yellow-400 hover:text-yellow-300'
-                            : 'text-white/30 hover:text-yellow-400'
+                        onClick={() => pkg.id === mostPopularPackageId ? clearMostPopular() : setMostPopular(pkg.id)}
+                        title={pkg.id === mostPopularPackageId ? 'Remove Most Popular' : 'Set as Most Popular'}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                          pkg.id === mostPopularPackageId
+                            ? 'bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30'
+                            : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
                         }`}
                       >
-                        <Star className={`w-3.5 h-3.5 transition-all ${pkg.tag === 'Most Popular' ? 'fill-yellow-400' : ''}`} />
-                        {pkg.tag === 'Most Popular' ? 'Popular' : 'Set Popular'}
+                        <Star className={`w-3.5 h-3.5 transition-all ${pkg.id === mostPopularPackageId ? 'fill-yellow-400' : ''}`} />
+                        {pkg.id === mostPopularPackageId ? 'Popular' : 'Set Popular'}
                       </button>
                       <div className="flex gap-3">
                         <button onClick={() => {setNewPackage(pkg); setShowPackageModal(true);}} className="text-blue-400 hover:text-blue-300 text-sm font-bold">Edit</button>
