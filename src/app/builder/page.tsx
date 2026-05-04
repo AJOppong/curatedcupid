@@ -77,14 +77,39 @@ function StepIndicator() {
 }
 
 function BuilderContent() {
-  const { step, preloadItems, setStep, setBaseService, clearCart } = useBuilder();
+  const { step, preloadItems, setStep, setBaseService, clearCart, dbPackages, dbItems } = useBuilder();
   const searchParams = useSearchParams();
   const hasLoaded = useRef(false);
 
   useEffect(() => {
     if (hasLoaded.current) return;
     const pkgName = searchParams.get("package");
-    if (pkgName) {
+    if (pkgName && dbPackages.length > 0) {
+      // Try DB packages first (new system)
+      const dbPkg = dbPackages.find(p => p.name === pkgName);
+      if (dbPkg) {
+        hasLoaded.current = true;
+        clearCart();
+        const itemsToLoad = dbPkg.items.map(itemId => {
+          const item = dbItems.find(si => si.id === itemId);
+          return item ? { id: item.id, name: item.name, price: item.price, image: item.image || item.emoji, quantity: 1 } : null;
+        }).filter(Boolean) as any;
+        preloadItems(itemsToLoad, dbPkg.name);
+        // Set appropriate base service based on package type
+        const pkgType = dbPkg.type ?? 'gift_box';
+        if (pkgType === 'hamper' || pkgType === 'gift_box') {
+          setBaseService("Surprise Package");
+          setStep(2); // Skip straight to add/remove items
+        } else if (pkgType === 'food_basket') {
+          setBaseService("Surprise Package");
+          setStep(2); // Go to step 2 which shows allergy input
+        } else {
+          setBaseService("Surprise Package");
+          setStep(2);
+        }
+        return;
+      }
+      // Fallback: old static predefined packages
       const pkg = predefinedPackages.find(p => p.name === pkgName);
       if (pkg) {
         hasLoaded.current = true;
@@ -99,7 +124,7 @@ function BuilderContent() {
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dbPackages]);
 
   const stepComponents: Record<number, React.ReactNode> = {
     1: <Step1BaseService />,
