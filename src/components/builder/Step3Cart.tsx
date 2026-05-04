@@ -19,6 +19,9 @@ export default function Step3Cart() {
   // Detect selected package type
   const selectedPkg = selectedPackageName ? dbPackages.find(p => p.name === selectedPackageName) : null;
   const isFoodBasket = selectedPkg?.type === 'food_basket';
+  const isHamper = selectedPkg?.type === 'hamper';
+  // Hide individual prices for food baskets and hampers — only show package total
+  const hideItemPrices = isFoodBasket || isHamper;
   // For food baskets: packageDiscount is negative (items=0, package costs real money)
   // totalWithFee formula still works: 0 + 50 - (-400) = 450 ✓
 
@@ -112,7 +115,7 @@ export default function Step3Cart() {
                 <div className="flex-1 min-w-0">
                   <p className="text-[var(--text-main)] font-semibold text-sm truncate">{item.name}</p>
                   <p className="text-[var(--text-muted)] text-xs mt-0.5">
-                    {item.price === 0 ? "-" : `GH₵${item.price.toLocaleString()}`} × {item.quantity}
+                    {hideItemPrices ? "Included in package" : item.price === 0 ? "-" : `GH₵${item.price.toLocaleString()} × ${item.quantity}`}
                   </p>
                   <div className="mt-1.5 w-full flex flex-col gap-2">
                     <input
@@ -192,7 +195,7 @@ export default function Step3Cart() {
                   transition={{ duration: 0.25 }}
                   className="text-[var(--text-main)] font-bold text-sm w-20 text-right flex-shrink-0 tabular-nums"
                 >
-                  {item.price === 0 ? "-" : `GH₵${(item.price * item.quantity).toLocaleString()}`}
+                  {hideItemPrices ? "-" : item.price === 0 ? "-" : `GH₵${(item.price * item.quantity).toLocaleString()}`}
                 </motion.p>
 
                 {/* Delete */}
@@ -242,7 +245,7 @@ export default function Step3Cart() {
                     )}
                   </div>
                   <span className="text-[var(--text-muted)] text-xs font-bold flex-shrink-0 tabular-nums">
-                    {item.price === 0 ? "-" : `GH₵${(item.price * item.quantity).toLocaleString()}`}
+                    {hideItemPrices ? "-" : item.price === 0 ? "-" : `GH₵${(item.price * item.quantity).toLocaleString()}`}
                   </span>
                 </div>
               ))}
