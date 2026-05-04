@@ -192,9 +192,9 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
         const item = dbItems.find(i => i.id === itemId);
         return sum + (item?.price || 0);
       }, 0);
-      // The package inherently saves money compared to buying items individually + service fee
-      // Package Discount = (Sum of default items + Service Fee) - Package Base Price
-      packageDiscount = Math.max(0, (defaultItemsTotal + 50) - pkg.price);
+      // packageDiscount can be negative (food basket: items=0 but package has a base price)
+      // packageDiscount can be positive (gift box/hamper: items individually would cost more)
+      packageDiscount = (defaultItemsTotal + 50) - pkg.price;
     }
   }
 

@@ -11,10 +11,16 @@ import * as LucideIcons from "lucide-react";
 import Image from "next/image";
 
 export default function Step3Cart() {
-  const { cart, removeFromCart, updateQuantity, cartTotal, packageDiscount, setStep, selectedPackageName, setCartItemNote } = useBuilder();
+  const { cart, removeFromCart, updateQuantity, cartTotal, packageDiscount, setStep, selectedPackageName, setCartItemNote, dbPackages } = useBuilder();
   const SERVICE_FEE = 50;
   const totalWithFee = cartTotal + SERVICE_FEE - packageDiscount;
   const itemCount = cart.reduce((s, i) => s + i.quantity, 0);
+
+  // Detect selected package type
+  const selectedPkg = selectedPackageName ? dbPackages.find(p => p.name === selectedPackageName) : null;
+  const isFoodBasket = selectedPkg?.type === 'food_basket';
+  // For food baskets: packageDiscount is negative (items=0, package costs real money)
+  // totalWithFee formula still works: 0 + 50 - (-400) = 450 ✓
 
   const renderCartIcon = (imageStr: string, className?: string) => {
     const isPath = imageStr && (imageStr.startsWith('/') || imageStr.startsWith('http') || imageStr.startsWith('data:image'));
@@ -244,26 +250,43 @@ export default function Step3Cart() {
 
             {/* Totals */}
             <div className="space-y-2 pt-4 border-t border-[var(--border)]">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[var(--text-muted)]">Subtotal ({itemCount} item{itemCount !== 1 ? "s" : ""})</span>
-                <motion.span
-                  key={cartTotal}
-                  initial={{ opacity: 0.5, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-[var(--text-main)] font-bold tabular-nums"
-                >
-                  GH₵{cartTotal.toLocaleString()}
-                </motion.span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[var(--text-muted)]">Service & Packaging</span>
-                <span className="text-[var(--text-muted)] font-bold">GH₵{SERVICE_FEE}</span>
-              </div>
-              {packageDiscount > 0 && (
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-[#E91E8C] font-bold">Package Discount</span>
-                  <span className="text-[#E91E8C] font-bold">-GH₵{packageDiscount.toLocaleString()}</span>
-                </div>
+              {isFoodBasket && selectedPkg ? (
+                // Food basket: clean breakdown — base price + service included
+                <>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[var(--text-muted)]">Package Base Price</span>
+                    <span className="text-[var(--text-main)] font-bold tabular-nums">GH₵{selectedPkg.price.toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[#22c55e] font-bold">Service & Packaging</span>
+                    <span className="text-[#22c55e] font-bold">Included</span>
+                  </div>
+                </>
+              ) : (
+                // Gift box / Hamper: itemised breakdown
+                <>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[var(--text-muted)]">Subtotal ({itemCount} item{itemCount !== 1 ? "s" : ""})</span>
+                    <motion.span
+                      key={cartTotal}
+                      initial={{ opacity: 0.5, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-[var(--text-main)] font-bold tabular-nums"
+                    >
+                      GH₵{cartTotal.toLocaleString()}
+                    </motion.span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[var(--text-muted)]">Service & Packaging</span>
+                    <span className="text-[var(--text-muted)] font-bold">GH₵{SERVICE_FEE}</span>
+                  </div>
+                  {packageDiscount > 0 && (
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-[#E91E8C] font-bold">Package Discount</span>
+                      <span className="text-[#E91E8C] font-bold">-GH₵{packageDiscount.toLocaleString()}</span>
+                    </div>
+                  )}
+                </>
               )}
             </div>
 
