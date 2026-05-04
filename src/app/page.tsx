@@ -211,11 +211,11 @@ function Services() {
 
 // ── Packages ──────────────────────────────────────────
 function Packages() {
-  const { dbPackages, dbItems, mostPopularPackageId } = useBuilder();
+  const { dbPackages, dbItems, mostPopularPackageIds } = useBuilder();
   const { activeTheme } = useTheme();
 
-  const isLadiesOnly = activeTheme?.name.toLowerCase().includes('mother') || activeTheme?.name.toLowerCase().includes('women');
-  const isGuysOnly = activeTheme?.name.toLowerCase().includes('father') || activeTheme?.name.toLowerCase().includes('men');
+  const isLadiesOnly = activeTheme?.name?.toLowerCase().includes('mother') || activeTheme?.name?.toLowerCase().includes('women');
+  const isGuysOnly = activeTheme?.name?.toLowerCase().includes('father') || activeTheme?.name?.toLowerCase().includes('men');
 
   const defaultGender = isLadiesOnly ? 'Ladies' : (isGuysOnly ? 'Guys' : 'Ladies');
   const [activeGender, setActiveGender] = useState(defaultGender);
