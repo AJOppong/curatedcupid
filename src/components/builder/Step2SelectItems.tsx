@@ -57,6 +57,8 @@ export default function Step2SelectItems() {
 
   const selectedPackageObj = dbPackages.find(p => p.name === selectedPackageName);
   const isFoodBasket = selectedPackageObj?.type === 'food_basket';
+  const isHamper = selectedPackageObj?.type === 'hamper';
+  const hideItemPrices = isFoodBasket || isHamper;
 
   const handleAdd = (item: typeof dbItems[0]) => {
     addToCart({ id: item.id, name: item.name, price: item.price, image: item.image || item.emoji, quantity: 1 });
@@ -448,9 +450,11 @@ export default function Step2SelectItems() {
                     <ItemIcon item={item} className="w-full aspect-square rounded-xl bg-[var(--glass-bg)] text-4xl border border-[var(--border)]" />
                     <div>
                       <p className="text-[var(--text-main)] text-xs font-semibold leading-tight line-clamp-1">{item.name}</p>
-                      <p className="text-[#D4AF37] text-[11px] font-bold mt-0.5">
-                        {item.price_range ? `GH₵${item.price_range}` : item.price === 0 ? "-" : `GH₵${item.price.toLocaleString()}`}
-                      </p>
+                      {!hideItemPrices && (
+                        <p className="text-[#D4AF37] text-[11px] font-bold mt-0.5">
+                          {item.price_range ? `GH₵${item.price_range}` : item.price === 0 ? "-" : `GH₵${item.price.toLocaleString()}`}
+                        </p>
+                      )}
                     </div>
 
                     {cartItem ? (
