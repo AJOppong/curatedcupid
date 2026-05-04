@@ -644,9 +644,9 @@ function Contact() {
             <div className="bg-[#12101F]/80 border border-[var(--border)] rounded-2xl p-6 space-y-5">
               <h3 className="text-white font-semibold text-lg">Contact Details</h3>
               {[
-                { icon: <Phone className="w-4 h-4" />, label: "Phone", value: "+233 24 123 4567" },
-                { icon: <Mail className="w-4 h-4" />, label: "Email", value: "hello@curatedcupid.com" },
-                { icon: <MapPin className="w-4 h-4" />, label: "Location", value: "Ayeduase - Kumasi, Ghana" },
+                { icon: <Phone className="w-4 h-4" />, label: "Phone", value: "+233 55 783 0853" },
+                { icon: <Mail className="w-4 h-4" />, label: "Email", value: "curatedcupid2026@gmail.com" },
+                { icon: <MapPin className="w-4 h-4" />, label: "Location", value: "Wagyingo Opal, Ayeuase - Kumasi, Ghana" },
                 { icon: <Clock className="w-4 h-4" />, label: "Hours", value: "Mon–Sun, 8am – 9pm" },
               ].map((item) => (
                 <div key={item.label} className="flex items-start gap-3">
@@ -666,10 +666,10 @@ function Contact() {
               <h3 className="text-white font-semibold text-sm">Follow Our Magic</h3>
               <div className="flex flex-wrap gap-3">
                 {[
-                  { name: "WhatsApp", icon: <MessageCircle className="w-4 h-4" />, color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/233241234567" },
-                  { name: "TikTok", icon: <Music className="w-4 h-4" />, color: "bg-white/5 text-[var(--text-main)] border-[var(--border)]", link: "https://tiktok.com/@curatedcupid" },
-                  { name: "Snapchat", icon: <Ghost className="w-4 h-4" />, color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", link: "https://snapchat.com/add/curatedcupid" },
-                  { name: "Instagram", icon: <Camera className="w-4 h-4" />, color: "bg-pink-500/10 text-pink-400 border-pink-500/20", link: "https://instagram.com/curatedcupid" },
+                  { name: "WhatsApp", icon: <MessageCircle className="w-4 h-4" />, color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/233557830853" },
+                  { name: "TikTok", icon: <Music className="w-4 h-4" />, color: "bg-white/5 text-[var(--text-main)] border-[var(--border)]", link: "https://tiktok.com/@planet_ajayy" },
+                  { name: "Snapchat", icon: <Ghost className="w-4 h-4" />, color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", link: "https://snapchat.com/add/l0v3_ajay" },
+                  { name: "Instagram", icon: <Camera className="w-4 h-4" />, color: "bg-pink-500/10 text-pink-400 border-pink-500/20", link: "https://instagram.com/ethereal_ajayy" },
                 ].map((social) => (
                   <a
                     key={social.name}
@@ -778,9 +778,9 @@ function Footer() {
           <div>
             <p className="text-[var(--text-muted)] text-xs font-semibold uppercase tracking-widest mb-4">Contact</p>
             <div className="space-y-2 text-[var(--text-muted)] text-sm">
-              <p>+233 24 123 4567</p>
-              <p>hello@curatedcupid.com</p>
-              <p>Ayeduase - Kumasi, Ghana</p>
+              <p>+233 55 783 0853</p>
+              <p>curatedcupid2026@gmail.com</p>
+              <p>Wagyingo Opal, Ayeuase - Kumasi, Ghana</p>
             </div>
           </div>
         </div>
