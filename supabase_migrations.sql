@@ -117,70 +117,9 @@ INSERT INTO reviews (name, rating, comment, role, approved) VALUES
 ('Michael O.', 5, 'Fast, professional, and absolutely stunning. The room vibe was exactly what I wanted. Highly recommended!', 'Birthday Setup', true),
 ('Emily B.', 5, 'I wanted to surprise my bestie for no reason, and Curated Cupid delivered! The gift box was so thoughtful.', 'Just Because', true);
 
--- Seed Shop Items
-INSERT INTO shop_items (id, name, price, category, description, emoji, image, gender, active) VALUES
-('raffaello', 'Raffaello Chocolates', 60, 'Treats', 'Premium almond and coconut confections', 'Candy', '/item_chocolates.png', 'all', true),
-('ferrero', 'Ferrero Rocher', 120, 'Treats', 'Gold-wrapped hazelnut milk chocolates', 'Gift', '/item_chocolates.png', 'all', true),
-('jewelry', 'Jewelry', 50, 'Gifts', 'Elegant necklace or bracelet in a luxury box', 'Gem', '/item_jewelry.png', 'ladies', true),
-('premium-jewelry', 'Premium Jewelry', 70, 'Gifts', 'High-end jewelry selection for special occasions', 'Gem', '/item_jewelry.png', 'ladies', true),
-('wine', 'Wine', 90, 'Drinks', 'Carefully selected vintage for romantic evenings', 'Wine', '/item_wine.png', 'all', true),
-('wallet', 'Wallet', 80, 'Gifts', 'Genuine leather wallet in a sleek design', 'Wallet', '/item_wallet.png', 'guys', true),
-('custom-slippers', 'Custom Slippers', 100, 'Gifts', 'Comfortable plush slippers with custom embroidery', 'Footprints', '/item_shoes.png', 'guys', true),
-('handwritten-letter', 'Custom Handwritten Letter', 30, 'Personal', 'Calligraphy letter on premium parchment paper', 'Mail', '/item_letter.png', 'all', true),
-('vals-card', 'Valentine''s Day Card', 20, 'Personal', 'Handcrafted romantic card with your message', 'MailHeart', '/item_card.png', 'all', true),
-('nike-slides', 'Nike Slides', 150, 'Gifts', 'Authentic Nike comfort slides for him', 'Footprints', '/item_shoes.png', 'guys', true),
-('shirt', 'Shirt', 120, 'Gifts', 'High-quality cotton shirt in his size', 'Shirt', '/item_shirt.png', 'guys', true),
-('db-perfume', 'David Beckham Perfume', 350, 'Gifts', 'Signature designer fragrance by David Beckham', 'Beaker', '/item_perfume.png', 'guys', true),
-('food-basket', 'Food Basket', 250, 'Treats', 'Gourmet selection of snacks, fruits and delicacies', 'ShoppingBag', '/item_basket.png', 'all', true),
-('oxford-shoes', 'Oxford Shoes', 300, 'Gifts', 'Classic handcrafted leather Oxford shoes', 'Footprints', '/item_shoes.png', 'guys', true),
-('fuel-coupons', 'Fuel Coupons', 200, 'Gifts', 'Prepaid fuel vouchers for easy mobility', 'Fuel', '/item_coupons.png', 'guys', true),
-('room-diffuser', 'Room Diffuser', 120, 'Decor', 'Essential oil diffuser for a romantic atmosphere', 'Wind', '/item_diffuser.png', 'all', true),
-('car-freshener', 'Car Freshener', 30, 'Decor', 'Premium scent for his vehicle', 'TreePine', '/item_freshener.png', 'guys', true),
-('birkenstocks', 'Birkenstocks', 325, 'Gifts', 'Authentic comfort footwear by Birkenstock', 'Footprints', '/item_shoes.png', 'all', true),
-('body-products', 'Body Products', 150, 'Personal', 'Luxury grooming and body care collection', 'Droplet', '/item_body_products.png', 'all', true),
-('custom-jersey', 'Custom Jersey', 200, 'Gifts', 'His favourite team''s jersey with custom name', 'Shirt', '/item_jersey.png', 'guys', true),
-('grooming-products', 'Grooming Products', 150, 'Personal', 'Complete beard and face care grooming set', 'Scissors', '/item_grooming.png', 'guys', true),
-('single-rose', 'Single Rose', 20, 'Flowers', 'A timeless symbol of love and affection', 'Flower2', '/flower_rose.png', 'all', true),
-('rose-bouquet-12', 'Rose Bouquet (12)', 150, 'Flowers', 'A dozen premium long-stem red roses', 'Flower', '/flower_bouquet_12.png', 'all', true),
-('rose-bouquet-24', 'Rose Bouquet (24)', 280, 'Flowers', 'Two dozen premium roses, beautifully wrapped', 'Flower2', '/flower_bouquet_24.png', 'all', true),
-('mixed-bouquet', 'Mixed Floral Bouquet', 200, 'Flowers', 'Seasonal mixed flowers in a stunning arrangement', 'Flower2', '/flower_mixed.png', 'all', true),
-('sunflowers', 'Sunflower Bouquet', 100, 'Flowers', 'Bright and cheerful sunflowers to lift any mood', 'Sun', '/flower_sunflowers.png', 'all', true),
-('lilies', 'White Lilies', 120, 'Flowers', 'Elegant pure white lilies in a classic wrap', 'Flower', '/flower_lilies.png', 'all', true),
-('custom-arrangement', 'Custom Arrangement', 350, 'Flowers', 'Bespoke floral design crafted for your unique occasion', 'Sparkles', '/flower_custom.png', 'all', true),
-('condolence-wreath', 'Condolence Wreath', 250, 'Flowers', 'A dignified white flower wreath for funerals and tributes', 'Circle', '/flower_wreath.png', 'all', true)
-ON CONFLICT (id) DO UPDATE SET
-  name = EXCLUDED.name,
-  price = EXCLUDED.price,
-  category = EXCLUDED.category,
-  description = EXCLUDED.description,
-  emoji = EXCLUDED.emoji,
-  image = EXCLUDED.image,
-  gender = EXCLUDED.gender,
-  active = EXCLUDED.active;
-
--- Seed Packages
-INSERT INTO packages (id, name, price, items, gender, tag, active) VALUES
-('el-capo', 'EL CAPO', 250, ARRAY['raffaello', 'jewelry', 'wine', 'vals-card'], 'guys', null, true),
-('non-anchora', 'NON ANCHORA', 350, ARRAY['raffaello', 'jewelry', 'wallet', 'wine', 'vals-card'], 'guys', null, true),
-('fuori-orario', 'FUORI ORARIO', 500, ARRAY['raffaello', 'jewelry', 'wallet', 'wine', 'custom-slippers', 'handwritten-letter'], 'guys', null, true),
-('il-devoto', 'IL DEVOTO', 700, ARRAY['raffaello', 'jewelry', 'wallet', 'wine', 'custom-slippers', 'nike-slides', 'handwritten-letter'], 'guys', 'Most Popular', true),
-('re-del-mio', 'RE DEL MIO', 830, ARRAY['raffaello', 'jewelry', 'wallet', 'wine', 'custom-slippers', 'nike-slides', 'shirt', 'handwritten-letter'], 'guys', null, true),
-('perche-sei-mio', 'PERCHÉ SEI MIO', 1400, ARRAY['ferrero', 'premium-jewelry', 'wallet', 'wine', 'custom-slippers', 'db-perfume', 'nike-slides', 'shirt', 'handwritten-letter'], 'guys', null, true),
-('oltre-leternita', 'OLTRE L''ETERNITÀ', 2000, ARRAY['ferrero', 'premium-jewelry', 'wallet', 'wine', 'custom-slippers', 'nike-slides', 'db-perfume', 'shirt', 'food-basket', 'oxford-shoes', 'handwritten-letter'], 'guys', null, true),
-('bella', 'BELLA', 250, ARRAY['raffaello', 'jewelry', 'vals-card'], 'ladies', null, true),
-('cara-mia', 'CARA MIA', 350, ARRAY['raffaello', 'jewelry', 'wine', 'vals-card'], 'ladies', null, true),
-('dolce-vita', 'DOLCE VITA', 500, ARRAY['raffaello', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter'], 'ladies', null, true),
-('la-principessa', 'LA PRINCIPESSA', 700, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser'], 'ladies', 'Most Popular', true),
-('il-tesoro', 'IL TESORO', 850, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'vals-card'], 'ladies', null, true),
-('la-regina', 'LA REGINA', 1400, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'birkenstocks'], 'ladies', null, true),
-('lamore-eterno', 'L''AMORE ETERNO', 2000, ARRAY['ferrero', 'premium-jewelry', 'wine', 'body-products', 'handwritten-letter', 'room-diffuser', 'birkenstocks', 'food-basket'], 'ladies', null, true)
-ON CONFLICT (id) DO UPDATE SET
-  name = EXCLUDED.name,
-  price = EXCLUDED.price,
-  items = EXCLUDED.items,
-  gender = EXCLUDED.gender,
-  tag = EXCLUDED.tag,
-  active = EXCLUDED.active;
+-- Clear old placeholder data before inserting the real items list
+DELETE FROM packages;
+DELETE FROM shop_items;
 
 -- Seed Mother's Day Shop Items
 -- (Safety: ensure new columns exist before inserting)
