@@ -216,16 +216,20 @@ function Packages() {
 
   const isLadiesOnly = activeTheme?.name?.toLowerCase().includes('mother') || activeTheme?.name?.toLowerCase().includes('women');
   const isGuysOnly = activeTheme?.name?.toLowerCase().includes('father') || activeTheme?.name?.toLowerCase().includes('men');
+  const isMothersDay = activeTheme?.name?.toLowerCase().includes('mother');
 
   const defaultGender = isLadiesOnly ? 'Ladies' : (isGuysOnly ? 'Guys' : 'Ladies');
   const [activeGender, setActiveGender] = useState(defaultGender);
+  const [activePackageType, setActivePackageType] = useState('gift_box'); // 'gift_box', 'hamper', 'food_basket'
 
   useEffect(() => {
     if (isLadiesOnly) setActiveGender('Ladies');
     else if (isGuysOnly) setActiveGender('Guys');
   }, [isLadiesOnly, isGuysOnly]);
 
-  const filteredPackages = dbPackages.filter(p => p.gender === 'all' || p.gender === activeGender.toLowerCase());
+  const filteredPackages = isMothersDay
+    ? dbPackages.filter(p => p.type === activePackageType && (p.gender === 'all' || p.gender === 'ladies'))
+    : dbPackages.filter(p => (!p.type || p.type === 'gift_box') && (p.gender === 'all' || p.gender === activeGender.toLowerCase()));
 
   return (
     <section id="packages" className="py-24 px-6 relative">
@@ -238,8 +242,32 @@ function Packages() {
           </p>
         </motion.div>
 
-        {/* Gender Filter */}
-        {!isLadiesOnly && !isGuysOnly && (
+        {/* Mother's Day Type Filter */}
+        {isMothersDay && (
+          <div className="flex justify-center mb-10">
+            <div className="flex gap-2 glass p-1.5 rounded-full border border-[var(--border)] overflow-x-auto max-w-full no-scrollbar">
+              {[
+                { id: "gift_box", label: "Gift Boxes" },
+                { id: "hamper", label: "Hampers" },
+                { id: "food_basket", label: "Food Baskets" }
+              ].map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActivePackageType(tab.id)}
+                  className={`px-6 py-2 rounded-full text-sm font-bold transition-all whitespace-nowrap ${activePackageType === tab.id
+                    ? "btn-pink-gradient text-white shadow-lg"
+                    : "text-[var(--text-muted)] hover:text-[var(--primary)]"
+                    }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Gender Filter (Standard) */}
+        {!isLadiesOnly && !isGuysOnly && !isMothersDay && (
           <div className="flex justify-center mb-10">
             <div className="flex gap-2 glass p-1.5 rounded-full border border-[var(--border)]">
               {["Ladies", "Guys"].map(tab => (

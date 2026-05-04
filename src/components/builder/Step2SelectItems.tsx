@@ -16,7 +16,8 @@ const GENDER_TABS = ["Ladies", "Guys"];
 export default function Step2SelectItems() {
   const {
     addToCart, removeFromCart, updateQuantity, clearCart, preloadItems,
-    cart, setStep, baseService, selectedPackageName, dbItems, dbPackages, setCartItemNote, mostPopularPackageIds
+    cart, setStep, baseService, selectedPackageName, dbItems, dbPackages, setCartItemNote, mostPopularPackageIds,
+    eventDetails, setEventDetails
   } = useBuilder();
   const { activeTheme } = useTheme();
 
@@ -53,6 +54,9 @@ export default function Step2SelectItems() {
   const getCartItem = (id: string) => cart.find((c) => c.id === id);
   const cartItemCount = cart.reduce((s, i) => s + i.quantity, 0);
   const cartSubtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+
+  const selectedPackageObj = dbPackages.find(p => p.name === selectedPackageName);
+  const isFoodBasket = selectedPackageObj?.type === 'food_basket';
 
   const handleAdd = (item: typeof dbItems[0]) => {
     addToCart({ id: item.id, name: item.name, price: item.price, image: item.image || item.emoji, quantity: 1 });
@@ -314,9 +318,14 @@ export default function Step2SelectItems() {
                     <ItemIcon item={item} className="w-10 h-10 rounded-xl bg-[var(--glass-bg)] text-xl flex-shrink-0 group-hover:scale-110 transition-transform" />
                     <div className="flex-1 min-w-0">
                       <p className="text-[var(--text-main)] text-sm font-semibold truncate">{item.name}</p>
-                      <p className="text-[#D4AF37] text-[11px] font-bold">GH₵{item.price.toLocaleString()}</p>
+                      <p className="text-[#D4AF37] text-[11px] font-bold">
+                        {dbItems.find(i => i.id === item.id)?.price_range
+                          ? `GH₵${dbItems.find(i => i.id === item.id)?.price_range}`
+                          : `GH₵${item.price.toLocaleString()}`}
+                      </p>
                     </div>
-                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                    {!isFoodBasket && (
+                      <div className="flex items-center gap-1.5 flex-shrink-0">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
                         className="w-6 h-6 rounded-lg glass border border-[var(--border)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-[var(--border)] transition-all"
@@ -337,6 +346,7 @@ export default function Step2SelectItems() {
                         <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
+                    )}
                   </motion.div>
                 ))}
               </AnimatePresence>
@@ -377,29 +387,48 @@ export default function Step2SelectItems() {
             </div>
           </div>
 
-          {/* RIGHT: Add Extra Items */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <PlusCircle className="w-4 h-4 text-[#E91E8C]" />
-              <h4 className="text-[var(--text-main)] font-black text-sm uppercase tracking-tight">Add Extra Items</h4>
+          {/* RIGHT: Add Extra Items OR Allergy Info for Food Baskets */}
+          {isFoodBasket ? (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-[#E91E8C]" />
+                <h4 className="text-[var(--text-main)] font-black text-sm uppercase tracking-tight">Dietary Restrictions & Allergies</h4>
+              </div>
+              <div className="glass border border-[var(--border)] rounded-2xl p-5">
+                <p className="text-[var(--text-muted)] text-xs mb-4">
+                  Food baskets cannot be customized with extra items, but please let us know of any allergies or substitutions you might need.
+                </p>
+                <textarea
+                  value={eventDetails.instructions}
+                  onChange={(e) => setEventDetails({ instructions: e.target.value })}
+                  placeholder="E.g., No peanuts, allergic to seafood, replace juice with water..."
+                  className="w-full bg-[var(--glass-bg)] border border-[var(--border)] rounded-xl p-4 text-sm text-[var(--text-main)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[#E91E8C] transition-colors resize-none h-32"
+                />
+              </div>
             </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <PlusCircle className="w-4 h-4 text-[#E91E8C]" />
+                <h4 className="text-[var(--text-main)] font-black text-sm uppercase tracking-tight">Add Extra Items</h4>
+              </div>
 
-            {/* Category Filter */}
-            <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-4 md:pb-0 scrollbar-hide">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-3 rounded-2xl text-sm font-bold transition-all whitespace-nowrap md:whitespace-normal border ${
-                    activeCategory === cat
-                      ? "bg-[#E91E8C] text-[var(--text-main)]"
-                      : "glass border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-[var(--border)]"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
+              {/* Category Filter */}
+              <div className="flex md:flex-col gap-2 overflow-x-auto md:overflow-visible pb-4 md:pb-0 scrollbar-hide">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className={`px-4 py-3 rounded-2xl text-sm font-bold transition-all whitespace-nowrap md:whitespace-normal border ${
+                      activeCategory === cat
+                        ? "bg-[#E91E8C] text-[var(--text-main)]"
+                        : "glass border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-[var(--border)]"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
 
             {/* Items Grid */}
             <div className="grid grid-cols-2 gap-3 max-h-[520px] overflow-y-auto pr-1 scrollbar-hide">
@@ -419,7 +448,9 @@ export default function Step2SelectItems() {
                     <ItemIcon item={item} className="w-full aspect-square rounded-xl bg-[var(--glass-bg)] text-4xl border border-[var(--border)]" />
                     <div>
                       <p className="text-[var(--text-main)] text-xs font-semibold leading-tight line-clamp-1">{item.name}</p>
-                      <p className="text-[#D4AF37] text-[11px] font-bold mt-0.5">GH₵{item.price.toLocaleString()}</p>
+                      <p className="text-[#D4AF37] text-[11px] font-bold mt-0.5">
+                        {item.price_range ? `GH₵${item.price_range}` : `GH₵${item.price.toLocaleString()}`}
+                      </p>
                     </div>
 
                     {cartItem ? (
@@ -478,6 +509,7 @@ export default function Step2SelectItems() {
               })}
             </div>
           </div>
+          )}
         </div>
       </div>
     );

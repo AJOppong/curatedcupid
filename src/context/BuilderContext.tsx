@@ -40,6 +40,7 @@ export interface ShopItem {
   image: string;
   gender: string;
   active: boolean;
+  price_range?: string;
 }
 
 export interface PackageItem {
@@ -50,6 +51,7 @@ export interface PackageItem {
   gender: string;
   active: boolean;
   tag?: string;
+  type?: 'hamper' | 'gift_box' | 'food_basket' | string;
 }
 
 interface BuilderContextType {

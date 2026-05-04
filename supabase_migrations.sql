@@ -85,6 +85,8 @@ ON CONFLICT (key) DO NOTHING;
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS delivery_method text;
 ALTER TABLE bookings ADD COLUMN IF NOT EXISTS room_transport text;
 ALTER TABLE packages ADD COLUMN IF NOT EXISTS tag text;
+ALTER TABLE packages ADD COLUMN IF NOT EXISTS type text DEFAULT 'gift_box';
+ALTER TABLE shop_items ADD COLUMN IF NOT EXISTS price_range text;
 
 -- Admin Management Policies
 ALTER TABLE shop_items ENABLE ROW LEVEL SECURITY;
@@ -175,6 +177,111 @@ INSERT INTO packages (id, name, price, items, gender, tag, active) VALUES
 ON CONFLICT (id) DO UPDATE SET
   name = EXCLUDED.name,
   price = EXCLUDED.price,
+  items = EXCLUDED.items,
+  gender = EXCLUDED.gender,
+  tag = EXCLUDED.tag,
+  active = EXCLUDED.active;
+
+-- Seed Mother's Day Shop Items
+-- (Safety: ensure new columns exist before inserting)
+ALTER TABLE shop_items ADD COLUMN IF NOT EXISTS price_range text;
+ALTER TABLE packages ADD COLUMN IF NOT EXISTS type text DEFAULT 'gift_box';
+INSERT INTO shop_items (id, name, price, price_range, category, description, emoji, image, gender, active) VALUES
+('basmati-1kg', '1 kg Basmati rice', 40, null, 'Groceries', 'Premium basmati rice', 'RiceBowl', '/item_rice.png', 'all', true),
+('basmati-2kg', '2 kg Basmati rice', 80, null, 'Groceries', 'Premium basmati rice', 'RiceBowl', '/item_rice.png', 'all', true),
+('basmati-5kg', '5 kg Basmati rice', 200, null, 'Groceries', 'Premium basmati rice', 'RiceBowl', '/item_rice.png', 'all', true),
+('sunflower-oil', 'Sunflower Oil', 50, null, 'Groceries', 'Healthy sunflower cooking oil', 'Droplet', '/item_oil.png', 'all', true),
+('tomato-paste', 'Tomato paste', 20, null, 'Groceries', 'Rich tomato paste', 'Tomato', '/item_tomato.png', 'all', true),
+('tea-bags', 'Tea bags', 30, null, 'Groceries', 'Premium tea bags', 'Coffee', '/item_tea.png', 'all', true),
+('spaghetti', 'Spaghetti', 15, null, 'Groceries', 'Long pasta', 'Utensils', '/item_pasta.png', 'all', true),
+('milk', 'Milk', 40, null, 'Groceries', 'Evaporated milk', 'Milk', '/item_milk.png', 'all', true),
+('sardines', 'Sardines', 25, null, 'Groceries', 'Canned sardines', 'Fish', '/item_sardine.png', 'all', true),
+('juice', 'Juice', 35, null, 'Drinks', 'Fruit juice', 'CupSoda', '/item_juice.png', 'all', true),
+('napkin', 'Napkin', 10, null, 'Decor', 'Table napkins', 'Square', '/item_napkin.png', 'all', true),
+('card', 'Card', 50, null, 'Personal', 'Custom greeting card', 'Mail', '/item_card.png', 'all', true),
+('oats', 'Oats', 45, null, 'Groceries', 'Rolled oats', 'Bowl', '/item_oats.png', 'all', true),
+('corned-beef', 'Corned beef', 60, null, 'Groceries', 'Canned corned beef', 'Beef', '/item_beef.png', 'all', true),
+('milo', 'Milo', 55, null, 'Groceries', 'Chocolate malt powder', 'Coffee', '/item_milo.png', 'all', true),
+('brown-sugar', 'Brown Sugar', 30, null, 'Groceries', 'Natural brown sugar', 'Box', '/item_sugar.png', 'all', true),
+('baked-beans', 'Baked Beans', 25, null, 'Groceries', 'Canned baked beans', 'Bean', '/item_beans.png', 'all', true),
+('ketchup', 'Ketchup', 20, null, 'Groceries', 'Tomato ketchup', 'Bottle', '/item_ketchup.png', 'all', true),
+('mayonnaise', 'Mayonnaise', 35, null, 'Groceries', 'Creamy mayonnaise', 'Bottle', '/item_mayo.png', 'all', true),
+('corned-flakes', 'Corned Flakes', 40, null, 'Groceries', 'Breakfast cereal', 'Bowl', '/item_cereal.png', 'all', true),
+('bread-spread', 'Bread spread', 45, null, 'Groceries', 'Butter or margarine', 'Sandwich', '/item_spread.png', 'all', true),
+('custard', 'Custard', 35, null, 'Groceries', 'Custard powder', 'Bowl', '/item_custard.png', 'all', true),
+('mackerel', 'Mackerel', 30, null, 'Groceries', 'Canned mackerel', 'Fish', '/item_mackerel.png', 'all', true),
+('mug', 'Mug', 40, null, 'Gifts', 'Customized mug', 'Coffee', '/item_mug.png', 'all', true),
+('hitarget-3', '3 yards Hitarget Cloth', 150, null, 'Gifts', 'Authentic African print fabric', 'Scissors', '/item_cloth.png', 'ladies', true),
+('hitarget-4', '4 yards Hitarget Cloth', 200, null, 'Gifts', 'Authentic African print fabric', 'Scissors', '/item_cloth.png', 'ladies', true),
+('hitarget-6', '6 yards Hitarget Cloth', 300, null, 'Gifts', 'Authentic African print fabric', 'Scissors', '/item_cloth.png', 'ladies', true),
+('vs-splash', 'Victoria''s Secret Splash', 140, null, 'Gifts', 'Body mist', 'Spray', '/item_perfume.png', 'ladies', true),
+('necklace', 'Necklace', 100, null, 'Gifts', 'Elegant necklace', 'Gem', '/item_jewelry.png', 'ladies', true),
+('scarf', 'Scarf', 100, null, 'Gifts', 'Silk scarf', 'Wind', '/item_scarf.png', 'ladies', true),
+('earrings', 'Earrings set', 50, null, 'Gifts', 'Beautiful earrings', 'Gem', '/item_jewelry.png', 'ladies', true),
+('scented-candle', 'Scented Candle', 400, null, 'Decor', 'Luxury scented candle', 'Flame', '/item_candle.png', 'all', true),
+('hand-fan', 'Hand Fan', 200, null, 'Gifts', 'Decorative hand fan', 'Wind', '/item_fan.png', 'ladies', true),
+('ferrero-range', 'Ferrero Rocher chocolates', 90, '90-300', 'Treats', 'Hazelnut chocolates', 'Gift', '/item_chocolates.png', 'all', true),
+('bracelet', 'Bracelet', 100, null, 'Gifts', 'Elegant bracelet', 'Gem', '/item_jewelry.png', 'ladies', true),
+('dove-care', 'Dove care set', 300, null, 'Personal', 'Body care products', 'Droplet', '/item_body_products.png', 'ladies', true),
+('purse', 'Purse', 200, null, 'Gifts', 'Women''s purse', 'Wallet', '/item_purse.png', 'ladies', true),
+('watch', 'Watch', 200, null, 'Gifts', 'Elegant wristwatch', 'Clock', '/item_watch.png', 'ladies', true),
+('diffuser-2', 'Diffuser', 200, null, 'Decor', 'Room diffuser', 'Wind', '/item_diffuser.png', 'all', true),
+('perfume-range', 'Perfume', 200, '200-5000', 'Gifts', 'Luxury perfume', 'Beaker', '/item_perfume.png', 'ladies', true),
+('wine-range', 'Wine', 150, '150-5000', 'Drinks', 'Premium wine', 'Wine', '/item_wine.png', 'all', true),
+('hand-bag', 'Hand bag', 300, null, 'Gifts', 'Luxury handbag', 'ShoppingBag', '/item_bag.png', 'ladies', true),
+('cadbury', 'Cadbury gift chocolate set', 200, null, 'Treats', 'Chocolate assortment', 'Candy', '/item_chocolates.png', 'all', true),
+('jollof', 'Jollof', 80, null, 'Treats', 'Delicious Ghana Jollof', 'Utensils', '/item_food.png', 'all', true),
+('jollof-2', 'Jollof-2', 160, null, 'Treats', 'Double portion Jollof', 'Utensils', '/item_food.png', 'all', true),
+('fried-rice', 'Fried rice', 80, null, 'Treats', 'Delicious Fried Rice', 'Utensils', '/item_food.png', 'all', true),
+('fried-rice-2', 'Fried rice-2', 160, null, 'Treats', 'Double portion Fried Rice', 'Utensils', '/item_food.png', 'all', true),
+('pastries', 'Pastries', 100, null, 'Treats', 'Assorted pastries', 'Croissant', '/item_pastries.png', 'all', true),
+('water', 'Water', 10, null, 'Drinks', 'Bottled water', 'Droplet', '/item_water.png', 'all', true),
+('meat-bowl', 'Meat bowl', 120, null, 'Treats', 'Assorted meat platter', 'Beef', '/item_meat.png', 'all', true),
+('salad', 'Salad', 50, null, 'Treats', 'Fresh vegetable salad', 'Leaf', '/item_salad.png', 'all', true),
+('stir-spaghetti', 'Stir fried spaghetti', 90, null, 'Treats', 'Stir-fried pasta', 'Utensils', '/item_pasta.png', 'all', true),
+('stir-spaghetti-2', 'Stir fried spaghetti-2', 180, null, 'Treats', 'Double portion pasta', 'Utensils', '/item_pasta.png', 'all', true),
+('fruits', 'Fruits', 80, null, 'Treats', 'Fresh fruit platter', 'Apple', '/item_fruits.png', 'all', true),
+('bento-cake', 'Custom bento cake', 150, null, 'Treats', 'Mini customized cake', 'Cake', '/item_cake.png', 'all', true),
+('milkshake', 'Milkshake', 60, null, 'Drinks', 'Creamy milkshake', 'CupSoda', '/item_juice.png', 'all', true),
+('snacks', 'Snacks', 100, null, 'Treats', 'Assorted snacks', 'Cookie', '/item_snacks.png', 'all', true)
+ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  price = EXCLUDED.price,
+  price_range = EXCLUDED.price_range,
+  category = EXCLUDED.category,
+  description = EXCLUDED.description,
+  emoji = EXCLUDED.emoji,
+  image = EXCLUDED.image,
+  gender = EXCLUDED.gender,
+  active = EXCLUDED.active;
+
+-- Seed Mother's Day Packages
+INSERT INTO packages (id, name, price, type, items, gender, tag, active) VALUES
+-- Hampers
+('hamper-p1', 'P1 Hamper', 380, 'hamper', ARRAY['basmati-1kg', 'sunflower-oil', 'tomato-paste', 'tea-bags', 'spaghetti', 'milk', 'sardines'], 'ladies', 'Hamper', true),
+('hamper-p2', 'P2 Hamper', 480, 'hamper', ARRAY['basmati-2kg', 'sunflower-oil', 'tomato-paste', 'tea-bags', 'spaghetti', 'milk', 'juice', 'napkin', 'sardines', 'card'], 'ladies', 'Hamper', true),
+('hamper-p3', 'P3 Hamper', 580, 'hamper', ARRAY['basmati-5kg', 'tomato-paste', 'sunflower-oil', 'tea-bags', 'spaghetti', 'milk', 'oats', 'juice', 'napkin', 'sardines', 'card'], 'ladies', 'Hamper', true),
+('hamper-p4', 'P4 Hamper', 750, 'hamper', ARRAY['basmati-5kg', 'tomato-paste', 'sunflower-oil', 'tea-bags', 'spaghetti', 'corned-beef', 'oats', 'milo', 'milk', 'napkin', 'juice', 'sardines', 'card'], 'ladies', 'Hamper', true),
+('hamper-p5', 'P5 Hamper', 900, 'hamper', ARRAY['basmati-5kg', 'brown-sugar', 'tomato-paste', 'sunflower-oil', 'spaghetti', 'tea-bags', 'oats', 'baked-beans', 'ketchup', 'mayonnaise', 'corned-beef', 'milo', 'milk', 'napkin', 'juice', 'sardines', 'card'], 'ladies', 'Hamper', true),
+('hamper-p6', 'P6 Hamper', 1500, 'hamper', ARRAY['basmati-5kg', 'spaghetti', 'oats', 'tea-bags', 'corned-flakes', 'brown-sugar', 'tomato-paste', 'sunflower-oil', 'baked-beans', 'ketchup', 'mayonnaise', 'corned-beef', 'bread-spread', 'custard', 'wine-range', 'milo', 'milk', 'mackerel', 'mug', 'juice', 'card'], 'ladies', 'Hamper', true),
+-- Gift Boxes
+('giftbox-1', 'DETALLE ESPECIAL', 380, 'gift_box', ARRAY['hitarget-3', 'vs-splash', 'necklace', 'card'], 'ladies', 'Gift Box', true),
+('giftbox-2', 'DETALLES QUE ABRAZAN', 580, 'gift_box', ARRAY['hitarget-3', 'vs-splash', 'scarf', 'necklace', 'earrings', 'card'], 'ladies', 'Gift Box', true),
+('giftbox-3', 'MOMENTOS PARA ELLA', 750, 'gift_box', ARRAY['hitarget-3', 'vs-splash', 'scented-candle', 'hand-fan', 'scarf', 'necklace', 'earrings', 'ferrero-range', 'card'], 'ladies', 'Gift Box', true),
+('giftbox-4', 'AMOR EN CADA DETALLE', 880, 'gift_box', ARRAY['hitarget-4', 'vs-splash', 'hand-fan', 'scented-candle', 'scarf', 'necklace', 'earrings', 'bracelet', 'ferrero-range', 'card'], 'ladies', 'Gift Box', true),
+('giftbox-5', 'AMOR INOLVIDABLE', 1200, 'gift_box', ARRAY['hitarget-6', 'vs-splash', 'scented-candle', 'dove-care', 'hand-fan', 'wine-range', 'ferrero-range', 'scarf', 'necklace', 'bracelet', 'earrings', 'card'], 'ladies', 'Gift Box', true),
+('giftbox-6', 'PARA MAMÁ, CON TODO MI AMOR', 1500, 'gift_box', ARRAY['hitarget-6', 'vs-splash', 'scented-candle', 'dove-care', 'purse', 'hand-fan', 'watch', 'wine-range', 'ferrero-range', 'scarf', 'necklace', 'bracelet', 'earrings', 'card'], 'ladies', 'Gift Box', true),
+('giftbox-7', 'LUJO, AMOR Y GRATITUD', 1750, 'gift_box', ARRAY['hitarget-6', 'vs-splash', 'scented-candle', 'dove-care', 'purse', 'hand-fan', 'diffuser-2', 'perfume-range', 'ferrero-range', 'watch', 'wine-range', 'scarf', 'necklace', 'bracelet', 'earrings', 'card'], 'ladies', 'Gift Box', true),
+('giftbox-8', 'LA MEJOR MAMÁ, LO MERECE TODO', 2250, 'gift_box', ARRAY['hitarget-6', 'hand-bag', 'vs-splash', 'scented-candle', 'dove-care', 'purse', 'hand-fan', 'diffuser-2', 'perfume-range', 'watch', 'cadbury', 'wine-range', 'scarf', 'necklace', 'bracelet', 'earrings', 'card'], 'ladies', 'Gift Box', true),
+-- Food Baskets
+('foodbasket-1', 'P1 Food Basket', 450, 'food_basket', ARRAY['jollof', 'fried-rice', 'pastries', 'juice', 'water', 'card'], 'ladies', 'Food Basket', true),
+('foodbasket-2', 'P2 Food Basket', 750, 'food_basket', ARRAY['jollof', 'fried-rice', 'meat-bowl', 'salad', 'pastries', 'juice', 'water', 'card'], 'ladies', 'Food Basket', true),
+('foodbasket-3', 'P3 Food Basket', 900, 'food_basket', ARRAY['jollof', 'fried-rice', 'stir-spaghetti', 'salad', 'meat-bowl', 'pastries', 'juice', 'water', 'fruits', 'card'], 'ladies', 'Food Basket', true),
+('foodbasket-4', 'P4 Food Basket', 1600, 'food_basket', ARRAY['jollof-2', 'fried-rice-2', 'stir-spaghetti-2', 'salad', 'meat-bowl', 'pastries', 'bento-cake', 'juice', 'milkshake', 'wine-range', 'snacks', 'water', 'fruits', 'card'], 'ladies', 'Food Basket', true)
+ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  price = EXCLUDED.price,
+  type = EXCLUDED.type,
   items = EXCLUDED.items,
   gender = EXCLUDED.gender,
   tag = EXCLUDED.tag,
