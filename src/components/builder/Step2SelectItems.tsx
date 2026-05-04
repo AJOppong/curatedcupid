@@ -320,11 +320,13 @@ export default function Step2SelectItems() {
                     <ItemIcon item={item} className="w-10 h-10 rounded-xl bg-[var(--glass-bg)] text-xl flex-shrink-0 group-hover:scale-110 transition-transform" />
                     <div className="flex-1 min-w-0">
                       <p className="text-[var(--text-main)] text-sm font-semibold truncate">{item.name}</p>
-                      <p className="text-[#D4AF37] text-[11px] font-bold">
-                        {dbItems.find(i => i.id === item.id)?.price_range
-                          ? `GH₵${dbItems.find(i => i.id === item.id)?.price_range}`
-                          : `GH₵${item.price.toLocaleString()}`}
-                      </p>
+                      {!hideItemPrices && (
+                        <p className="text-[#D4AF37] text-[11px] font-bold">
+                          {dbItems.find(i => i.id === item.id)?.price_range
+                            ? `GH₵${dbItems.find(i => i.id === item.id)?.price_range}`
+                            : `GH₵${item.price.toLocaleString()}`}
+                        </p>
+                      )}
                     </div>
                     {!isFoodBasket && (
                       <div className="flex items-center gap-1.5 flex-shrink-0">
@@ -354,21 +356,41 @@ export default function Step2SelectItems() {
               </AnimatePresence>
             </div>
 
-            {/* Subtotal */}
+            {/* Subtotal / Package Summary */}
             <div className="glass border border-[var(--border)] rounded-2xl p-4 space-y-2">
-              <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
-                <span>Subtotal</span>
-                <span className="text-[var(--text-main)] font-bold">GH₵{cartSubtotal.toLocaleString()}</span>
-              </div>
-              <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
-                <span>Service & Packaging</span>
-                <span className="text-[var(--text-main)] font-bold">GH₵50</span>
-              </div>
+              {hideItemPrices && selectedPackageObj ? (
+                <>
+                  <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
+                    <span>Package Base Price</span>
+                    <span className="text-[var(--text-main)] font-bold">GH₵{selectedPackageObj.price.toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[#22c55e] font-bold">Service & Packaging</span>
+                    <span className="text-[#22c55e] font-bold">Included</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
+                    <span>Subtotal</span>
+                    <span className="text-[var(--text-main)] font-bold">GH₵{cartSubtotal.toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-[var(--text-muted)]">
+                    <span>Service & Packaging</span>
+                    <span className="text-[var(--text-main)] font-bold">GH₵50</span>
+                  </div>
+                </>
+              )}
               <div className="border-t border-[var(--border)] pt-2 flex items-center justify-between">
                 <span className="text-[var(--text-main)] font-bold text-sm">Total</span>
-                <span className="text-[#D4AF37] font-black text-lg">GH₵{(cartSubtotal + 50).toLocaleString()}</span>
+                <span className="text-[#D4AF37] font-black text-lg">
+                  GH₵{hideItemPrices && selectedPackageObj
+                    ? selectedPackageObj.price.toLocaleString()
+                    : (cartSubtotal + 50).toLocaleString()}
+                </span>
               </div>
             </div>
+
 
             {/* Navigation Buttons */}
             <div className="flex gap-3">
