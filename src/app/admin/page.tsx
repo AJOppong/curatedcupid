@@ -694,7 +694,9 @@ function AdminContent() {
                       <span className="px-1.5 py-0.5 bg-white/5 rounded text-[9px] text-white/40 uppercase font-bold">{item.gender}</span>
                     </div>
                     <div className="mt-auto pt-3 flex items-center justify-between">
-                      <span className="text-[#D4AF37] font-bold text-sm">GH₵{item.price}</span>
+                      <span className="text-[#D4AF37] font-bold text-sm">
+                        {item.price === 0 ? "-" : `GH₵${item.price}`}
+                      </span>
                       <div className="flex gap-2">
                         <button onClick={() => {setNewItem(item); setShowItemModal(true);}} className="text-blue-400 hover:text-blue-300 text-xs font-bold">Edit</button>
                         <button onClick={() => deleteItem(item.id)} className="text-red-500 hover:text-red-400 text-xs font-bold">Delete</button>
@@ -861,7 +863,7 @@ function AdminContent() {
               <form onSubmit={handleSaveItem} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1"><label className="text-white/60 text-xs">Name</label><input required value={newItem.name || ''} onChange={e => setNewItem({...newItem, name: e.target.value})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" /></div>
-                  <div className="space-y-1"><label className="text-white/60 text-xs">Price (GH₵)</label><input required type="number" value={newItem.price || ''} onChange={e => setNewItem({...newItem, price: parseInt(e.target.value)})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" /></div>
+                  <div className="space-y-1"><label className="text-white/60 text-xs">Price (GH₵)</label><input required type="number" min="0" value={newItem.price ?? ''} onChange={e => setNewItem({...newItem, price: parseInt(e.target.value) || 0})} className="w-full bg-white/5 rounded-xl px-3 py-2 text-white text-sm" /></div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">

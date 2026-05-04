@@ -12,13 +12,13 @@ import {
 } from "lucide-react";
 
 export default function Step5Checkout() {
-  const { cart, cartTotal, baseService, roomVibe, customVibe, roomTransport, roomTransportPrice, eventDetails, setStep } = useBuilder();
+  const { cart, cartTotal, packageDiscount, baseService, roomVibe, customVibe, roomTransport, roomTransportPrice, eventDetails, setStep } = useBuilder();
   const [loading, setLoading] = useState(false);
   const [paymentPhase, setPaymentPhase] = useState<"none" | "details" | "completed">("none");
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [refundAcknowledged, setRefundAcknowledged] = useState(false);
 
-  const total = cartTotal + 50 + (baseService === "Room Aesthetics" ? roomTransportPrice : 0);
+  const total = cartTotal + 50 + (baseService === "Room Aesthetics" ? roomTransportPrice : 0) - packageDiscount;
 
   const deliveryObj = deliveryMethods.find(d => d.id === eventDetails.deliveryMethod);
   const transportObj = roomTransportOptions.find(t => t.id === roomTransport);
@@ -79,7 +79,8 @@ export default function Step5Checkout() {
     `*Delivery Method:* ${deliveryObj?.label} ${eventDetails.deliveryMethodDetails ? `(${eventDetails.deliveryMethodDetails})` : ""}\n` +
     `*Service:* ${baseService}${roomVibe ? ` (${roomVibe === "Other" ? customVibe : roomVibe} Vibe)` : ""}\n\n` +
     `${baseService === "Room Aesthetics" ? `*Room Transport:* ${transportObj?.label}\n\n` : ""}` +
-    `*Items:*\n${cart.map((i) => `- ${i.name} x${i.quantity} (GH₵${(i.price * i.quantity).toLocaleString()})`).join("\n")}\n\n` +
+    `*Items:*\n${cart.map((i) => `- ${i.name} x${i.quantity} (${i.price === 0 ? "Included" : `GH₵${(i.price * i.quantity).toLocaleString()}`})`).join("\n")}\n\n` +
+    (packageDiscount > 0 ? `*Package Discount:* -GH₵${packageDiscount.toLocaleString()}\n` : "") +
     `*Total:* GH₵${total.toLocaleString()}\n\n` +
     `*Theme:* ${eventDetails.theme || "No preference"}\n` +
     `*Notes:* ${eventDetails.instructions || "None"}`

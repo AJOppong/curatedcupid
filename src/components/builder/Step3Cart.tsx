@@ -11,9 +11,9 @@ import * as LucideIcons from "lucide-react";
 import Image from "next/image";
 
 export default function Step3Cart() {
-  const { cart, removeFromCart, updateQuantity, cartTotal, setStep, selectedPackageName, setCartItemNote } = useBuilder();
+  const { cart, removeFromCart, updateQuantity, cartTotal, packageDiscount, setStep, selectedPackageName, setCartItemNote } = useBuilder();
   const SERVICE_FEE = 50;
-  const totalWithFee = cartTotal + SERVICE_FEE;
+  const totalWithFee = cartTotal + SERVICE_FEE - packageDiscount;
   const itemCount = cart.reduce((s, i) => s + i.quantity, 0);
 
   const renderCartIcon = (imageStr: string, className?: string) => {
@@ -106,7 +106,7 @@ export default function Step3Cart() {
                 <div className="flex-1 min-w-0">
                   <p className="text-[var(--text-main)] font-semibold text-sm truncate">{item.name}</p>
                   <p className="text-[var(--text-muted)] text-xs mt-0.5">
-                    GH₵{item.price.toLocaleString()} × {item.quantity}
+                    {item.price === 0 ? "-" : `GH₵${item.price.toLocaleString()}`} × {item.quantity}
                   </p>
                   <div className="mt-1.5 w-full flex flex-col gap-2">
                     <input
@@ -186,7 +186,7 @@ export default function Step3Cart() {
                   transition={{ duration: 0.25 }}
                   className="text-[var(--text-main)] font-bold text-sm w-20 text-right flex-shrink-0 tabular-nums"
                 >
-                  GH₵{(item.price * item.quantity).toLocaleString()}
+                  {item.price === 0 ? "-" : `GH₵${(item.price * item.quantity).toLocaleString()}`}
                 </motion.p>
 
                 {/* Delete */}
@@ -236,7 +236,7 @@ export default function Step3Cart() {
                     )}
                   </div>
                   <span className="text-[var(--text-muted)] text-xs font-bold flex-shrink-0 tabular-nums">
-                    GH₵{(item.price * item.quantity).toLocaleString()}
+                    {item.price === 0 ? "-" : `GH₵${(item.price * item.quantity).toLocaleString()}`}
                   </span>
                 </div>
               ))}
@@ -259,6 +259,12 @@ export default function Step3Cart() {
                 <span className="text-[var(--text-muted)]">Service & Packaging</span>
                 <span className="text-[var(--text-muted)] font-bold">GH₵{SERVICE_FEE}</span>
               </div>
+              {packageDiscount > 0 && (
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[#E91E8C] font-bold">Package Discount</span>
+                  <span className="text-[#E91E8C] font-bold">-GH₵{packageDiscount.toLocaleString()}</span>
+                </div>
+              )}
             </div>
 
             <div className="bg-gradient-to-r from-[#E91E8C]/10 to-[#7C3AED]/10 border border-[#E91E8C]/20 rounded-2xl p-4 flex items-center justify-between">

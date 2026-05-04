@@ -58,6 +58,7 @@ interface BuilderContextType {
   step: number;
   cart: CartItem[];
   cartTotal: number;
+  packageDiscount: number;
   baseService: string;
   roomVibe: string;
   vibeImage: string;
@@ -183,10 +184,24 @@ export function BuilderProvider({ children }: { children: ReactNode }) {
 
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+  let packageDiscount = 0;
+  if (selectedPackageName) {
+    const pkg = dbPackages.find(p => p.name === selectedPackageName);
+    if (pkg) {
+      const defaultItemsTotal = pkg.items.reduce((sum, itemId) => {
+        const item = dbItems.find(i => i.id === itemId);
+        return sum + (item?.price || 0);
+      }, 0);
+      // The package inherently saves money compared to buying items individually + service fee
+      // Package Discount = (Sum of default items + Service Fee) - Package Base Price
+      packageDiscount = Math.max(0, (defaultItemsTotal + 50) - pkg.price);
+    }
+  }
+
   return (
     <BuilderContext.Provider
       value={{
-        step, cart, cartTotal, baseService, roomVibe, vibeImage,
+        step, cart, cartTotal, packageDiscount, baseService, roomVibe, vibeImage,
         customVibe, roomTransport, roomTransportPrice,
         selectedPackageName, eventDetails, dbItems, dbPackages, mostPopularPackageIds,
         setStep, setBaseService, setRoomVibe: setRoomVibeWithImage,

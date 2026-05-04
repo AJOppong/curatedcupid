@@ -449,7 +449,7 @@ export default function Step2SelectItems() {
                     <div>
                       <p className="text-[var(--text-main)] text-xs font-semibold leading-tight line-clamp-1">{item.name}</p>
                       <p className="text-[#D4AF37] text-[11px] font-bold mt-0.5">
-                        {item.price_range ? `GH₵${item.price_range}` : `GH₵${item.price.toLocaleString()}`}
+                        {item.price_range ? `GH₵${item.price_range}` : item.price === 0 ? "-" : `GH₵${item.price.toLocaleString()}`}
                       </p>
                     </div>
 
