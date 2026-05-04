@@ -91,6 +91,12 @@ function AdminContent() {
   const [packageSearch, setPackageSearch] = useState("");
   const [mostPopularPackageIds, setMostPopularPackageIds] = useState<string[]>([]);
 
+  // Items filter state
+  const [itemSearch, setItemSearch] = useState("");
+  const [itemFilterGender, setItemFilterGender] = useState("all");
+  const [itemFilterCategory, setItemFilterCategory] = useState("all");
+  const [itemSortBy, setItemSortBy] = useState<"name" | "price_asc" | "price_desc" | "category">("name");
+
   const [isNewCategory, setIsNewCategory] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   
@@ -309,6 +315,21 @@ function AdminContent() {
   };
 
   const filteredBookings = bookings.filter(b => filter === "all" || b.status === filter);
+
+  const filteredItems = items
+    .filter(item => {
+      const matchSearch = item.name.toLowerCase().includes(itemSearch.toLowerCase()) ||
+        item.description?.toLowerCase().includes(itemSearch.toLowerCase());
+      const matchGender = itemFilterGender === "all" || item.gender === itemFilterGender;
+      const matchCategory = itemFilterCategory === "all" || item.category === itemFilterCategory;
+      return matchSearch && matchGender && matchCategory;
+    })
+    .sort((a, b) => {
+      if (itemSortBy === "price_asc") return a.price - b.price;
+      if (itemSortBy === "price_desc") return b.price - a.price;
+      if (itemSortBy === "category") return a.category.localeCompare(b.category);
+      return a.name.localeCompare(b.name);
+    });
 
   if (!isAuthenticated) {
     return (
@@ -597,12 +618,59 @@ function AdminContent() {
                 <Button onClick={() => setShowItemModal(true)} className="gap-2 py-2 text-sm"><Plus className="w-4 h-4"/> Add New Item</Button>
               </div>
             </div>
-            
+
+            {/* Filter & Sort Bar */}
+            <div className="flex flex-wrap gap-3 items-center">
+              {/* Search */}
+              <div className="relative flex-1 min-w-[180px]">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/30" />
+                <input
+                  type="text"
+                  placeholder="Search items..."
+                  value={itemSearch}
+                  onChange={e => setItemSearch(e.target.value)}
+                  className="w-full glass border border-white/10 rounded-xl pl-9 pr-3 py-2 text-sm text-white bg-transparent focus:outline-none focus:border-[#E91E8C]/50 placeholder-white/30"
+                />
+              </div>
+              {/* Category filter */}
+              <select
+                value={itemFilterCategory}
+                onChange={e => setItemFilterCategory(e.target.value)}
+                className="glass border border-white/10 rounded-xl px-3 py-2 text-sm text-white bg-[#0A0A0A] focus:outline-none focus:border-[#E91E8C]/50"
+              >
+                <option value="all">All Categories</option>
+                {categories.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+              {/* Gender filter */}
+              <select
+                value={itemFilterGender}
+                onChange={e => setItemFilterGender(e.target.value)}
+                className="glass border border-white/10 rounded-xl px-3 py-2 text-sm text-white bg-[#0A0A0A] focus:outline-none focus:border-[#E91E8C]/50"
+              >
+                <option value="all">All Genders</option>
+                <option value="ladies">Ladies</option>
+                <option value="guys">Guys</option>
+              </select>
+              {/* Sort */}
+              <select
+                value={itemSortBy}
+                onChange={e => setItemSortBy(e.target.value as any)}
+                className="glass border border-white/10 rounded-xl px-3 py-2 text-sm text-white bg-[#0A0A0A] focus:outline-none focus:border-[#E91E8C]/50"
+              >
+                <option value="name">Sort: Name A–Z</option>
+                <option value="price_asc">Sort: Price Low–High</option>
+                <option value="price_desc">Sort: Price High–Low</option>
+                <option value="category">Sort: Category</option>
+              </select>
+              {/* Count */}
+              <span className="text-white/30 text-xs whitespace-nowrap">{filteredItems.length} of {items.length} items</span>
+            </div>
+
             {loadingItems ? (
                <div className="py-20 text-center text-white/20">Loading items...</div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {items.map(item => (
+                {filteredItems.map(item => (
                   <div key={item.id} className="glass border border-white/10 p-4 rounded-2xl flex flex-col gap-2">
                     <div className="flex items-center justify-between mb-2">
                       <div className="w-10 h-10 bg-white/5 rounded-xl flex items-center justify-center text-2xl border border-white/5 relative overflow-hidden">
@@ -621,6 +689,10 @@ function AdminContent() {
                     </div>
                     <h3 className="text-white font-bold text-sm leading-tight">{item.name}</h3>
                     <p className="text-white/40 text-xs line-clamp-2">{item.description}</p>
+                    <div className="flex gap-1.5 flex-wrap">
+                      <span className="px-1.5 py-0.5 bg-white/5 rounded text-[9px] text-white/40 uppercase font-bold">{item.category}</span>
+                      <span className="px-1.5 py-0.5 bg-white/5 rounded text-[9px] text-white/40 uppercase font-bold">{item.gender}</span>
+                    </div>
                     <div className="mt-auto pt-3 flex items-center justify-between">
                       <span className="text-[#D4AF37] font-bold text-sm">GH₵{item.price}</span>
                       <div className="flex gap-2">
@@ -630,7 +702,7 @@ function AdminContent() {
                     </div>
                   </div>
                 ))}
-                {items.length === 0 && <div className="col-span-4 py-20 text-center text-white/30">No items found. Create one!</div>}
+                {filteredItems.length === 0 && <div className="col-span-4 py-20 text-center text-white/30">{items.length === 0 ? 'No items found. Create one!' : 'No items match your filters.'}</div>}
               </div>
             )}
           </div>
