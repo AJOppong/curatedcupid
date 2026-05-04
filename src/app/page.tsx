@@ -338,10 +338,10 @@ function Packages() {
 const galleryItems = [
   { type: "image", src: "/gallery-room.png", label: "Romantic Candlelit Setup", tag: "Anniversary" },
   { type: "image", src: "/gallery-birthday.png", label: "Luxury Bedroom Design", tag: "Celebration" },
-  { type: "image", src: "/gallery-elegant.png", label: "Elegant Interior", tag: "Romance" },
-  { type: "video", src: null, icon: <Video className="w-12 h-12 text-[#E91E8C]" />, label: "Event Highlight", tag: "Proposal" },
-  { type: "image", src: null, icon: <Wine className="w-12 h-12 text-[#E91E8C]" />, label: "Champagne Setup", tag: "VIP" },
-  { type: "video", src: null, icon: <Sparkles className="w-12 h-12 text-[#E91E8C]" />, label: "LED Light Display", tag: "Trending" },
+  { type: "image", src: "/gallery-elegant-gh.png", label: "Elegant Interior", tag: "Romance" },
+  { type: "image", src: "/gallery-highlight-gh.png", label: "Event Highlight", tag: "Proposal" },
+  { type: "image", src: "/gallery-champagne.jpg", label: "Champagne Setup", tag: "VIP" },
+  { type: "image", src: "/gallery-led-gh.png", label: "LED Light Display", tag: "Trending" },
 ];
 
 function Gallery() {
