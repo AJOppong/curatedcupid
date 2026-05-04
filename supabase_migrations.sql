@@ -256,6 +256,9 @@ ON CONFLICT (id) DO UPDATE SET
   active = EXCLUDED.active;
 
 -- Seed Mother's Day Packages
+-- (Safety: ensure new columns exist before inserting)
+ALTER TABLE packages ADD COLUMN IF NOT EXISTS tag text;
+ALTER TABLE packages ADD COLUMN IF NOT EXISTS type text DEFAULT 'gift_box';
 INSERT INTO packages (id, name, price, type, items, gender, tag, active) VALUES
 -- Hampers
 ('hamper-p1', 'P1 Hamper', 380, 'hamper', ARRAY['basmati-1kg', 'sunflower-oil', 'tomato-paste', 'tea-bags', 'spaghetti', 'milk', 'sardines'], 'ladies', 'Hamper', true),
