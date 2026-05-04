@@ -330,7 +330,9 @@ function Packages() {
 }
 
 // ── Gallery ──────────────────────────────────────────
-const galleryItems = [
+type GalleryItem = { type: string; src: string | null; label: string; tag: string; icon?: any };
+
+const galleryItems: GalleryItem[] = [
   { type: "image", src: "/gallery-room.png", label: "Romantic Candlelit Setup", tag: "Anniversary" },
   { type: "image", src: "/gallery-birthday.png", label: "Luxury Bedroom Design", tag: "Celebration" },
   { type: "image", src: "/gallery-elegant-gh.png", label: "Elegant Interior", tag: "Romance" },
