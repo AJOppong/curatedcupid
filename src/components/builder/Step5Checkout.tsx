@@ -113,8 +113,8 @@ export default function Step5Checkout() {
         <div className="glass border border-[var(--border)] rounded-2xl p-6 text-center max-w-sm mx-auto space-y-4">
           <p className="text-[var(--text-muted)] text-xs font-medium uppercase tracking-widest">Payment Details</p>
           <div className="space-y-1 py-2">
-            <p className="text-[var(--text-main)] font-bold text-lg tracking-widest">055 000 0000</p>
-            <p className="text-[var(--text-muted)] text-sm">Account Name: Curated Cupid</p>
+            <p className="text-[var(--text-main)] font-bold text-lg tracking-widest">055 783 0853</p>
+            <p className="text-[var(--text-muted)] text-sm">Account Name: Frances Akosua Adjei</p>
           </div>
           <div className="pt-2 border-t border-[var(--border)]">
              <p className="text-[var(--text-main)] text-sm">Amount to Pay:</p>
@@ -162,7 +162,7 @@ export default function Step5Checkout() {
           <p className="text-[#D4AF37] font-bold text-sm mt-2">Total: GH₵{total.toLocaleString()}</p>
         </div>
 
-        <a href={`https://wa.me/233550000000?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer">
+        <a href={`https://wa.me/233557830853?text=${whatsappMessage}`} target="_blank" rel="noopener noreferrer">
           <Button variant="gold" className="gap-2 mx-auto">
             <MessageCircle className="w-4 h-4" /> Continue on WhatsApp
           </Button>
@@ -274,7 +274,7 @@ export default function Step5Checkout() {
           <CheckCircle2 className="w-4 h-4" /> Confirm Booking & Pay
         </Button>
         <a
-          href={refundAcknowledged ? `https://wa.me/233550000000?text=${whatsappMessage}` : "#"}
+          href={refundAcknowledged ? `https://wa.me/233557830853?text=${whatsappMessage}` : "#"}
           target={refundAcknowledged ? "_blank" : "_self"}
           rel="noopener noreferrer"
           className="w-full sm:w-auto"

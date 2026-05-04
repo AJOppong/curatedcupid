@@ -630,6 +630,19 @@ function Reviews() {
 
 // ── Contact ───────────────────────────────────────────
 function Contact() {
+  const [form, setForm] = useState({ name: "", phone: "", email: "", date: "", message: "" });
+  const upd = (f: string, v: string) => setForm(p => ({ ...p, [f]: v }));
+
+  const emailLink = `mailto:curatedcupid2026@gmail.com?subject=${encodeURIComponent(
+    `Enquiry from ${form.name || 'a visitor'}`
+  )}&body=${encodeURIComponent(
+    `Hi Curated Cupid!\n\nName: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\nEvent Date: ${form.date}\n\nMessage:\n${form.message}`
+  )}`;
+
+  const waLink = `https://wa.me/233557830853?text=${encodeURIComponent(
+    `Hi Curated Cupid! 🌹\n\nName: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\nEvent Date: ${form.date}\n\nMessage: ${form.message}`
+  )}`;
+
   return (
     <section id="contact" className="py-24 px-6">
       <div className="max-w-5xl mx-auto">
@@ -647,8 +660,8 @@ function Contact() {
             <div className="bg-[#12101F]/80 border border-[var(--border)] rounded-2xl p-6 space-y-5">
               <h3 className="text-white font-semibold text-lg">Contact Details</h3>
               {[
-                { icon: <Phone className="w-4 h-4" />, label: "Phone", value: "+233 24 123 4567" },
-                { icon: <Mail className="w-4 h-4" />, label: "Email", value: "hello@curatedcupid.com" },
+                { icon: <Phone className="w-4 h-4" />, label: "Phone", value: "+233 55 783 0853" },
+                { icon: <Mail className="w-4 h-4" />, label: "Email", value: "curatedcupid2026@gmail.com" },
                 { icon: <MapPin className="w-4 h-4" />, label: "Location", value: "Ayeduase - Kumasi, Ghana" },
                 { icon: <Clock className="w-4 h-4" />, label: "Hours", value: "Mon–Sun, 8am – 9pm" },
               ].map((item) => (
@@ -669,10 +682,10 @@ function Contact() {
               <h3 className="text-white font-semibold text-sm">Follow Our Magic</h3>
               <div className="flex flex-wrap gap-3">
                 {[
-                  { name: "WhatsApp", icon: <MessageCircle className="w-4 h-4" />, color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/233241234567" },
-                  { name: "TikTok", icon: <Music className="w-4 h-4" />, color: "bg-white/5 text-[var(--text-main)] border-[var(--border)]", link: "https://tiktok.com/@curatedcupid" },
-                  { name: "Snapchat", icon: <Ghost className="w-4 h-4" />, color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", link: "https://snapchat.com/add/curatedcupid" },
-                  { name: "Instagram", icon: <Camera className="w-4 h-4" />, color: "bg-pink-500/10 text-pink-400 border-pink-500/20", link: "https://instagram.com/curatedcupid" },
+                  { name: "WhatsApp", icon: <MessageCircle className="w-4 h-4" />, color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/233557830853" },
+                  { name: "TikTok", icon: <Music className="w-4 h-4" />, color: "bg-white/5 text-[var(--text-main)] border-[var(--border)]", link: "https://tiktok.com/@planet_ajayy" },
+                  { name: "Snapchat", icon: <Ghost className="w-4 h-4" />, color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", link: "https://snapchat.com/add/l0v3_ajay" },
+                  { name: "Instagram", icon: <Camera className="w-4 h-4" />, color: "bg-pink-500/10 text-pink-400 border-pink-500/20", link: "https://instagram.com/ethereal_ajayy" },
                 ].map((social) => (
                   <a
                     key={social.name}
@@ -696,28 +709,48 @@ function Contact() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-white/60 text-xs">Your Name</label>
-                    <input type="text" placeholder="e.g. Amara Johnson" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                    <input type="text" value={form.name} onChange={e => upd('name', e.target.value)} placeholder="e.g. Amara Johnson" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-white/60 text-xs">Phone / WhatsApp</label>
-                    <input type="tel" placeholder="e.g. 0241234567" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                    <input type="tel" value={form.phone} onChange={e => upd('phone', e.target.value)} placeholder="e.g. 0557830853" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                   </div>
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-white/60 text-xs">Email Address</label>
-                  <input type="email" placeholder="your@email.com" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                  <input type="email" value={form.email} onChange={e => upd('email', e.target.value)} placeholder="your@email.com" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-white/60 text-xs">Event Date (Approx.)</label>
-                  <input type="date" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#E91E8C]/50 transition-all" />
+                  <input type="date" value={form.date} onChange={e => upd('date', e.target.value)} className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#E91E8C]/50 transition-all" />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-white/60 text-xs">Message</label>
-                  <textarea rows={4} placeholder="Tell us about your dream setup..." className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all resize-none" />
+                  <textarea rows={4} value={form.message} onChange={e => upd('message', e.target.value)} placeholder="Tell us about your dream setup..." className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all resize-none" />
                 </div>
-                <button type="submit" className="w-full btn-pink-gradient text-white font-semibold py-3.5 rounded-xl text-sm hover:scale-[1.01] transition-transform">
-                  Send Message
-                </button>
+
+                {/* Send options */}
+                <div className="pt-1 space-y-2.5">
+                  <p className="text-white/40 text-[11px] text-center tracking-wide">Choose how you&apos;d like to reach us</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <a
+                      href={emailLink}
+                      className="flex items-center justify-center gap-2 w-full btn-pink-gradient text-white font-semibold py-3.5 rounded-xl text-sm hover:scale-[1.01] transition-transform"
+                    >
+                      <Mail className="w-4 h-4" />
+                      Send via Email
+                    </a>
+                    <a
+                      href={waLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl text-sm font-semibold bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 hover:scale-[1.01] transition-all"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      Chat on WhatsApp
+                    </a>
+                  </div>
+                </div>
               </form>
             </div>
           </motion.div>
@@ -781,8 +814,8 @@ function Footer() {
           <div>
             <p className="text-[var(--text-muted)] text-xs font-semibold uppercase tracking-widest mb-4">Contact</p>
             <div className="space-y-2 text-[var(--text-muted)] text-sm">
-              <p>+233 24 123 4567</p>
-              <p>hello@curatedcupid.com</p>
+              <p>+233 55 783 0853</p>
+              <p>curatedcupid2026@gmail.com</p>
               <p>Ayeduase - Kumasi, Ghana</p>
             </div>
           </div>
