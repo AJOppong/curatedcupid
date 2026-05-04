@@ -186,11 +186,10 @@ function Services() {
               {...fadeUp(i * 0.08)}
               whileHover={{ y: -6, scale: 1.01 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className={`relative rounded-2xl p-6 border border-[var(--border)] overflow-hidden group transition-all ${
-                s.cardGlow
-                  ? "bg-gradient-to-br from-[var(--primary)]/10 to-[var(--surface)]"
-                  : "bg-[var(--surface)]"
-              }`}
+              className={`relative rounded-2xl p-6 border border-[var(--border)] overflow-hidden group transition-all ${s.cardGlow
+                ? "bg-gradient-to-br from-[var(--primary)]/10 to-[var(--surface)]"
+                : "bg-[var(--surface)]"
+                }`}
             >
               {/* Corner dot */}
               <div className="absolute top-5 right-5 w-2.5 h-2.5 rounded-full" style={{ backgroundColor: s.dot, boxShadow: `0 0 10px ${s.dot}80` }} />
@@ -212,12 +211,12 @@ function Services() {
 
 // ── Packages ──────────────────────────────────────────
 function Packages() {
-  const { dbPackages, dbItems, mostPopularPackageIds } = useBuilder();
+  const { dbPackages, dbItems, mostPopularPackageId } = useBuilder();
   const { activeTheme } = useTheme();
 
-  const isLadiesOnly = activeTheme?.name?.toLowerCase().includes('mother') || activeTheme?.name?.toLowerCase().includes('women');
-  const isGuysOnly = activeTheme?.name?.toLowerCase().includes('father') || activeTheme?.name?.toLowerCase().includes('men');
-  
+  const isLadiesOnly = activeTheme?.name.toLowerCase().includes('mother') || activeTheme?.name.toLowerCase().includes('women');
+  const isGuysOnly = activeTheme?.name.toLowerCase().includes('father') || activeTheme?.name.toLowerCase().includes('men');
+
   const defaultGender = isLadiesOnly ? 'Ladies' : (isGuysOnly ? 'Guys' : 'Ladies');
   const [activeGender, setActiveGender] = useState(defaultGender);
 
@@ -247,11 +246,10 @@ function Packages() {
                 <button
                   key={tab}
                   onClick={() => setActiveGender(tab)}
-                  className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
-                    activeGender === tab
-                      ? "btn-pink-gradient text-white shadow-lg"
-                      : "text-[var(--text-muted)] hover:text-[var(--primary)]"
-                  }`}
+                  className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${activeGender === tab
+                    ? "btn-pink-gradient text-white shadow-lg"
+                    : "text-[var(--text-muted)] hover:text-[var(--primary)]"
+                    }`}
                 >
                   {tab}
                 </button>
@@ -268,28 +266,26 @@ function Packages() {
                 key={pkg.id}
                 layout
                 initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: mostPopularPackageIds.includes(pkg.id) ? 1.03 : 1 }}
+                animate={{ opacity: 1, scale: pkg.id === mostPopularPackageId ? 1.03 : 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                whileHover={{ y: -6, scale: mostPopularPackageIds.includes(pkg.id) ? 1.05 : 1.02 }}
+                whileHover={{ y: -6, scale: pkg.id === mostPopularPackageId ? 1.05 : 1.02 }}
                 transition={{ type: "spring", stiffness: 280, damping: 22 }}
-                className={`relative rounded-2xl overflow-hidden flex flex-col ${
-                  mostPopularPackageIds.includes(pkg.id)
-                    ? "border-2 border-[#D4AF37] bg-gradient-to-b from-[#D4AF37]/10 to-[var(--surface)] shadow-[0_0_40px_rgba(212,175,55,0.25)] z-10"
-                    : "border border-[var(--border)] bg-[var(--surface)]"
-                }`}
+                className={`relative rounded-2xl overflow-hidden flex flex-col ${pkg.id === mostPopularPackageId
+                  ? "border-2 border-[#D4AF37] bg-gradient-to-b from-[#D4AF37]/10 to-[var(--surface)] shadow-[0_0_40px_rgba(212,175,55,0.25)] z-10"
+                  : "border border-[var(--border)] bg-[var(--surface)]"
+                  }`}
               >
                 {/* Top tag */}
-                {mostPopularPackageIds.includes(pkg.id) && (
+                {pkg.id === mostPopularPackageId && (
                   <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-[#D4AF37] to-[#AA8529] text-white text-[10px] font-black uppercase tracking-widest py-1.5 text-center shadow-md z-20">
                     Most Popular Choice
                   </div>
                 )}
-                
+
                 <div className="p-7 flex flex-col h-full">
                   {/* Icon */}
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
-                    mostPopularPackageIds.includes(pkg.id) ? "bg-gradient-to-br from-[#D4AF37] to-[#AA8529] text-white shadow-lg shadow-[#D4AF37]/30" : "bg-[var(--primary-glow)] text-[var(--primary)]"
-                  }`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${pkg.id === mostPopularPackageId ? "bg-gradient-to-br from-[#D4AF37] to-[#AA8529] text-white shadow-lg shadow-[#D4AF37]/30" : "bg-[var(--primary-glow)] text-[var(--primary)]"
+                    }`}>
                     <Crown className="w-5 h-5" />
                   </div>
 
@@ -316,11 +312,10 @@ function Packages() {
 
                   {/* CTA */}
                   <Link href={`/builder?package=${encodeURIComponent(pkg.name)}`}>
-                    <div className={`w-full py-4 rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2 ${
-                      mostPopularPackageIds.includes(pkg.id)
-                        ? "bg-gradient-to-r from-[#D4AF37] to-[#AA8529] text-white shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-[0_0_30px_rgba(212,175,55,0.6)] hover:scale-[1.02]"
-                        : "bg-[var(--primary)] text-white hover:bg-[var(--primary-light)] hover:scale-[1.02]"
-                    }`}>
+                    <div className={`w-full py-4 rounded-xl font-bold transition-all text-sm flex items-center justify-center gap-2 ${pkg.id === mostPopularPackageId
+                      ? "bg-gradient-to-r from-[#D4AF37] to-[#AA8529] text-white shadow-[0_0_20px_rgba(212,175,55,0.4)] hover:shadow-[0_0_30px_rgba(212,175,55,0.6)] hover:scale-[1.02]"
+                      : "bg-[var(--primary)] text-white hover:bg-[var(--primary-light)] hover:scale-[1.02]"
+                      }`}>
                       Book This Package
                     </div>
                   </Link>
@@ -338,10 +333,10 @@ function Packages() {
 const galleryItems = [
   { type: "image", src: "/gallery-room.png", label: "Romantic Candlelit Setup", tag: "Anniversary" },
   { type: "image", src: "/gallery-birthday.png", label: "Luxury Bedroom Design", tag: "Celebration" },
-  { type: "image", src: "/gallery-elegant-gh.png", label: "Elegant Interior", tag: "Romance" },
-  { type: "image", src: "/gallery-highlight-gh.png", label: "Event Highlight", tag: "Proposal" },
-  { type: "image", src: "/gallery-champagne.jpg", label: "Champagne Setup", tag: "VIP" },
-  { type: "image", src: "/gallery-led-gh.png", label: "LED Light Display", tag: "Trending" },
+  { type: "image", src: "/gallery-elegant.png", label: "Elegant Interior", tag: "Romance" },
+  { type: "video", src: null, icon: <Video className="w-12 h-12 text-[#E91E8C]" />, label: "Event Highlight", tag: "Proposal" },
+  { type: "image", src: null, icon: <Wine className="w-12 h-12 text-[#E91E8C]" />, label: "Champagne Setup", tag: "VIP" },
+  { type: "video", src: null, icon: <Sparkles className="w-12 h-12 text-[#E91E8C]" />, label: "LED Light Display", tag: "Trending" },
 ];
 
 function Gallery() {
@@ -542,15 +537,15 @@ function Reviews() {
 
         <motion.div {...fadeUp(0.4)} className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
           {hasMore && (
-            <button 
-              onClick={loadMore} 
+            <button
+              onClick={loadMore}
               className="glass border border-[var(--border)] px-8 py-3 rounded-full text-[var(--text-main)] font-bold text-xs hover:bg-[#E91E8C]/10 hover:border-[#E91E8C]/30 transition-all flex items-center gap-2"
             >
               See More Reviews <ChevronDown className="w-4 h-4" />
             </button>
           )}
-          <button 
-            onClick={() => setShowModal(true)} 
+          <button
+            onClick={() => setShowModal(true)}
             className="btn-pink-gradient px-8 py-3 rounded-full text-white font-bold text-xs hover:scale-105 transition-all shadow-[0_0_20px_rgba(233,30,140,0.2)]"
           >
             Share Your Experience
@@ -573,7 +568,7 @@ function Reviews() {
               </button>
               <h3 className="text-2xl font-bold text-[var(--text-main)] mb-2">Share Your Experience</h3>
               <p className="text-[var(--text-muted)] text-sm mb-6">Tell us about your Curated Cupid moment.</p>
-              
+
               <form onSubmit={handleSubmitReview} className="space-y-4">
                 <div className="space-y-1.5">
                   <label className="text-[var(--text-muted)] text-xs">Your Name</label>
@@ -581,7 +576,7 @@ function Reviews() {
                     required
                     type="text"
                     value={newReview.name}
-                    onChange={e => setNewReview({...newReview, name: e.target.value})}
+                    onChange={e => setNewReview({ ...newReview, name: e.target.value })}
                     className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm focus:border-[#E91E8C] focus:outline-none transition-colors"
                     placeholder="Enter your name"
                   />
@@ -593,7 +588,7 @@ function Reviews() {
                       <button
                         key={star}
                         type="button"
-                        onClick={() => setNewReview({...newReview, rating: star})}
+                        onClick={() => setNewReview({ ...newReview, rating: star })}
                         className={`text-2xl transition-transform hover:scale-110 ${newReview.rating >= star ? 'text-[#D4AF37]' : 'text-[var(--text-main)]/10'}`}
                       >
                         ★
@@ -607,7 +602,7 @@ function Reviews() {
                     required
                     rows={4}
                     value={newReview.comment}
-                    onChange={e => setNewReview({...newReview, comment: e.target.value})}
+                    onChange={e => setNewReview({ ...newReview, comment: e.target.value })}
                     className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-[var(--text-main)] text-sm focus:border-[#E91E8C] focus:outline-none transition-colors resize-none"
                     placeholder="Tell us what you loved..."
                   />
@@ -630,19 +625,6 @@ function Reviews() {
 
 // ── Contact ───────────────────────────────────────────
 function Contact() {
-  const [form, setForm] = useState({ name: "", phone: "", email: "", date: "", message: "" });
-  const upd = (f: string, v: string) => setForm(p => ({ ...p, [f]: v }));
-
-  const emailLink = `mailto:curatedcupid2026@gmail.com?subject=${encodeURIComponent(
-    `Enquiry from ${form.name || 'a visitor'}`
-  )}&body=${encodeURIComponent(
-    `Hi Curated Cupid!\n\nName: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\nEvent Date: ${form.date}\n\nMessage:\n${form.message}`
-  )}`;
-
-  const waLink = `https://wa.me/233557830853?text=${encodeURIComponent(
-    `Hi Curated Cupid! 🌹\n\nName: ${form.name}\nPhone: ${form.phone}\nEmail: ${form.email}\nEvent Date: ${form.date}\n\nMessage: ${form.message}`
-  )}`;
-
   return (
     <section id="contact" className="py-24 px-6">
       <div className="max-w-5xl mx-auto">
@@ -660,8 +642,8 @@ function Contact() {
             <div className="bg-[#12101F]/80 border border-[var(--border)] rounded-2xl p-6 space-y-5">
               <h3 className="text-white font-semibold text-lg">Contact Details</h3>
               {[
-                { icon: <Phone className="w-4 h-4" />, label: "Phone", value: "+233 55 783 0853" },
-                { icon: <Mail className="w-4 h-4" />, label: "Email", value: "curatedcupid2026@gmail.com" },
+                { icon: <Phone className="w-4 h-4" />, label: "Phone", value: "+233 24 123 4567" },
+                { icon: <Mail className="w-4 h-4" />, label: "Email", value: "hello@curatedcupid.com" },
                 { icon: <MapPin className="w-4 h-4" />, label: "Location", value: "Ayeduase - Kumasi, Ghana" },
                 { icon: <Clock className="w-4 h-4" />, label: "Hours", value: "Mon–Sun, 8am – 9pm" },
               ].map((item) => (
@@ -682,10 +664,10 @@ function Contact() {
               <h3 className="text-white font-semibold text-sm">Follow Our Magic</h3>
               <div className="flex flex-wrap gap-3">
                 {[
-                  { name: "WhatsApp", icon: <MessageCircle className="w-4 h-4" />, color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/233557830853" },
-                  { name: "TikTok", icon: <Music className="w-4 h-4" />, color: "bg-white/5 text-[var(--text-main)] border-[var(--border)]", link: "https://tiktok.com/@planet_ajayy" },
-                  { name: "Snapchat", icon: <Ghost className="w-4 h-4" />, color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", link: "https://snapchat.com/add/l0v3_ajay" },
-                  { name: "Instagram", icon: <Camera className="w-4 h-4" />, color: "bg-pink-500/10 text-pink-400 border-pink-500/20", link: "https://instagram.com/ethereal_ajayy" },
+                  { name: "WhatsApp", icon: <MessageCircle className="w-4 h-4" />, color: "bg-green-500/10 text-green-400 border-green-500/20", link: "https://wa.me/233241234567" },
+                  { name: "TikTok", icon: <Music className="w-4 h-4" />, color: "bg-white/5 text-[var(--text-main)] border-[var(--border)]", link: "https://tiktok.com/@curatedcupid" },
+                  { name: "Snapchat", icon: <Ghost className="w-4 h-4" />, color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", link: "https://snapchat.com/add/curatedcupid" },
+                  { name: "Instagram", icon: <Camera className="w-4 h-4" />, color: "bg-pink-500/10 text-pink-400 border-pink-500/20", link: "https://instagram.com/curatedcupid" },
                 ].map((social) => (
                   <a
                     key={social.name}
@@ -709,48 +691,28 @@ function Contact() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-white/60 text-xs">Your Name</label>
-                    <input type="text" value={form.name} onChange={e => upd('name', e.target.value)} placeholder="e.g. Amara Johnson" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                    <input type="text" placeholder="e.g. Amara Johnson" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-white/60 text-xs">Phone / WhatsApp</label>
-                    <input type="tel" value={form.phone} onChange={e => upd('phone', e.target.value)} placeholder="e.g. 0557830853" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                    <input type="tel" placeholder="e.g. 0241234567" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                   </div>
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-white/60 text-xs">Email Address</label>
-                  <input type="email" value={form.email} onChange={e => upd('email', e.target.value)} placeholder="your@email.com" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
+                  <input type="email" placeholder="your@email.com" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all" />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-white/60 text-xs">Event Date (Approx.)</label>
-                  <input type="date" value={form.date} onChange={e => upd('date', e.target.value)} className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#E91E8C]/50 transition-all" />
+                  <input type="date" className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-[#E91E8C]/50 transition-all" />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-white/60 text-xs">Message</label>
-                  <textarea rows={4} value={form.message} onChange={e => upd('message', e.target.value)} placeholder="Tell us about your dream setup..." className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all resize-none" />
+                  <textarea rows={4} placeholder="Tell us about your dream setup..." className="w-full bg-white/5 border border-[var(--border)] rounded-xl px-4 py-3 text-white text-sm placeholder-white/30 focus:outline-none focus:border-[#E91E8C]/50 focus:shadow-[0_0_12px_rgba(233,30,140,0.1)] transition-all resize-none" />
                 </div>
-
-                {/* Send options */}
-                <div className="pt-1 space-y-2.5">
-                  <p className="text-white/40 text-[11px] text-center tracking-wide">Choose how you&apos;d like to reach us</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <a
-                      href={emailLink}
-                      className="flex items-center justify-center gap-2 w-full btn-pink-gradient text-white font-semibold py-3.5 rounded-xl text-sm hover:scale-[1.01] transition-transform"
-                    >
-                      <Mail className="w-4 h-4" />
-                      Send via Email
-                    </a>
-                    <a
-                      href={waLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl text-sm font-semibold bg-green-600/20 border border-green-500/30 text-green-400 hover:bg-green-600/30 hover:scale-[1.01] transition-all"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      Chat on WhatsApp
-                    </a>
-                  </div>
-                </div>
+                <button type="submit" className="w-full btn-pink-gradient text-white font-semibold py-3.5 rounded-xl text-sm hover:scale-[1.01] transition-transform">
+                  Send Message
+                </button>
               </form>
             </div>
           </motion.div>
@@ -814,8 +776,8 @@ function Footer() {
           <div>
             <p className="text-[var(--text-muted)] text-xs font-semibold uppercase tracking-widest mb-4">Contact</p>
             <div className="space-y-2 text-[var(--text-muted)] text-sm">
-              <p>+233 55 783 0853</p>
-              <p>curatedcupid2026@gmail.com</p>
+              <p>+233 24 123 4567</p>
+              <p>hello@curatedcupid.com</p>
               <p>Ayeduase - Kumasi, Ghana</p>
             </div>
           </div>
